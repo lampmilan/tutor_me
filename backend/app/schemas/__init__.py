@@ -128,11 +128,5 @@ class JudgeResponse(BaseModel):
     results: list[TestResult]
 
 
-class TemplateGenerateRequest(BaseModel):
-    template: dict = Field(..., description="Exam template JSON")
-    use_ai: bool = False
-    seed: int | None = None
-
-
 class GenerateExamResponse(BaseModel):
     exam: ExamOut

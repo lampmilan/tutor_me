@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, model_validator
 
 
 class ExamFileOut(BaseModel):
@@ -21,12 +21,12 @@ class TestCaseOut(BaseModel):
 
     model_config = {"from_attributes": True}
 
-    @classmethod
-    def model_validate(cls, obj, *args, **kwargs):  # type: ignore[override]
-        data = super().model_validate(obj, *args, **kwargs)
-        if data.is_hidden:
-            data.expected_output = None
-        return data
+    @model_validator(mode="after")
+    def redact_hidden(self) -> "TestCaseOut":
+        if self.is_hidden:
+            self.expected_output = None
+        return self
+
 
 
 class TaskOut(BaseModel):

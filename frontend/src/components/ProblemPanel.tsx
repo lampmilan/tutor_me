@@ -32,14 +32,9 @@ export function ProblemPanel({
       </div>
 
       <div className="flex-1 overflow-auto px-4 py-4">
-        <div className="mb-1 flex flex-wrap items-center gap-2">
-          <h1 className="font-[family-name:var(--font-display)] text-xl font-semibold tracking-tight text-[var(--fg)]">
-            {title}
-          </h1>
-          <span className="rounded border border-[var(--border)] px-1.5 py-0.5 text-[11px] uppercase tracking-wide text-[var(--muted)]">
-            Easy
-          </span>
-        </div>
+        <h1 className="mb-1 font-[family-name:var(--font-display)] text-xl font-semibold tracking-tight text-[var(--fg)]">
+          {title}
+        </h1>
         <p className="mb-5 text-sm text-[var(--muted-strong)]">{description}</p>
 
         <section className="mb-6">
@@ -57,6 +52,9 @@ export function ProblemPanel({
             {sorted.map((task, index) => {
               const active = activePhase === task.id;
               const status = phaseStatus[task.id] ?? "idle";
+              const samples = (task.test_cases ?? []).filter(
+                (tc) => !tc.is_hidden && tc.expected_output != null,
+              );
               return (
                 <li key={task.id}>
                   <button
@@ -95,6 +93,21 @@ export function ProblemPanel({
                         <p className="mt-1.5 font-mono text-[11px] text-[var(--python)]">
                           {task.solution_file}
                         </p>
+                        {active && samples.length > 0 ? (
+                          <div className="mt-3 space-y-2 border-t border-[var(--border)] pt-2">
+                            {samples.map((sample, i) => (
+                              <div key={sample.id} className="text-xs">
+                                <p className="mb-1 font-medium text-[var(--muted-strong)]">
+                                  Example {i + 1}
+                                </p>
+                                <pre className="overflow-x-auto rounded bg-[var(--editor)] px-2 py-1.5 font-mono text-[11px] leading-relaxed text-[var(--fg)]">
+                                  Output:{"\n"}
+                                  {sample.expected_output}
+                                </pre>
+                              </div>
+                            ))}
+                          </div>
+                        ) : null}
                       </div>
                     </div>
                   </button>

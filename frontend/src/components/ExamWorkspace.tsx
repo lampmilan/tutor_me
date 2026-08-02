@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { CodeEditor } from "@/components/CodeEditor";
 import { FileExplorer } from "@/components/FileExplorer";
@@ -276,9 +277,9 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
   return (
     <div className="flex h-screen flex-col overflow-hidden bg-[var(--bg)] text-[var(--fg)]">
       <header className="flex items-center gap-4 border-b border-[var(--border)] bg-[var(--panel)] px-4 py-2">
-        <a href="/" className="font-[family-name:var(--font-display)] text-lg tracking-tight text-[var(--accent)]">
+        <Link href="/" className="font-[family-name:var(--font-display)] text-lg tracking-tight text-[var(--accent)]">
           Érettségi Lab
-        </a>
+        </Link>
         <div className="min-w-0 flex-1">
           <h1 className="truncate text-sm font-medium">{exam.title}</h1>
           <p className="truncate text-xs text-[var(--muted)]">

@@ -21,6 +21,13 @@ export type Task = {
   points: number;
   order_index: number;
   solution_file: string;
+  test_cases?: {
+    id: number;
+    name: string;
+    expected_output: string | null;
+    is_hidden: boolean;
+    points: number;
+  }[];
 };
 
 export type Exam = {

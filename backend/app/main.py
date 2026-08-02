@@ -7,6 +7,7 @@ from app.api import exams, execution, workspaces
 from app.config import get_settings
 from app.database import Base, SessionLocal, engine
 from app.db.migrate import ensure_schema
+from app import models  # noqa: F401 — register ORM tables
 from app.seed import seed_cities_exam
 from app.services.workspace import ensure_workspaces_root
 

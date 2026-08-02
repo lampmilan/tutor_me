@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { CodeEditor } from "@/components/CodeEditor";
 import { FileExplorer } from "@/components/FileExplorer";
 import { OutputPanel } from "@/components/OutputPanel";
@@ -21,8 +21,7 @@ type ExamWorkspaceProps = {
 
 type PhaseStatus = "idle" | "passed" | "failed";
 
-/** Prefer exam template / phase order over alphabetical sorting. */
-function sortWorkspaceFiles(
+function sortPythonFiles(
   files: WorkspaceFile[],
   tasks: Task[],
 ): { filename: string; read_only: boolean }[] {
@@ -30,12 +29,9 @@ function sortWorkspaceFiles(
     .slice()
     .sort((a, b) => a.order_index - b.order_index)
     .map((t) => t.solution_file);
-  const preferred = [
-    ...files.filter((f) => f.filename.endsWith(".txt")).map((f) => f.filename),
-    ...phaseOrder,
-  ];
-  const rank = new Map(preferred.map((name, i) => [name, i]));
+  const rank = new Map(phaseOrder.map((name, i) => [name, i]));
   return files
+    .filter((f) => f.filename.endsWith(".py"))
     .map((f) => ({ filename: f.filename, read_only: f.read_only }))
     .sort((a, b) => {
       const ra = rank.get(a.filename);
@@ -78,6 +74,9 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
   const [judge, setJudge] = useState<JudgeResponse | null>(null);
   const [phaseStatus, setPhaseStatus] = useState<Record<number, PhaseStatus>>({});
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [leftPct, setLeftPct] = useState(42);
+  const splitRef = useRef<HTMLDivElement>(null);
+  const dragging = useRef(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -101,7 +100,6 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
           firstTask?.solution_file && map[firstTask.solution_file]
             ? firstTask.solution_file
             : ws.files.find((f) => f.filename.endsWith(".py") && !f.read_only)?.filename ||
-              ws.files[0]?.filename ||
               "";
         setActiveFile(starter);
         setActivePhaseId(firstTask?.id ?? null);
@@ -114,10 +112,38 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
     };
   }, [examId]);
 
+  useEffect(() => {
+    const onMove = (e: MouseEvent) => {
+      if (!dragging.current || !splitRef.current) return;
+      const rect = splitRef.current.getBoundingClientRect();
+      const pct = ((e.clientX - rect.left) / rect.width) * 100;
+      setLeftPct(Math.min(65, Math.max(28, pct)));
+    };
+    const onUp = () => {
+      dragging.current = false;
+      document.body.style.cursor = "";
+      document.body.style.userSelect = "";
+    };
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseup", onUp);
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseup", onUp);
+    };
+  }, []);
+
   const current = activeFile ? files[activeFile] : undefined;
-  const fileList = useMemo(
-    () => sortWorkspaceFiles(Object.values(files), exam?.tasks ?? []),
+  const pythonFiles = useMemo(
+    () => sortPythonFiles(Object.values(files), exam?.tasks ?? []),
     [files, exam?.tasks],
+  );
+  const dataFiles = useMemo(
+    () =>
+      Object.values(files)
+        .filter((f) => !f.filename.endsWith(".py"))
+        .map((f) => ({ filename: f.filename, content: f.content }))
+        .sort((a, b) => a.filename.localeCompare(b.filename)),
+    [files],
   );
   const dirty = dirtyFiles.size > 0;
   const isDirty = dirtyFiles.has(activeFile);
@@ -277,13 +303,18 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
   return (
     <div className="flex h-screen flex-col overflow-hidden bg-[var(--bg)] text-[var(--fg)]">
       <header className="flex items-center gap-4 border-b border-[var(--border)] bg-[var(--panel)] px-4 py-2">
-        <Link href="/" className="font-[family-name:var(--font-display)] text-lg tracking-tight text-[var(--accent)]">
+        <Link
+          href="/"
+          className="font-[family-name:var(--font-display)] text-lg tracking-tight text-[var(--accent)]"
+        >
           Érettségi Lab
         </Link>
         <div className="min-w-0 flex-1">
           <h1 className="truncate text-sm font-medium">{exam.title}</h1>
           <p className="truncate text-xs text-[var(--muted)]">
-            {activePhaseId ? `Phase ${activePhaseNumber} · ${runEntrypoint}` : runEntrypoint}
+            {activePhaseId
+              ? `${activePhaseNumber}. feladat · ${runEntrypoint}`
+              : runEntrypoint}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -315,19 +346,39 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
         </div>
       </header>
 
-      <div className="flex min-h-0 flex-1 flex-col md:flex-row">
-        <ProblemPanel
-          title={exam.title}
-          description={exam.description}
-          story={exam.story}
-          tasks={exam.tasks}
-          activePhase={activePhaseId}
-          onSelectPhase={selectPhase}
-          phaseStatus={phaseStatus}
-        />
+      <div ref={splitRef} className="flex min-h-0 flex-1">
+        {/* Left: exam statement (LeetCode-style description) */}
+        <div className="flex min-h-0 min-w-0 flex-col" style={{ width: `${leftPct}%` }}>
+          <ProblemPanel
+            title={exam.title}
+            description={exam.description}
+            story={exam.story}
+            tasks={exam.tasks}
+            dataFiles={dataFiles}
+            activePhase={activePhaseId}
+            onSelectPhase={selectPhase}
+            phaseStatus={phaseStatus}
+          />
+        </div>
 
+        {/* Middle separator */}
+        <div
+          role="separator"
+          aria-orientation="vertical"
+          aria-label="Resize panels"
+          onMouseDown={() => {
+            dragging.current = true;
+            document.body.style.cursor = "col-resize";
+            document.body.style.userSelect = "none";
+          }}
+          className="group relative z-10 w-1.5 shrink-0 cursor-col-resize bg-[var(--border)] transition hover:bg-[var(--accent)]"
+        >
+          <div className="absolute inset-y-0 -left-1 -right-1" />
+        </div>
+
+        {/* Right: explorer + Monaco + output */}
         <div className="flex min-h-0 min-w-0 flex-1">
-          <FileExplorer files={fileList} activeFile={activeFile} onSelect={selectFile} />
+          <FileExplorer files={pythonFiles} activeFile={activeFile} onSelect={selectFile} />
           <div className="flex min-w-0 flex-1 flex-col">
             <CodeEditor
               filename={activeFile}

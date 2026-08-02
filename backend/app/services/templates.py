@@ -46,21 +46,35 @@ def _format_cities_file(rows: list[tuple[str, int]]) -> str:
 
 def _task_read(rows: list[tuple[str, int]]) -> tuple[str, str, str]:
     title = "Beolvasás"
-    description = "Olvasd be a cities.txt fájlt"
+    description = (
+        "Olvassa be a cities.txt fájlt, és írja ki a fájl teljes tartalmát "
+        "a képernyőre! Feltételezheti, hogy a fájl létezik, és a sorok "
+        "a leírt formátumot követik. A kiírás legyen soronként azonos "
+        "a fájl tartalmával (városnév, szóköz, lakosságszám)."
+    )
     expected = _format_cities_file(rows).rstrip("\n")
     return title, description, expected
 
 
 def _task_count(rows: list[tuple[str, int]]) -> tuple[str, str, str]:
     title = "Városok száma"
-    description = "Írd ki a városok számát!"
+    description = (
+        "Számítsa ki és a mintának megfelelően jelenítse meg a fájlban "
+        "szereplő városok számát! A program csak a városok darabszámát "
+        "írja a képernyőre (egy egész számot)."
+    )
     expected = str(len(rows))
     return title, description, expected
 
 
 def _task_maximum(rows: list[tuple[str, int]], field: str = "population") -> tuple[str, str, str]:
     title = "Legnépesebb város"
-    description = "Határozd meg a legnagyobb népességű város nevét, és írd ki!"
+    description = (
+        "Határozza meg a legnagyobb népességű város nevét, és írja ki "
+        "a képernyőre! Ha több városnak is azonos a legnagyobb "
+        "lakosságszáma, bármelyik megfelelő nevét kiírhatja. "
+        "A kimenet csak a város neve legyen."
+    )
     best = max(rows, key=lambda r: r[1])
     expected = best[0]
     return title, description, expected
@@ -68,7 +82,10 @@ def _task_maximum(rows: list[tuple[str, int]], field: str = "population") -> tup
 
 def _task_sum(rows: list[tuple[str, int]]) -> tuple[str, str, str]:
     title = "Össznépesség"
-    description = "Számold ki a városok össznépességét, és írd ki!"
+    description = (
+        "Számolja ki a városok össznépességét, és írja ki a képernyőre! "
+        "A kimenet egyetlen egész szám legyen."
+    )
     expected = str(sum(r[1] for r in rows))
     return title, description, expected
 
@@ -96,12 +113,39 @@ def generate_dataset(template: dict[str, Any], rng: random.Random) -> list[tuple
 
 
 def build_story(template: dict[str, Any], rows: list[tuple[str, int]], use_ai: bool = False) -> str:
-    default = (
-        "Egy statisztikai hivatal a magyar városok népességét tartja nyilván. "
-        f"A cities.txt fájl {len(rows)} város nevét és lakosságszámát tartalmazza "
-        "(szóközzel elválasztva). Oldd meg a feladatokat fázisonként, "
-        "minden fázishoz külön Python fájlban!"
-    )
+    sample = _format_cities_file(rows).rstrip("\n")
+    best = max(rows, key=lambda r: r[1])
+    default = f"""Egy statisztikai hivatal a magyar városok népességét tartja nyilván. A hivatal
+munkatársai a települések adatait szöveges fájlban gyűjtik, majd programokkal
+értékelik ki. Ebben a feladatban Önnek kell feldolgoznia a cities.txt fájlban
+tárolt városadatokat!
+
+A cities.txt fájl minden sora egy város adatait tartalmazza. A sorban először
+a város neve, majd szóközzel elválasztva a lakosságszám (egész szám) szerepel:
+
+Városnév Lakosságszám
+
+Az alábbi táblázat mutatja a fájl mezőinek jelentését:
+
+Mező          Jelentés
+Városnév      A település neve (ékezet nélküli írásmód is előfordulhat)
+Lakosságszám  A település lakóinak száma főben
+
+Az alábbi példa a cities.txt fájl tartalmát mutatja:
+
+{sample}
+
+Ebben a példában {len(rows)} város szerepel. A legnépesebb település: {best[0]}
+({best[1]} fő).
+
+Készítsen programot, amely kiértékeli a cities.txt fájl tartalmát! A megoldást
+fázisonként, külön Python fájlokban készítse el. A program megírásakor a fájl
+adatainak helyességét, érvényességét nem kell ellenőriznie, és feltételezheti,
+hogy a rendelkezésre álló adatok a leírtaknak megfelelnek.
+
+A képernyőre írást igénylő részfeladatok esetén az ékezetmentes kiírás is
+elfogadott. A mintához tartalmában hasonlóan jelenítse meg az eredményt!
+"""
     if use_ai:
         return ai_generator.rewrite_story(default, context={"title": template.get("title", "Cities"), "rows": rows})
     return template.get("story") or default
@@ -197,7 +241,7 @@ def create_exam_from_template(
 
 SAMPLE_TEMPLATE: dict[str, Any] = {
     "title": "Cities",
-    "description": "Olvasd be a cities.txt fájlt, és oldd meg a feladatokat fázisonként!",
+    "description": "Értékelje ki a cities.txt fájlban tárolt városok népességadatait!",
     "dataset": {
         "type": "cities",
         "fields": ["name", "population"],

@@ -18,6 +18,49 @@ HIDDEN_READ = "A 10\nB 20\nC 30\nD 40\n"
 HIDDEN_COUNT = HIDDEN_READ
 HIDDEN_MAX = "Alpha 100\nBeta 500\nGamma 200\n"
 
+# Marker used to detect whether an existing seed needs a content refresh
+STORY_VERSION_MARKER = "[[cities-v2]]"
+
+CITIES_STORY = f"""{STORY_VERSION_MARKER}
+Egy statisztikai hivatal a magyar városok népességét tartja nyilván. A hivatal
+munkatársai a települések adatait szöveges fájlban gyűjtik, majd programokkal
+értékelik ki. Ebben a feladatban Önnek kell feldolgoznia a cities.txt fájlban
+tárolt városadatokat!
+
+A cities.txt fájl minden sora egy város adatait tartalmazza. A sorban először
+a város neve, majd szóközzel elválasztva a lakosságszám (egész szám) szerepel:
+
+Városnév Lakosságszám
+
+Az alábbi táblázat mutatja a fájl mezőinek jelentését:
+
+Mező          Jelentés
+Városnév      A település neve (ékezet nélküli írásmód is előfordulhat)
+Lakosságszám  A település lakóinak száma főben
+
+Az alábbi példa a cities.txt fájl tartalmát mutatja:
+
+Budapest 1780000
+Szeged 160000
+Pecs 140000
+
+Ebben a példában három város szerepel. Budapest a legnépesebb település
+1 780 000 fővel, Szeged 160 000, Pécs pedig 140 000 fővel rendelkezik.
+
+Készítsen programot, amely kiértékeli a cities.txt fájl tartalmát! A megoldást
+fázisonként, külön Python fájlokban készítse el (beolvasas.py, varosok_szama.py,
+nepesseg.py). A program megírásakor a fájl adatainak helyességét, érvényességét
+nem kell ellenőriznie, és feltételezheti, hogy a rendelkezésre álló adatok
+a leírtaknak megfelelnek.
+
+A képernyőre írást igénylő részfeladatok esetén az ékezetmentes kiírás is
+elfogadott. A mintához tartalmában hasonlóan jelenítse meg az eredményt!
+"""
+
+CITIES_DESCRIPTION = (
+    "Értékelje ki a cities.txt fájlban tárolt városok népességadatait!"
+)
+
 
 def _replace_exam_files(db: Session, exam: Exam, files: list[tuple[str, str, bool]]) -> None:
     for existing in list(exam.files):
@@ -66,7 +109,12 @@ def _cities_phase_specs() -> list[dict]:
     return [
         {
             "title": "Beolvasás",
-            "description": "Olvasd be a cities.txt fájlt",
+            "description": (
+                "Olvassa be a cities.txt fájlt, és írja ki a fájl teljes tartalmát "
+                "a képernyőre! Feltételezheti, hogy a fájl létezik, és a sorok "
+                "a leírt formátumot követik. A kiírás legyen soronként azonos "
+                "a fájl tartalmával (városnév, szóköz, lakosságszám)."
+            ),
             "points": 1,
             "order_index": 0,
             "solution_file": "beolvasas.py",
@@ -89,7 +137,11 @@ def _cities_phase_specs() -> list[dict]:
         },
         {
             "title": "Városok száma",
-            "description": "Írd ki a városok számát!",
+            "description": (
+                "Számítsa ki és a mintának megfelelően jelenítse meg a fájlban "
+                "szereplő városok számát! A program csak a városok darabszámát "
+                "írja a képernyőre (egy egész számot)."
+            ),
             "points": 1,
             "order_index": 1,
             "solution_file": "varosok_szama.py",
@@ -112,7 +164,12 @@ def _cities_phase_specs() -> list[dict]:
         },
         {
             "title": "Legnépesebb város",
-            "description": "Határozd meg a legnagyobb népességű város nevét, és írd ki!",
+            "description": (
+                "Határozza meg a legnagyobb népességű város nevét, és írja ki "
+                "a képernyőre! Ha több városnak is azonos a legnagyobb "
+                "lakosságszáma, bármelyik megfelelő nevét kiírhatja. "
+                "A kimenet csak a város neve legyen."
+            ),
             "points": 2,
             "order_index": 2,
             "solution_file": "nepesseg.py",
@@ -146,6 +203,8 @@ def _cities_files() -> list[tuple[str, str, bool]]:
 
 
 def _needs_cities_upgrade(exam: Exam) -> bool:
+    if STORY_VERSION_MARKER not in (exam.story or ""):
+        return True
     filenames = {f.filename for f in exam.files}
     expected = {"cities.txt", "beolvasas.py", "varosok_szama.py", "nepesseg.py"}
     if filenames != expected:
@@ -168,13 +227,8 @@ def seed_cities_exam(db: Session) -> Exam:
         .first()
     )
 
-    story = (
-        "Egy statisztikai hivatal a magyar városok népességét tartja nyilván. "
-        "A cities.txt fájl három város nevét és lakosságszámát tartalmazza "
-        "(szóközzel elválasztva). Oldd meg a feladatokat fázisonként, "
-        "minden fázishoz külön Python fájlban!"
-    )
-    description = "Olvasd be a cities.txt fájlt, és oldd meg a feladatokat fázisonként!"
+    story = CITIES_STORY
+    description = CITIES_DESCRIPTION
 
     if existing and not _needs_cities_upgrade(existing):
         return existing

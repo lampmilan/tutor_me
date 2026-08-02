@@ -1,6 +1,6 @@
 {
   "title": "Cities",
-  "description": "Olvasd be a cities.txt fájlt, és oldd meg a feladatokat fázisonként!",
+  "description": "Értékelje ki a cities.txt fájlban tárolt városok népességadatait!",
   "dataset": {
     "type": "cities",
     "fields": ["name", "population"],

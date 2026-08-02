@@ -1,13 +1,14 @@
 {
   "title": "Cities",
-  "description": "Olvasd be a cities.txt fájlt, és oldd meg a feladatokat!",
+  "description": "Olvasd be a cities.txt fájlt, és oldd meg a feladatokat fázisonként!",
   "dataset": {
     "type": "cities",
     "fields": ["name", "population"],
     "count": 3
   },
   "tasks": [
-    { "type": "count", "points": 1 },
-    { "type": "maximum", "field": "population", "points": 2 }
+    { "type": "read", "points": 1, "solution_file": "beolvasas.py" },
+    { "type": "count", "points": 1, "solution_file": "varosok_szama.py" },
+    { "type": "maximum", "field": "population", "points": 2, "solution_file": "nepesseg.py" }
   ]
 }

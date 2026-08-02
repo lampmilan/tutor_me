@@ -31,14 +31,29 @@ DEFAULT_CITIES = [
     ("Szombathely", 78000),
 ]
 
+# Default solution filenames for cities template task types
+DEFAULT_SOLUTION_FILES = {
+    "read": "beolvasas.py",
+    "count": "varosok_szama.py",
+    "maximum": "nepesseg.py",
+    "sum": "osszesen.py",
+}
+
 
 def _format_cities_file(rows: list[tuple[str, int]]) -> str:
     return "\n".join(f"{name} {pop}" for name, pop in rows) + "\n"
 
 
+def _task_read(rows: list[tuple[str, int]]) -> tuple[str, str, str]:
+    title = "Beolvasás"
+    description = "Olvasd be a cities.txt fájlt"
+    expected = _format_cities_file(rows).rstrip("\n")
+    return title, description, expected
+
+
 def _task_count(rows: list[tuple[str, int]]) -> tuple[str, str, str]:
     title = "Városok száma"
-    description = "Olvasd be a cities.txt fájlt, és írd ki a városok számát!"
+    description = "Írd ki a városok számát!"
     expected = str(len(rows))
     return title, description, expected
 
@@ -59,6 +74,7 @@ def _task_sum(rows: list[tuple[str, int]]) -> tuple[str, str, str]:
 
 
 TASK_BUILDERS = {
+    "read": lambda rows, spec: _task_read(rows),
     "count": lambda rows, spec: _task_count(rows),
     "maximum": lambda rows, spec: _task_maximum(rows, spec.get("field", "population")),
     "sum": lambda rows, spec: _task_sum(rows),
@@ -83,7 +99,8 @@ def build_story(template: dict[str, Any], rows: list[tuple[str, int]], use_ai: b
     default = (
         "Egy statisztikai hivatal a magyar városok népességét tartja nyilván. "
         f"A cities.txt fájl {len(rows)} város nevét és lakosságszámát tartalmazza "
-        "(szóközzel elválasztva). Oldd meg a feladatokat a fájl alapján!"
+        "(szóközzel elválasztva). Oldd meg a feladatokat fázisonként, "
+        "minden fázishoz külön Python fájlban!"
     )
     if use_ai:
         return ai_generator.rewrite_story(default, context={"title": template.get("title", "Cities"), "rows": rows})
@@ -118,8 +135,8 @@ def create_exam_from_template(
 
     dataset_content = _format_cities_file(rows)
     db.add(ExamFile(exam_id=exam.id, filename="cities.txt", content=dataset_content, read_only=True))
-    db.add(ExamFile(exam_id=exam.id, filename="main.py", content="", read_only=False))
 
+    solution_files: list[str] = []
     for idx, task_spec in enumerate(template.get("tasks", [])):
         ttype = task_spec.get("type", "count")
         builder = TASK_BUILDERS.get(ttype)
@@ -127,6 +144,9 @@ def create_exam_from_template(
             raise ValueError(f"Unknown task type: {ttype}")
         title_t, desc, expected = builder(rows, task_spec)
         points = int(task_spec.get("points", 1))
+        solution_file = task_spec.get("solution_file") or DEFAULT_SOLUTION_FILES.get(ttype, f"feladat_{idx + 1}.py")
+        if solution_file not in solution_files:
+            solution_files.append(solution_file)
 
         task = Task(
             exam_id=exam.id,
@@ -134,6 +154,7 @@ def create_exam_from_template(
             description=desc,
             points=points,
             order_index=idx,
+            solution_file=solution_file,
         )
         db.add(task)
         db.flush()
@@ -166,6 +187,9 @@ def create_exam_from_template(
             )
         )
 
+    for solution_file in solution_files:
+        db.add(ExamFile(exam_id=exam.id, filename=solution_file, content="", read_only=False))
+
     db.commit()
     db.refresh(exam)
     return exam
@@ -173,14 +197,15 @@ def create_exam_from_template(
 
 SAMPLE_TEMPLATE: dict[str, Any] = {
     "title": "Cities",
-    "description": "Olvasd be a cities.txt fájlt, és oldd meg a feladatokat!",
+    "description": "Olvasd be a cities.txt fájlt, és oldd meg a feladatokat fázisonként!",
     "dataset": {
         "type": "cities",
         "fields": ["name", "population"],
         "count": 3,
     },
     "tasks": [
-        {"type": "count", "points": 1},
-        {"type": "maximum", "field": "population", "points": 2},
+        {"type": "read", "points": 1, "solution_file": "beolvasas.py"},
+        {"type": "count", "points": 1, "solution_file": "varosok_szama.py"},
+        {"type": "maximum", "field": "population", "points": 2, "solution_file": "nepesseg.py"},
     ],
 }

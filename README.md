@@ -56,15 +56,15 @@ If Docker is not available, set `EXECUTION_BACKEND=subprocess` in `.env`
 ## Core workflow
 
 1. Open an exam (e.g. **Cities**).
-2. Workspace is created with `main.py` + `cities.txt`.
-3. Edit code in Monaco.
-4. Click **Run** → `POST /execute` → isolated Python run → stdout/stderr/runtime.
-5. Click **Submit** → automatic judging against test cases → points.
+2. Workspace is created with phase files (e.g. `cities.txt`, `beolvasas.py`, `varosok_szama.py`, `nepesseg.py`).
+3. Left pane shows the story and phases; right pane is the explorer + Monaco editor.
+4. Click a phase to open its Python file, edit code, then **Run** / **Submit** that phase.
+5. Submit grades the active phase against its test cases.
 
 ## Project layout
 
 ```
-frontend/          Next.js app (Monaco workspace UI)
+frontend/          Next.js app (LeetCode-style workspace UI)
 backend/           FastAPI API, models, judge, templates
 docker/executor/   Slim Python image for student code
 docker-compose.yml Postgres + backend + frontend
@@ -75,11 +75,11 @@ docker-compose.yml Postgres + backend + frontend
 | Method | Path | Purpose |
 |--------|------|---------|
 | GET | `/exams` | List exams |
-| GET | `/exams/{id}` | Exam details + tasks |
+| GET | `/exams/{id}` | Exam details + phased tasks |
 | POST | `/exams/{id}/start` | Create workspace |
 | PUT | `/workspaces/{id}/files/{name}` | Save file |
-| POST | `/execute` | Run `main.py` |
-| POST | `/judge` | Grade against tests |
+| POST | `/execute` | Run a chosen `.py` entrypoint |
+| POST | `/judge` | Grade a phase (or all) against tests |
 | POST | `/exams/from-template` | Generate exam from JSON template |
 
 ## Exam templates (Phase 7)
@@ -93,7 +93,11 @@ Example: `backend/app/templates/cities.json`
 {
   "title": "Cities",
   "dataset": { "type": "cities", "fields": ["name", "population"] },
-  "tasks": [{ "type": "count" }, { "type": "maximum", "field": "population" }]
+  "tasks": [
+    { "type": "read", "solution_file": "beolvasas.py" },
+    { "type": "count", "solution_file": "varosok_szama.py" },
+    { "type": "maximum", "field": "population", "solution_file": "nepesseg.py" }
+  ]
 }
 ```
 
@@ -127,6 +131,13 @@ Docker runs with:
 
 ## Example exam: Cities
 
+Workspace files:
+
+- `cities.txt` — dataset (read-only)
+- `beolvasas.py` — Phase 1: read the file
+- `varosok_szama.py` — Phase 2: print city count
+- `nepesseg.py` — Phase 3: print the most populous city
+
 `cities.txt`:
 
 ```
@@ -135,7 +146,7 @@ Szeged 160000
 Pecs 140000
 ```
 
-Sample solution for task 1 (count cities):
+Sample solution for Phase 2 (`varosok_szama.py`):
 
 ```python
 with open("cities.txt") as f:

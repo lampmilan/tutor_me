@@ -20,22 +20,32 @@ def _normalize_output(text: str) -> str:
     return "\n".join(lines)
 
 
+def _upsert_file(db: Session, workspace: Workspace, filename: str, content: str) -> None:
+    existing = next((f for f in workspace.files if f.filename == filename), None)
+    if existing is None:
+        created = File(
+            workspace_id=workspace.id,
+            filename=filename,
+            content=content,
+            read_only=False,
+        )
+        db.add(created)
+        workspace.files.append(created)
+    else:
+        existing.content = content
+    db.commit()
+
+
 def judge_workspace(
     db: Session,
     workspace: Workspace,
     *,
     task_id: int | None = None,
     code: str | None = None,
+    filename: str | None = None,
 ) -> JudgeResponse:
-    if code is not None:
-        main = next((f for f in workspace.files if f.filename == "main.py"), None)
-        if main is None:
-            main = File(workspace_id=workspace.id, filename="main.py", content=code, read_only=False)
-            db.add(main)
-            workspace.files.append(main)
-        else:
-            main.content = code
-        db.commit()
+    if code is not None and filename:
+        _upsert_file(db, workspace, filename, code)
 
     path = sync_workspace_to_disk(workspace)
 
@@ -48,6 +58,7 @@ def judge_workspace(
     points_possible = 0.0
 
     for task in sorted(tasks, key=lambda t: t.order_index):
+        entrypoint = task.solution_file or "main.py"
         for tc in task.test_cases:
             points_possible += tc.points
             try:
@@ -55,7 +66,12 @@ def judge_workspace(
             except json.JSONDecodeError:
                 extra = {}
 
-            exec_result = execute_python(path, stdin=tc.stdin or "", extra_files=extra or None)
+            exec_result = execute_python(
+                path,
+                entrypoint=entrypoint,
+                stdin=tc.stdin or "",
+                extra_files=extra or None,
+            )
             actual = _normalize_output(exec_result.output)
             expected = _normalize_output(tc.expected_output)
             passed = actual == expected and exec_result.exit_code == 0
@@ -66,6 +82,7 @@ def judge_workspace(
             results.append(
                 TestResult(
                     test_case_id=tc.id,
+                    task_id=task.id,
                     name=tc.name,
                     passed=passed,
                     points_earned=earned,

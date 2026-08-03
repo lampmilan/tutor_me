@@ -22,6 +22,8 @@ export type Task = {
   points: number;
   order_index: number;
   solution_file: string;
+  uses_preamble: boolean;
+  starter: string;
   test_cases?: {
     id: number;
     name: string;
@@ -37,6 +39,8 @@ export type Exam = {
   description: string;
   story: string;
   template_type: string | null;
+  preamble: string;
+  shared_variable: string;
   created_at: string;
   files: ExamFile[];
   tasks: Task[];
@@ -119,24 +123,23 @@ export const api = {
       method: "PUT",
       body: JSON.stringify({ content }),
     }),
-  execute: (workspaceId: number, code?: string, stdin = "", filename?: string) =>
+  execute: (workspaceId: number, code?: string, stdin = "", taskId?: number) =>
     request<ExecuteResponse>("/execute", {
       method: "POST",
       body: JSON.stringify({
         workspace_id: workspaceId,
         code,
         stdin,
-        filename: filename ?? null,
+        task_id: taskId ?? null,
       }),
     }),
-  judge: (workspaceId: number, code?: string, taskId?: number, filename?: string) =>
+  judge: (workspaceId: number, code?: string, taskId?: number) =>
     request<JudgeResponse>("/judge", {
       method: "POST",
       body: JSON.stringify({
         workspace_id: workspaceId,
         code,
         task_id: taskId ?? null,
-        filename: filename ?? null,
       }),
     }),
 };

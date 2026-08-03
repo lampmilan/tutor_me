@@ -1,13 +1,14 @@
 """Isolated code execution service.
 
 Primary backend: Docker (CPU/memory/time/network limits).
-Fallback: subprocess (for local dev without Docker).
+Fallback: subprocess (for local Compose when Docker CLI is unavailable).
 """
 
 from __future__ import annotations
 
 import shutil
 import subprocess
+import sys
 import tempfile
 import time
 from dataclasses import dataclass
@@ -135,6 +136,11 @@ def _run_docker(
         return _run_subprocess(workspace_path, entrypoint=entrypoint, stdin=stdin, timeout=timeout)
 
 
+def _python_bin() -> str:
+    """Interpreter used for subprocess execution (backend container's Python)."""
+    return sys.executable or "/usr/local/bin/python3"
+
+
 def _run_subprocess(
     workspace_path: Path,
     *,
@@ -142,18 +148,20 @@ def _run_subprocess(
     stdin: str,
     timeout: int,
 ) -> ExecutionResult:
-    """Dev fallback when Docker is unavailable. Still enforces a time limit."""
+    """Run student code via subprocess (Compose-friendly fallback)."""
     started = time.perf_counter()
+    python_bin = _python_bin()
+    script = entrypoint or "main.py"
     try:
         proc = subprocess.run(
-            ["python3", entrypoint],
+            [python_bin, script],
             cwd=str(workspace_path),
             input=stdin,
             capture_output=True,
             text=True,
             timeout=timeout,
             env={
-                "PATH": "/usr/bin:/bin",
+                "PATH": "/usr/local/bin:/usr/bin:/bin",
                 "HOME": "/tmp",
                 "PYTHONDONTWRITEBYTECODE": "1",
             },
@@ -174,4 +182,12 @@ def _run_subprocess(
             error=(stderr + "\nExecution timed out.").strip(),
             runtime=round(runtime, 4),
             exit_code=124,
+        )
+    except FileNotFoundError:
+        runtime = time.perf_counter() - started
+        return ExecutionResult(
+            output="",
+            error=f"Python interpreter not found: {python_bin}",
+            runtime=round(runtime, 4),
+            exit_code=127,
         )

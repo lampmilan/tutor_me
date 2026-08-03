@@ -16,18 +16,24 @@ class Base(DeclarativeBase):
     pass
 
 
+def _add_column_if_missing(table: str, column: str, ddl: str) -> None:
+    insp = inspect(engine)
+    if table not in insp.get_table_names():
+        return
+    cols = {c["name"] for c in insp.get_columns(table)}
+    if column not in cols:
+        with engine.begin() as conn:
+            conn.execute(text(f"ALTER TABLE {table} ADD COLUMN {ddl}"))
+
+
 def ensure_schema() -> None:
     """Lightweight additive migrations for create_all-managed schemas."""
-    insp = inspect(engine)
-    if "tasks" in insp.get_table_names():
-        cols = {c["name"] for c in insp.get_columns("tasks")}
-        with engine.begin() as conn:
-            if "hints_json" not in cols:
-                conn.execute(text("ALTER TABLE tasks ADD COLUMN hints_json TEXT DEFAULT '[]'"))
-            if "solution_file" not in cols:
-                conn.execute(
-                    text("ALTER TABLE tasks ADD COLUMN solution_file VARCHAR(255) DEFAULT 'main.py'")
-                )
+    _add_column_if_missing("tasks", "hints_json", "hints_json TEXT DEFAULT '[]'")
+    _add_column_if_missing("tasks", "solution_file", "solution_file VARCHAR(255) DEFAULT 'main.py'")
+    _add_column_if_missing("tasks", "uses_preamble", "uses_preamble BOOLEAN DEFAULT FALSE")
+    _add_column_if_missing("tasks", "starter", "starter TEXT DEFAULT ''")
+    _add_column_if_missing("exams", "preamble", "preamble TEXT DEFAULT ''")
+    _add_column_if_missing("exams", "shared_variable", "shared_variable VARCHAR(100) DEFAULT 'data'")
 
 
 def get_db() -> Generator[Session, None, None]:

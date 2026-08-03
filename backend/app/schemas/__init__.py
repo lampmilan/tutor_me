@@ -36,6 +36,8 @@ class TaskOut(BaseModel):
     points: int
     order_index: int
     solution_file: str = "main.py"
+    uses_preamble: bool = False
+    starter: str = ""
     test_cases: list[TestCaseOut] = []
 
     model_config = {"from_attributes": True}
@@ -47,6 +49,8 @@ class ExamOut(BaseModel):
     description: str
     story: str
     template_type: str | None
+    preamble: str = ""
+    shared_variable: str = "data"
     created_at: datetime
     files: list[ExamFileOut] = []
     tasks: list[TaskOut] = []
@@ -92,9 +96,10 @@ class StartExamRequest(BaseModel):
 
 class ExecuteRequest(BaseModel):
     workspace_id: int
-    # Optional: save this code to filename before running
+    task_id: int | None = None
+    # Optional: save this as the active feladat source before running
     code: str | None = None
-    filename: str | None = None  # entrypoint; defaults to main.py
+    filename: str | None = None  # optional; used to resolve task if task_id omitted
     stdin: str = ""
 
 

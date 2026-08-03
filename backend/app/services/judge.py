@@ -1,19 +1,16 @@
-"""Automatic judging: run student code against test cases and award points.
-
-Hidden tests mount alternate data files under the same filename (e.g. cities.txt)
-without revealing those inputs to the student. Educational hints are returned
-instead of hidden I/O.
-"""
+"""Automatic judging with optional canonical preamble injection (Option A)."""
 
 from __future__ import annotations
 
 import json
+from pathlib import Path
 
 from sqlalchemy.orm import Session
 
-from app.models import File, Submission, Task, TestCase, Workspace
+from app.models import Exam, File, Submission, Task, Workspace
 from app.schemas import JudgeResponse, TestResult
 from app.services.executor import execute_python
+from app.services.templates import compose_source
 from app.services.workspace import sync_workspace_to_disk
 
 GENERIC_GENERALIZATION_HINT = (
@@ -21,9 +18,11 @@ GENERIC_GENERALIZATION_HINT = (
 )
 GENERIC_RUNTIME_HINT = "Your program did not finish successfully on every dataset."
 
+# Composed run artifact (preamble + student code). Not shown as a phase file.
+RUN_ENTRYPOINT = "main.py"
+
 
 def _normalize_output(text: str) -> str:
-    """Normalize whitespace for comparison (érettségi-friendly)."""
     lines = [line.rstrip() for line in text.replace("\r\n", "\n").replace("\r", "\n").split("\n")]
     while lines and lines[-1] == "":
         lines.pop()
@@ -58,20 +57,57 @@ def _collect_hints(
     return hints[:3]
 
 
-def _upsert_file(db: Session, workspace: Workspace, filename: str, content: str) -> None:
-    existing = next((f for f in workspace.files if f.filename == filename), None)
-    if existing is None:
-        created = File(
+def student_code_for_task(workspace: Workspace, task: Task, code: str | None) -> str:
+    if code is not None:
+        return code
+    entry = task.solution_file or "main.py"
+    match = next((f for f in workspace.files if f.filename == entry), None)
+    if match is not None:
+        return match.content
+    main = next((f for f in workspace.files if f.filename == "main.py"), None)
+    return main.content if main else ""
+
+
+def prepare_run(
+    db: Session,
+    workspace: Workspace,
+    task: Task,
+    student_code: str,
+) -> Path:
+    """Persist student solution file and write composed source to main.py for execution."""
+    exam: Exam = workspace.exam
+    composed = compose_source(exam, task, student_code)
+
+    main = next((f for f in workspace.files if f.filename == RUN_ENTRYPOINT), None)
+    if main is None:
+        main = File(
             workspace_id=workspace.id,
-            filename=filename,
-            content=content,
+            filename=RUN_ENTRYPOINT,
+            content=composed,
             read_only=False,
         )
-        db.add(created)
-        workspace.files.append(created)
+        db.add(main)
+        workspace.files.append(main)
     else:
-        existing.content = content
+        main.content = composed
+
+    entry = task.solution_file or RUN_ENTRYPOINT
+    if entry != RUN_ENTRYPOINT:
+        entry_file = next((f for f in workspace.files if f.filename == entry), None)
+        if entry_file is None:
+            entry_file = File(
+                workspace_id=workspace.id,
+                filename=entry,
+                content=student_code,
+                read_only=False,
+            )
+            db.add(entry_file)
+            workspace.files.append(entry_file)
+        else:
+            entry_file.content = student_code
+
     db.commit()
+    return sync_workspace_to_disk(workspace)
 
 
 def judge_workspace(
@@ -82,20 +118,26 @@ def judge_workspace(
     code: str | None = None,
     filename: str | None = None,
 ) -> JudgeResponse:
-    if code is not None and filename:
-        _upsert_file(db, workspace, filename, code)
-
-    path = sync_workspace_to_disk(workspace)
-
+    del filename  # solution file comes from the task; kept for API compat
     tasks: list[Task] = list(workspace.exam.tasks)
     if task_id is not None:
         tasks = [t for t in tasks if t.id == task_id]
     tasks = sorted(tasks, key=lambda t: t.order_index)
+    if not tasks:
+        return JudgeResponse(
+            points_earned=0,
+            points_possible=0,
+            passed_count=0,
+            total_count=0,
+            summary_line="0/0 tests passed",
+            failed_labels=[],
+            hints=[],
+            results=[],
+        )
 
     results: list[TestResult] = []
     points_earned = 0.0
     points_possible = 0.0
-
     sample_passed = False
     any_sample_seen = False
     any_hidden_failed = False
@@ -105,8 +147,10 @@ def judge_workspace(
     hidden_counter = 0
 
     for task in tasks:
-        entrypoint = getattr(task, "solution_file", None) or "main.py"
+        student_code = student_code_for_task(workspace, task, code if len(tasks) == 1 else None)
+        path = prepare_run(db, workspace, task, student_code)
         cases = sorted(task.test_cases, key=lambda tc: tc.id)
+
         for tc in cases:
             points_possible += tc.points
             try:
@@ -122,7 +166,7 @@ def judge_workspace(
 
             exec_result = execute_python(
                 path,
-                entrypoint=entrypoint,
+                entrypoint=RUN_ENTRYPOINT,
                 stdin=tc.stdin or "",
                 extra_files=extra or None,
             )
@@ -130,7 +174,6 @@ def judge_workspace(
             expected = _normalize_output(tc.expected_output)
             runtime_ok = exec_result.exit_code == 0
             passed = actual == expected and runtime_ok
-
             earned = tc.points if passed else 0
             points_earned += earned
 
@@ -138,9 +181,8 @@ def judge_workspace(
                 any_sample_seen = True
                 if passed:
                     sample_passed = True
-            else:
-                if not passed:
-                    any_hidden_failed = True
+            elif not passed:
+                any_hidden_failed = True
 
             if not passed and not runtime_ok:
                 any_runtime_fail = True
@@ -203,7 +245,6 @@ def judge_workspace(
         any_runtime_fail=any_runtime_fail,
         failed_task_hints=failed_task_hints,
     )
-
     passed_count = sum(1 for r in results if r.passed)
     total_count = len(results)
     summary_line = f"{passed_count}/{total_count} tests passed"

@@ -31,7 +31,7 @@ function sortPythonFiles(
     .map((t) => t.solution_file);
   const rank = new Map(phaseOrder.map((name, i) => [name, i]));
   return files
-    .filter((f) => f.filename.endsWith(".py"))
+    .filter((f) => f.filename.endsWith(".py") && f.filename !== "main.py")
     .map((f) => ({ filename: f.filename, read_only: f.read_only }))
     .sort((a, b) => {
       const ra = rank.get(a.filename);
@@ -148,12 +148,20 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
   const dirty = dirtyFiles.size > 0;
   const isDirty = dirtyFiles.has(activeFile);
 
+  const activeTask = useMemo(() => {
+    if (!exam || activePhaseId == null) return null;
+    return exam.tasks.find((t) => t.id === activePhaseId) ?? null;
+  }, [exam, activePhaseId]);
+
   const selectFile = useCallback(
     (filename: string) => {
       setActiveFile(filename);
       if (!exam) return;
       const task = exam.tasks.find((t) => t.solution_file === filename);
       setActivePhaseId(task?.id ?? null);
+      setJudge(null);
+      setOutput("");
+      setError("");
     },
     [exam],
   );
@@ -164,6 +172,9 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
       if (files[task.solution_file]) {
         setActiveFile(task.solution_file);
       }
+      setJudge(null);
+      setOutput("");
+      setError("");
     },
     [files],
   );
@@ -210,14 +221,8 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
     setDirtyFiles(new Set());
   }, [workspace, dirtyFiles, files]);
 
-  const runEntrypoint = useMemo(() => {
-    if (activeFile.endsWith(".py")) return activeFile;
-    const task = exam?.tasks.find((t) => t.id === activePhaseId);
-    return task?.solution_file || exam?.tasks[0]?.solution_file || "main.py";
-  }, [activeFile, activePhaseId, exam]);
-
   const run = useCallback(async () => {
-    if (!workspace) return;
+    if (!workspace || !activeTask || !current) return;
     setBusy(true);
     setJudge(null);
     setOutput("");
@@ -226,8 +231,8 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
       if (dirtyFiles.size > 0) {
         await saveAllDirty();
       }
-      const code = files[runEntrypoint]?.content ?? "";
-      const result = await api.execute(workspace.id, code, "", runEntrypoint);
+      const code = files[activeTask.solution_file]?.content ?? current.content;
+      const result = await api.execute(workspace.id, code, "", activeTask.id);
       setOutput(result.output);
       setError(result.error);
       setRuntime(result.runtime);
@@ -237,10 +242,10 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
     } finally {
       setBusy(false);
     }
-  }, [workspace, files, dirtyFiles, saveAllDirty, runEntrypoint]);
+  }, [workspace, activeTask, current, dirtyFiles, saveAllDirty, files]);
 
   const submit = useCallback(async () => {
-    if (!workspace || !exam) return;
+    if (!workspace || !activeTask) return;
     setBusy(true);
     setOutput("");
     setError("");
@@ -248,13 +253,8 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
       if (dirtyFiles.size > 0) {
         await saveAllDirty();
       }
-      const code = files[runEntrypoint]?.content;
-      const result = await api.judge(
-        workspace.id,
-        code,
-        activePhaseId ?? undefined,
-        runEntrypoint,
-      );
+      const code = files[activeTask.solution_file]?.content;
+      const result = await api.judge(workspace.id, code, activeTask.id);
       setJudge(result);
       setRuntime(null);
       setExitCode(null);
@@ -264,7 +264,7 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
     } finally {
       setBusy(false);
     }
-  }, [workspace, exam, dirtyFiles, saveAllDirty, files, runEntrypoint, activePhaseId]);
+  }, [workspace, activeTask, dirtyFiles, saveAllDirty, files]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -289,7 +289,7 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
     );
   }
 
-  if (!exam || !workspace || !current) {
+  if (!exam || !workspace || !current || !activeTask) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[var(--bg)] text-[var(--muted)]">
         Loading workspace…
@@ -297,8 +297,7 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
     );
   }
 
-  const activePhaseNumber =
-    (exam.tasks.find((t) => t.id === activePhaseId)?.order_index ?? 0) + 1;
+  const activePhaseNumber = (activeTask.order_index ?? 0) + 1;
 
   return (
     <div className="flex h-screen flex-col overflow-hidden bg-[var(--bg)] text-[var(--fg)]">
@@ -312,9 +311,8 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
         <div className="min-w-0 flex-1">
           <h1 className="truncate text-sm font-medium">{exam.title}</h1>
           <p className="truncate text-xs text-[var(--muted)]">
-            {activePhaseId
-              ? `${activePhaseNumber}. feladat · ${runEntrypoint}`
-              : runEntrypoint}
+            {activePhaseNumber}. feladat · {activeTask.solution_file}
+            {activeTask.uses_preamble ? ` · +${exam.shared_variable}` : ""}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -345,6 +343,14 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
           </button>
         </div>
       </header>
+
+      {activeTask.uses_preamble ? (
+        <div className="border-b border-[var(--border)] bg-[var(--panel)] px-4 py-2 text-xs text-[var(--muted-strong)]">
+          Run/Submit injects the file load into{" "}
+          <code className="text-[var(--accent)]">{exam.shared_variable}</code> before your code.
+          You do not need to open the data file again.
+        </div>
+      ) : null}
 
       <div ref={splitRef} className="flex min-h-0 flex-1">
         <div className="flex min-h-0 min-w-0 flex-col" style={{ width: `${leftPct}%` }}>
@@ -390,7 +396,7 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
               exitCode={exitCode}
               judge={judge}
               busy={busy}
-              entrypoint={runEntrypoint}
+              entrypoint={activeTask.solution_file}
             />
           </div>
         </div>

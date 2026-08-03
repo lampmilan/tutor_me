@@ -7,39 +7,33 @@ from app.models import Exam, Task
 from app.services.templates import materialize_loaded_exam
 
 
-def _hidden_test_count(exam: Exam) -> int:
-    return sum(1 for task in exam.tasks for tc in task.test_cases if tc.is_hidden)
-
-
-def _needs_phase_upgrade(exam: Exam, loaded) -> bool:
-    """True when exam lacks per-task solution files from the current template."""
-    expected_files = {
-        (t.solution_file or f"feladat_{i + 1}.py")
-        for i, t in enumerate(loaded.template.tasks)
-    }
-    if not expected_files:
-        return False
-    existing_names = {f.filename for f in exam.files}
-    if not expected_files.issubset(existing_names):
+def _needs_rematerialize(exam: Exam, loaded, expected_hidden: int) -> bool:
+    hidden = sum(1 for task in exam.tasks for tc in task.test_cases if tc.is_hidden)
+    if hidden < expected_hidden:
+        return True
+    if not (exam.preamble or "").strip() and (loaded.template.preamble or "").strip():
         return True
     if len(exam.tasks) != len(loaded.template.tasks):
+        return True
+    expected_files = {
+        (t.solution_file or f"feladat{i + 1}.py")
+        for i, t in enumerate(loaded.template.tasks)
+    }
+    existing_names = {f.filename for f in exam.files}
+    if expected_files and not expected_files.issubset(existing_names):
         return True
     by_order = sorted(exam.tasks, key=lambda t: t.order_index)
     for task, tmpl in zip(by_order, loaded.template.tasks):
         want = tmpl.solution_file or None
         if want and getattr(task, "solution_file", None) != want:
             return True
-        if not getattr(task, "solution_file", None) or task.solution_file == "main.py":
-            if want:
-                return True
+        if bool(getattr(task, "uses_preamble", False)) != bool(tmpl.uses_preamble):
+            return True
     return False
 
 
 def seed_all_exams(db: Session) -> list[Exam]:
-    """Materialize each catalog exam once.
-
-    Re-seeds when hidden tests are missing or phase solution files are absent.
-    """
+    """Materialize each catalog exam once (rematerialize if outdated)."""
     created: list[Exam] = []
     for loaded in discover_exams():
         expected_hidden = len(loaded.hidden_contents) * len(loaded.template.tasks)
@@ -55,11 +49,7 @@ def seed_all_exams(db: Session) -> list[Exam]:
             )
             .first()
         )
-        if (
-            existing
-            and _hidden_test_count(existing) >= expected_hidden
-            and not _needs_phase_upgrade(existing, loaded)
-        ):
+        if existing and not _needs_rematerialize(existing, loaded, expected_hidden):
             created.append(existing)
             continue
         if existing:
@@ -72,7 +62,6 @@ def seed_all_exams(db: Session) -> list[Exam]:
 
 
 def seed_cities_exam(db: Session) -> Exam | None:
-    """Back-compat alias."""
     exams = seed_all_exams(db)
     for exam in exams:
         if exam.title == "Cities":

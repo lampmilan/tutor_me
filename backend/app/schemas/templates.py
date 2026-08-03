@@ -12,6 +12,10 @@ class TaskTemplate(BaseModel):
     value: str | int | float | None = None
     solution_file: str | None = None
     hints: list[str] = Field(default_factory=list)
+    # Option A: later tasks get a canonical load preamble injected at run time
+    uses_preamble: bool = False
+    # Monaco scaffold shown for this feladat (comments + stub)
+    starter: str = ""
 
 
 class ExamTemplate(BaseModel):
@@ -23,6 +27,9 @@ class ExamTemplate(BaseModel):
     dataset_type: str
     visible: str
     hidden: list[str] = Field(default_factory=list)
+    # Canonical loader injected before student code when uses_preamble=True
+    shared_variable: str = "data"
+    preamble: str = ""
     tasks: list[TaskTemplate] = Field(default_factory=list)
 
 

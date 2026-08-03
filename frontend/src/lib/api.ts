@@ -21,6 +21,14 @@ export type Task = {
   description: string;
   points: number;
   order_index: number;
+  solution_file: string;
+  test_cases?: {
+    id: number;
+    name: string;
+    expected_output: string | null;
+    is_hidden: boolean;
+    points: number;
+  }[];
 };
 
 export type Exam = {
@@ -58,6 +66,7 @@ export type ExecuteResponse = {
 
 export type TestResult = {
   test_case_id: number;
+  task_id: number | null;
   name: string;
   label: string;
   passed: boolean;
@@ -110,18 +119,24 @@ export const api = {
       method: "PUT",
       body: JSON.stringify({ content }),
     }),
-  execute: (workspaceId: number, code?: string, stdin = "") =>
+  execute: (workspaceId: number, code?: string, stdin = "", filename?: string) =>
     request<ExecuteResponse>("/execute", {
       method: "POST",
-      body: JSON.stringify({ workspace_id: workspaceId, code, stdin }),
+      body: JSON.stringify({
+        workspace_id: workspaceId,
+        code,
+        stdin,
+        filename: filename ?? null,
+      }),
     }),
-  judge: (workspaceId: number, code?: string, taskId?: number) =>
+  judge: (workspaceId: number, code?: string, taskId?: number, filename?: string) =>
     request<JudgeResponse>("/judge", {
       method: "POST",
       body: JSON.stringify({
         workspace_id: workspaceId,
         code,
         task_id: taskId ?? null,
+        filename: filename ?? null,
       }),
     }),
 };

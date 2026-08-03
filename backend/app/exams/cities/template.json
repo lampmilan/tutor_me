@@ -1,8 +1,8 @@
 {
   "id": "cities",
   "title": "Cities",
-  "description": "Olvasd be a cities.txt fájlt, és oldd meg a feladatokat!",
-  "story": "Egy statisztikai hivatal a magyar városok népességét tartja nyilván. A cities.txt fájl városok nevét és lakosságszámát tartalmazza (szóközzel elválasztva). Oldd meg a feladatokat a fájl alapján!",
+  "description": "Értékelje ki a cities.txt fájlban tárolt városok népességadatait!",
+  "story": "Egy statisztikai hivatal a magyar városok népességét tartja nyilván. A hivatal munkatársai a települések adatait szöveges fájlban gyűjtik, majd programokkal értékelik ki. Ebben a feladatban Önnek kell feldolgoznia a cities.txt fájlban tárolt városadatokat!\n\nA cities.txt fájl minden sora egy város adatait tartalmazza. A sorban először a város neve, majd szóközzel elválasztva a lakosságszám (egész szám) szerepel:\n\nVárosnév Lakosságszám\n\nMező          Jelentés\nVárosnév      A település neve (ékezet nélküli írásmód is előfordulhat)\nLakosságszám  A település lakóinak száma főben\n\nAz alábbi példa a cities.txt fájl tartalmát mutatja:\n\nBudapest 1780000\nSzeged 160000\nPecs 140000\n\nEbben a példában három város szerepel. Budapest a legnépesebb település 1 780 000 fővel.\n\nKészítsen programot, amely kiértékeli a cities.txt fájl tartalmát! A megoldást fázisonként, külön Python fájlokban készítse el. A program megírásakor a fájl adatainak helyességét nem kell ellenőriznie.\n\nA képernyőre írást igénylő részfeladatok esetén az ékezetmentes kiírás is elfogadott.",
   "data_file": "cities.txt",
   "dataset_type": "cities",
   "visible": "datasets/visible.txt",
@@ -14,10 +14,22 @@
   ],
   "tasks": [
     {
+      "type": "read",
+      "title": "Beolvasás",
+      "description": "Olvassa be a cities.txt fájlt, és írja ki a fájl teljes tartalmát a képernyőre! A kiírás legyen soronként azonos a fájl tartalmával (városnév, szóköz, lakosságszám).",
+      "points": 1,
+      "solution_file": "beolvasas.py",
+      "hints": [
+        "Your solution works for the example dataset but fails on other datasets.",
+        "Print every line of cities.txt — do not hard-code the sample cities."
+      ]
+    },
+    {
       "type": "count",
       "title": "Városok száma",
-      "description": "Olvasd be a cities.txt fájlt, és írd ki a városok számát!",
+      "description": "Számítsa ki és a mintának megfelelően jelenítse meg a fájlban szereplő városok számát! A program csak a városok darabszámát írja a képernyőre (egy egész számot).",
       "points": 1,
+      "solution_file": "varosok_szama.py",
       "hints": [
         "Your solution works for the example dataset but fails on other datasets.",
         "Count the cities by reading every line of cities.txt — do not hard-code the answer."
@@ -28,8 +40,9 @@
       "field": "population",
       "label_field": "name",
       "title": "Legnépesebb város",
-      "description": "Határozd meg a legnagyobb népességű város nevét, és írd ki!",
+      "description": "Határozza meg a legnagyobb népességű város nevét, és írja ki a képernyőre! A kimenet csak a város neve legyen.",
       "points": 2,
+      "solution_file": "nepesseg.py",
       "hints": [
         "Make sure you're calculating the largest city from the contents of cities.txt instead of assuming a fixed value."
       ]

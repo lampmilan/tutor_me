@@ -153,7 +153,26 @@ def _task_count_where(rows: list[Row], spec: dict[str, Any]) -> str:
     return str(sum(1 for r in rows if _compare(r[field], op, target)))
 
 
+def _format_row(row: Row, dataset_hint: str | None = None) -> str:
+    """Best-effort line dump for 'read' tasks (echo dataset content)."""
+    if "name" in row and "population" in row:
+        return f"{row['name']} {row['population']}"
+    if "id" in row and "from" in row and "to" in row and "minutes" in row:
+        return f"{row['id']} {row['from']} {row['to']} {row['minutes']}"
+    if "date" in row and "celsius" in row:
+        return f"{row['date']} {row['celsius']}"
+    if "name" in row and "grade" in row:
+        return f"{row['name']} {row['grade']}"
+    # Fallback: stable key order
+    return " ".join(str(row[k]) for k in sorted(row.keys()))
+
+
+def _task_read(rows: list[Row], _spec: dict[str, Any]) -> str:
+    return "\n".join(_format_row(r) for r in rows)
+
+
 TASK_BUILDERS: dict[str, Callable[[list[Row], dict[str, Any]], str]] = {
+    "read": _task_read,
     "count": _task_count,
     "maximum": _task_maximum,
     "minimum": _task_minimum,

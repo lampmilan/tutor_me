@@ -21,7 +21,8 @@
       "hints": [
         "Your solution works for the example dataset but fails on other datasets.",
         "Count every line in trains.txt — the number of trains can change between datasets."
-      ]
+      ],
+      "solution_file": "jaratok_szama.py"
     },
     {
       "type": "maximum",
@@ -32,7 +33,8 @@
       "points": 2,
       "hints": [
         "Compare the minutes field from each line of trains.txt instead of assuming a fixed train id."
-      ]
+      ],
+      "solution_file": "leghosszabb.py"
     },
     {
       "type": "count_where",
@@ -44,7 +46,8 @@
       "points": 2,
       "hints": [
         "Filter trains by reading the destination column from trains.txt for each dataset."
-      ]
+      ],
+      "solution_file": "budapest.py"
     }
   ]
 }

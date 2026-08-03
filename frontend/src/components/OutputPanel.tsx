@@ -9,6 +9,7 @@ type OutputPanelProps = {
   exitCode: number | null;
   judge: JudgeResponse | null;
   busy: boolean;
+  entrypoint?: string;
 };
 
 export function OutputPanel({
@@ -18,11 +19,12 @@ export function OutputPanel({
   exitCode,
   judge,
   busy,
+  entrypoint = "main.py",
 }: OutputPanelProps) {
   return (
     <section className="flex h-48 shrink-0 flex-col border-t border-[var(--border)] bg-[var(--panel)]">
       <div className="flex items-center gap-3 border-b border-[var(--border)] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
-        <span>Output</span>
+        <span>Test Result</span>
         {busy ? <span className="text-[var(--accent)]">Running…</span> : null}
         {runtime !== null && !busy ? (
           <span className="font-mono normal-case tracking-normal text-[var(--muted-strong)]">
@@ -43,7 +45,9 @@ export function OutputPanel({
           <pre className="whitespace-pre-wrap text-[var(--fg)]">{output}</pre>
         ) : null}
         {!output && !error && !judge && !busy ? (
-          <p className="text-[var(--muted)]">Press Run to execute main.py against the visible dataset</p>
+          <p className="text-[var(--muted)]">
+            Press Run to execute {entrypoint} against the visible dataset
+          </p>
         ) : null}
         {judge ? (
           <div className="space-y-2">

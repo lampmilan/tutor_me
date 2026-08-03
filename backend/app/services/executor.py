@@ -30,17 +30,19 @@ class ExecutionResult:
 def execute_python(
     workspace_path: str | Path,
     *,
+    entrypoint: str = "main.py",
     stdin: str = "",
     timeout: int | None = None,
     extra_files: dict[str, str] | None = None,
 ) -> ExecutionResult:
-    """Run main.py inside an isolated environment.
+    """Run a Python entrypoint inside an isolated environment.
 
     If extra_files is provided, a temporary copy of the workspace is used
     so test input files do not mutate the student's workspace.
     """
     timeout = timeout or settings.execution_timeout_seconds
     src = Path(workspace_path)
+    script = entrypoint or "main.py"
 
     if extra_files:
         with tempfile.TemporaryDirectory(prefix="exec-") as tmp:
@@ -53,19 +55,31 @@ def execute_python(
                     shutil.copytree(item, dest)
             for name, content in extra_files.items():
                 (tmp_path / name).write_text(content, encoding="utf-8")
-            return _run(tmp_path, stdin=stdin, timeout=timeout)
+            return _run(tmp_path, entrypoint=script, stdin=stdin, timeout=timeout)
 
-    return _run(src, stdin=stdin, timeout=timeout)
+    return _run(src, entrypoint=script, stdin=stdin, timeout=timeout)
 
 
-def _run(workspace_path: Path, *, stdin: str, timeout: int) -> ExecutionResult:
+def _run(
+    workspace_path: Path,
+    *,
+    entrypoint: str,
+    stdin: str,
+    timeout: int,
+) -> ExecutionResult:
     backend = settings.execution_backend.lower()
     if backend == "docker" and shutil.which("docker"):
-        return _run_docker(workspace_path, stdin=stdin, timeout=timeout)
-    return _run_subprocess(workspace_path, stdin=stdin, timeout=timeout)
+        return _run_docker(workspace_path, entrypoint=entrypoint, stdin=stdin, timeout=timeout)
+    return _run_subprocess(workspace_path, entrypoint=entrypoint, stdin=stdin, timeout=timeout)
 
 
-def _run_docker(workspace_path: Path, *, stdin: str, timeout: int) -> ExecutionResult:
+def _run_docker(
+    workspace_path: Path,
+    *,
+    entrypoint: str,
+    stdin: str,
+    timeout: int,
+) -> ExecutionResult:
     """Create a temporary container, mount workspace, run, destroy."""
     host_path = str(workspace_path.resolve())
     cmd = [
@@ -89,7 +103,7 @@ def _run_docker(workspace_path: Path, *, stdin: str, timeout: int) -> ExecutionR
         "/workspace",
         settings.executor_image,
         "python",
-        "main.py",
+        entrypoint,
     ]
 
     started = time.perf_counter()
@@ -119,7 +133,7 @@ def _run_docker(workspace_path: Path, *, stdin: str, timeout: int) -> ExecutionR
             exit_code=124,
         )
     except FileNotFoundError:
-        return _run_subprocess(workspace_path, stdin=stdin, timeout=timeout)
+        return _run_subprocess(workspace_path, entrypoint=entrypoint, stdin=stdin, timeout=timeout)
 
 
 def _python_bin() -> str:
@@ -127,20 +141,26 @@ def _python_bin() -> str:
     return sys.executable or "/usr/local/bin/python3"
 
 
-def _run_subprocess(workspace_path: Path, *, stdin: str, timeout: int) -> ExecutionResult:
-    """Run student code in-process host via subprocess (Compose-friendly fallback)."""
+def _run_subprocess(
+    workspace_path: Path,
+    *,
+    entrypoint: str,
+    stdin: str,
+    timeout: int,
+) -> ExecutionResult:
+    """Run student code via subprocess (Compose-friendly fallback)."""
     started = time.perf_counter()
     python_bin = _python_bin()
+    script = entrypoint or "main.py"
     try:
         proc = subprocess.run(
-            [python_bin, "main.py"],
+            [python_bin, script],
             cwd=str(workspace_path),
             input=stdin,
             capture_output=True,
             text=True,
             timeout=timeout,
             env={
-                # Include /usr/local/bin — official Python images install there
                 "PATH": "/usr/local/bin:/usr/bin:/bin",
                 "HOME": "/tmp",
                 "PYTHONDONTWRITEBYTECODE": "1",

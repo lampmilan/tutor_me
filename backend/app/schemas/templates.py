@@ -10,6 +10,7 @@ class TaskTemplate(BaseModel):
     label_field: str | None = None
     op: str | None = None
     value: str | int | float | None = None
+    solution_file: str | None = None
     hints: list[str] = Field(default_factory=list)
     # Option A: later tasks get a canonical load preamble injected at run time
     uses_preamble: bool = False

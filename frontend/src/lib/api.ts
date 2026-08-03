@@ -21,9 +21,16 @@ export type Task = {
   description: string;
   points: number;
   order_index: number;
+  solution_file: string;
   uses_preamble: boolean;
   starter: string;
-  entry_filename: string;
+  test_cases?: {
+    id: number;
+    name: string;
+    expected_output: string | null;
+    is_hidden: boolean;
+    points: number;
+  }[];
 };
 
 export type Exam = {
@@ -63,6 +70,7 @@ export type ExecuteResponse = {
 
 export type TestResult = {
   test_case_id: number;
+  task_id: number | null;
   name: string;
   label: string;
   passed: boolean;

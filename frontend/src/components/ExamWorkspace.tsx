@@ -1,9 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import Link from "next/link";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { CodeEditor } from "@/components/CodeEditor";
 import { FileExplorer } from "@/components/FileExplorer";
 import { OutputPanel } from "@/components/OutputPanel";
+import { ProblemPanel } from "@/components/ProblemPanel";
 import {
   api,
   type Exam,
@@ -17,12 +19,52 @@ type ExamWorkspaceProps = {
   examId: number;
 };
 
+type PhaseStatus = "idle" | "passed" | "failed";
+
+function sortPythonFiles(
+  files: WorkspaceFile[],
+  tasks: Task[],
+): { filename: string; read_only: boolean }[] {
+  const phaseOrder = tasks
+    .slice()
+    .sort((a, b) => a.order_index - b.order_index)
+    .map((t) => t.solution_file);
+  const rank = new Map(phaseOrder.map((name, i) => [name, i]));
+  return files
+    .filter((f) => f.filename.endsWith(".py") && f.filename !== "main.py")
+    .map((f) => ({ filename: f.filename, read_only: f.read_only }))
+    .sort((a, b) => {
+      const ra = rank.get(a.filename);
+      const rb = rank.get(b.filename);
+      if (ra !== undefined && rb !== undefined) return ra - rb;
+      if (ra !== undefined) return -1;
+      if (rb !== undefined) return 1;
+      return a.filename.localeCompare(b.filename);
+    });
+}
+
+function statusFromJudge(result: JudgeResponse): Record<number, PhaseStatus> {
+  const byTask = new Map<number, boolean[]>();
+  for (const r of result.results) {
+    if (r.task_id == null) continue;
+    const list = byTask.get(r.task_id) ?? [];
+    list.push(r.passed);
+    byTask.set(r.task_id, list);
+  }
+  const next: Record<number, PhaseStatus> = {};
+  for (const [taskId, passes] of byTask) {
+    next[taskId] = passes.every(Boolean) ? "passed" : "failed";
+  }
+  return next;
+}
+
 export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
   const [exam, setExam] = useState<Exam | null>(null);
   const [workspace, setWorkspace] = useState<Workspace | null>(null);
   const [files, setFiles] = useState<Record<string, WorkspaceFile>>({});
-  const [activeTaskId, setActiveTaskId] = useState<number | null>(null);
-  const [dirty, setDirty] = useState(false);
+  const [activeFile, setActiveFile] = useState("");
+  const [activePhaseId, setActivePhaseId] = useState<number | null>(null);
+  const [dirtyFiles, setDirtyFiles] = useState<Set<string>>(new Set());
   const [busy, setBusy] = useState(false);
   const [saving, setSaving] = useState(false);
   const [output, setOutput] = useState("");
@@ -30,20 +72,11 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
   const [runtime, setRuntime] = useState<number | null>(null);
   const [exitCode, setExitCode] = useState<number | null>(null);
   const [judge, setJudge] = useState<JudgeResponse | null>(null);
+  const [phaseStatus, setPhaseStatus] = useState<Record<number, PhaseStatus>>({});
   const [loadError, setLoadError] = useState<string | null>(null);
-
-  const tasks = useMemo(
-    () => (exam ? [...exam.tasks].sort((a, b) => a.order_index - b.order_index) : []),
-    [exam],
-  );
-
-  const activeTask: Task | null = useMemo(() => {
-    if (!tasks.length) return null;
-    return tasks.find((t) => t.id === activeTaskId) ?? tasks[0];
-  }, [tasks, activeTaskId]);
-
-  const activeFile = activeTask?.entry_filename || "main.py";
-  const current = files[activeFile];
+  const [leftPct, setLeftPct] = useState(42);
+  const splitRef = useRef<HTMLDivElement>(null);
+  const dragging = useRef(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -59,8 +92,17 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
         const map: Record<string, WorkspaceFile> = {};
         for (const f of ws.files) map[f.filename] = f;
         setFiles(map);
-        const sorted = [...examData.tasks].sort((a, b) => a.order_index - b.order_index);
-        setActiveTaskId(sorted[0]?.id ?? null);
+
+        const firstTask = examData.tasks
+          .slice()
+          .sort((a, b) => a.order_index - b.order_index)[0];
+        const starter =
+          firstTask?.solution_file && map[firstTask.solution_file]
+            ? firstTask.solution_file
+            : ws.files.find((f) => f.filename.endsWith(".py") && !f.read_only)?.filename ||
+              "";
+        setActiveFile(starter);
+        setActivePhaseId(firstTask?.id ?? null);
       } catch (e) {
         if (!cancelled) setLoadError(e instanceof Error ? e.message : "Failed to load exam");
       }
@@ -70,32 +112,71 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
     };
   }, [examId]);
 
-  const fileList = useMemo(
+  useEffect(() => {
+    const onMove = (e: MouseEvent) => {
+      if (!dragging.current || !splitRef.current) return;
+      const rect = splitRef.current.getBoundingClientRect();
+      const pct = ((e.clientX - rect.left) / rect.width) * 100;
+      setLeftPct(Math.min(65, Math.max(28, pct)));
+    };
+    const onUp = () => {
+      dragging.current = false;
+      document.body.style.cursor = "";
+      document.body.style.userSelect = "";
+    };
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseup", onUp);
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseup", onUp);
+    };
+  }, []);
+
+  const current = activeFile ? files[activeFile] : undefined;
+  const pythonFiles = useMemo(
+    () => sortPythonFiles(Object.values(files), exam?.tasks ?? []),
+    [files, exam?.tasks],
+  );
+  const dataFiles = useMemo(
     () =>
       Object.values(files)
-        .map((f) => ({ filename: f.filename, read_only: f.read_only }))
-        .filter((f) => f.filename !== "main.py") // composed run artifact; edit feladatN.py
+        .filter((f) => !f.filename.endsWith(".py"))
+        .map((f) => ({ filename: f.filename, content: f.content }))
         .sort((a, b) => a.filename.localeCompare(b.filename)),
     [files],
   );
+  const dirty = dirtyFiles.size > 0;
+  const isDirty = dirtyFiles.has(activeFile);
 
-  const selectTask = useCallback(
-    async (task: Task) => {
-      if (dirty && workspace && current && !current.read_only) {
-        try {
-          const saved = await api.saveFile(workspace.id, current.filename, current.content);
-          setFiles((prev) => ({ ...prev, [saved.filename]: saved }));
-          setDirty(false);
-        } catch {
-          // keep going; user can still switch
-        }
-      }
-      setActiveTaskId(task.id);
+  const activeTask = useMemo(() => {
+    if (!exam || activePhaseId == null) return null;
+    return exam.tasks.find((t) => t.id === activePhaseId) ?? null;
+  }, [exam, activePhaseId]);
+
+  const selectFile = useCallback(
+    (filename: string) => {
+      setActiveFile(filename);
+      if (!exam) return;
+      const task = exam.tasks.find((t) => t.solution_file === filename);
+      setActivePhaseId(task?.id ?? null);
       setJudge(null);
       setOutput("");
       setError("");
     },
-    [dirty, workspace, current],
+    [exam],
+  );
+
+  const selectPhase = useCallback(
+    (task: Task) => {
+      setActivePhaseId(task.id);
+      if (files[task.solution_file]) {
+        setActiveFile(task.solution_file);
+      }
+      setJudge(null);
+      setOutput("");
+      setError("");
+    },
+    [files],
   );
 
   const onChange = useCallback(
@@ -105,7 +186,7 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
         ...prev,
         [activeFile]: { ...prev[activeFile], content: value },
       }));
-      setDirty(true);
+      setDirtyFiles((prev) => new Set(prev).add(activeFile));
     },
     [activeFile, current],
   );
@@ -116,13 +197,29 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
     try {
       const saved = await api.saveFile(workspace.id, current.filename, current.content);
       setFiles((prev) => ({ ...prev, [saved.filename]: saved }));
-      setDirty(false);
+      setDirtyFiles((prev) => {
+        const next = new Set(prev);
+        next.delete(saved.filename);
+        return next;
+      });
     } catch (e) {
       setError(e instanceof Error ? e.message : "Save failed");
     } finally {
       setSaving(false);
     }
   }, [workspace, current]);
+
+  const saveAllDirty = useCallback(async () => {
+    if (!workspace) return;
+    const names = [...dirtyFiles];
+    for (const name of names) {
+      const file = files[name];
+      if (!file || file.read_only) continue;
+      const saved = await api.saveFile(workspace.id, file.filename, file.content);
+      setFiles((prev) => ({ ...prev, [saved.filename]: saved }));
+    }
+    setDirtyFiles(new Set());
+  }, [workspace, dirtyFiles, files]);
 
   const run = useCallback(async () => {
     if (!workspace || !activeTask || !current) return;
@@ -131,11 +228,10 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
     setOutput("");
     setError("");
     try {
-      const code = current.content;
-      if (dirty) {
-        await api.saveFile(workspace.id, current.filename, code);
-        setDirty(false);
+      if (dirtyFiles.size > 0) {
+        await saveAllDirty();
       }
+      const code = files[activeTask.solution_file]?.content ?? current.content;
       const result = await api.execute(workspace.id, code, "", activeTask.id);
       setOutput(result.output);
       setError(result.error);
@@ -146,27 +242,29 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
     } finally {
       setBusy(false);
     }
-  }, [workspace, activeTask, current, dirty]);
+  }, [workspace, activeTask, current, dirtyFiles, saveAllDirty, files]);
 
   const submit = useCallback(async () => {
-    if (!workspace || !activeTask || !current) return;
+    if (!workspace || !activeTask) return;
     setBusy(true);
     setOutput("");
     setError("");
     try {
-      const code = current.content;
-      await api.saveFile(workspace.id, current.filename, code);
-      setDirty(false);
+      if (dirtyFiles.size > 0) {
+        await saveAllDirty();
+      }
+      const code = files[activeTask.solution_file]?.content;
       const result = await api.judge(workspace.id, code, activeTask.id);
       setJudge(result);
       setRuntime(null);
       setExitCode(null);
+      setPhaseStatus((prev) => ({ ...prev, ...statusFromJudge(result) }));
     } catch (e) {
       setError(e instanceof Error ? e.message : "Judging failed");
     } finally {
       setBusy(false);
     }
-  }, [workspace, activeTask, current]);
+  }, [workspace, activeTask, dirtyFiles, saveAllDirty, files]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -191,7 +289,7 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
     );
   }
 
-  if (!exam || !workspace || !activeTask || !current) {
+  if (!exam || !workspace || !current || !activeTask) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[var(--bg)] text-[var(--muted)]">
         Loading workspace…
@@ -199,24 +297,32 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
     );
   }
 
+  const activePhaseNumber = (activeTask.order_index ?? 0) + 1;
+
   return (
     <div className="flex h-screen flex-col overflow-hidden bg-[var(--bg)] text-[var(--fg)]">
       <header className="flex items-center gap-4 border-b border-[var(--border)] bg-[var(--panel)] px-4 py-2">
-        <a href="/" className="font-[family-name:var(--font-display)] text-lg tracking-tight text-[var(--accent)]">
+        <Link
+          href="/"
+          className="font-[family-name:var(--font-display)] text-lg tracking-tight text-[var(--accent)]"
+        >
           Érettségi Lab
-        </a>
+        </Link>
         <div className="min-w-0 flex-1">
           <h1 className="truncate text-sm font-medium">{exam.title}</h1>
-          <p className="truncate text-xs text-[var(--muted)]">{exam.description}</p>
+          <p className="truncate text-xs text-[var(--muted)]">
+            {activePhaseNumber}. feladat · {activeTask.solution_file}
+            {activeTask.uses_preamble ? ` · +${exam.shared_variable}` : ""}
+          </p>
         </div>
         <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={() => void save()}
-            disabled={saving || !dirty || current.read_only}
+            disabled={saving || !isDirty || current.read_only}
             className="rounded border border-[var(--border)] px-3 py-1.5 text-sm text-[var(--muted-strong)] transition hover:border-[var(--accent)] hover:text-[var(--fg)] disabled:opacity-40"
           >
-            {saving ? "Saving…" : dirty ? "Save" : "Saved"}
+            {saving ? "Saving…" : isDirty || dirty ? "Save" : "Saved"}
           </button>
           <button
             type="button"
@@ -230,6 +336,7 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
             type="button"
             onClick={() => void submit()}
             disabled={busy}
+            title="Submit current phase"
             className="rounded border border-[var(--accent)] px-3 py-1.5 text-sm text-[var(--accent)] transition hover:bg-[var(--accent-soft)] disabled:opacity-50"
           >
             Submit
@@ -237,70 +344,61 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
         </div>
       </header>
 
-      <div className="grid shrink-0 gap-4 border-b border-[var(--border)] bg-[var(--panel)] px-4 py-3 md:grid-cols-[1.2fr_1fr]">
-        <p className="text-sm leading-relaxed text-[var(--muted-strong)]">{exam.story}</p>
-        <ol className="space-y-1 text-sm">
-          {tasks.map((task, i) => {
-            const selected = task.id === activeTask.id;
-            return (
-              <li key={task.id}>
-                <button
-                  type="button"
-                  onClick={() => void selectTask(task)}
-                  className={`w-full rounded px-2 py-1.5 text-left transition ${
-                    selected
-                      ? "bg-[var(--accent-soft)] text-[var(--fg)]"
-                      : "text-[var(--fg)] hover:bg-[var(--border)]"
-                  }`}
-                >
-                  <span className="text-[var(--muted)]">{i + 1}.</span> {task.title}
-                  <span className="text-[var(--muted)]"> ({task.points} pt)</span>
-                  {task.uses_preamble ? (
-                    <span className="ml-2 text-[10px] uppercase tracking-wide text-[var(--muted)]">
-                      +{exam.shared_variable}
-                    </span>
-                  ) : null}
-                  <span className="block pl-4 text-xs text-[var(--muted-strong)]">
-                    {task.description}
-                  </span>
-                </button>
-              </li>
-            );
-          })}
-        </ol>
-      </div>
-
       {activeTask.uses_preamble ? (
         <div className="border-b border-[var(--border)] bg-[var(--panel)] px-4 py-2 text-xs text-[var(--muted-strong)]">
-          Run/Submit injects the file load into <code className="text-[var(--accent)]">{exam.shared_variable}</code>{" "}
-          before your code. You do not need to open the data file again.
+          Run/Submit injects the file load into{" "}
+          <code className="text-[var(--accent)]">{exam.shared_variable}</code> before your code.
+          You do not need to open the data file again.
         </div>
       ) : null}
 
-      <div className="flex min-h-0 flex-1">
-        <FileExplorer
-          files={fileList}
-          activeFile={activeFile}
-          onSelect={(name) => {
-            const task = tasks.find((t) => t.entry_filename === name);
-            if (task) void selectTask(task);
+      <div ref={splitRef} className="flex min-h-0 flex-1">
+        <div className="flex min-h-0 min-w-0 flex-col" style={{ width: `${leftPct}%` }}>
+          <ProblemPanel
+            title={exam.title}
+            description={exam.description}
+            story={exam.story}
+            tasks={exam.tasks}
+            dataFiles={dataFiles}
+            activePhase={activePhaseId}
+            onSelectPhase={selectPhase}
+            phaseStatus={phaseStatus}
+          />
+        </div>
+
+        <div
+          role="separator"
+          aria-orientation="vertical"
+          aria-label="Resize panels"
+          onMouseDown={() => {
+            dragging.current = true;
+            document.body.style.cursor = "col-resize";
+            document.body.style.userSelect = "none";
           }}
-        />
-        <div className="flex min-w-0 flex-1 flex-col">
-          <CodeEditor
-            filename={activeFile}
-            content={current.content}
-            readOnly={current.read_only}
-            onChange={onChange}
-          />
-          <OutputPanel
-            output={output}
-            error={error}
-            runtime={runtime}
-            exitCode={exitCode}
-            judge={judge}
-            busy={busy}
-          />
+          className="group relative z-10 w-1.5 shrink-0 cursor-col-resize bg-[var(--border)] transition hover:bg-[var(--accent)]"
+        >
+          <div className="absolute inset-y-0 -left-1 -right-1" />
+        </div>
+
+        <div className="flex min-h-0 min-w-0 flex-1">
+          <FileExplorer files={pythonFiles} activeFile={activeFile} onSelect={selectFile} />
+          <div className="flex min-w-0 flex-1 flex-col">
+            <CodeEditor
+              filename={activeFile}
+              content={current.content}
+              readOnly={current.read_only}
+              onChange={onChange}
+            />
+            <OutputPanel
+              output={output}
+              error={error}
+              runtime={runtime}
+              exitCode={exitCode}
+              judge={judge}
+              busy={busy}
+              entrypoint={activeTask.solution_file}
+            />
+          </div>
         </div>
       </div>
     </div>

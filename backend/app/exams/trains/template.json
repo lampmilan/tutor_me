@@ -25,7 +25,8 @@
       "hints": [
         "Your solution works for the example dataset but fails on other datasets.",
         "Count every line in trains.txt — the number of trains can change between datasets."
-      ]
+      ],
+      "solution_file": "jaratok_szama.py"
     },
     {
       "type": "maximum",
@@ -38,7 +39,8 @@
       "starter": "# A trains.txt tartalmát a `trains` változó tárolja.\n# Példa:\n# for jarat in trains:\n#     print(jarat)\n# Példa elem: {'id': 'T101', 'from': 'Budapest', 'to': 'Debrecen', 'minutes': 140}\n#\n# 2. feladat: írd ki a leghosszabb járat azonosítóját.\n\nprint()\n",
       "hints": [
         "Compare the minutes field from each line of trains.txt instead of assuming a fixed train id."
-      ]
+      ],
+      "solution_file": "leghosszabb.py"
     },
     {
       "type": "count_where",
@@ -52,7 +54,8 @@
       "starter": "# A trains.txt tartalmát a `trains` változó tárolja.\n# Példa:\n# for jarat in trains:\n#     print(jarat[\"to\"])\n#\n# 3. feladat: hány járat érkezik Budapestre?\n\nprint()\n",
       "hints": [
         "Filter trains by reading the destination column from trains.txt for each dataset."
-      ]
+      ],
+      "solution_file": "budapest.py"
     }
   ]
 }

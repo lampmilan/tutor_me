@@ -5,7 +5,7 @@ from app.database import get_db
 from app.models import Exam, File, Task, Workspace
 from app.schemas import ExecuteRequest, ExecuteResponse, JudgeRequest, JudgeResponse
 from app.services.executor import execute_python
-from app.services.judge import judge_workspace, prepare_run, student_code_for_task
+from app.services.judge import RUN_ENTRYPOINT, judge_workspace, prepare_run, student_code_for_task
 from app.services.workspace import sync_workspace_to_disk
 
 router = APIRouter(tags=["execution"])
@@ -31,18 +31,22 @@ def execute(body: ExecuteRequest, db: Session = Depends(get_db)):
             task = next((t for t in workspace.exam.tasks if t.id == body.task_id), None)
             if task is None:
                 raise HTTPException(status_code=404, detail="Task not found")
-        else:
+        elif body.filename:
+            task = next(
+                (t for t in workspace.exam.tasks if t.solution_file == body.filename),
+                None,
+            )
+        if task is None:
             tasks = sorted(workspace.exam.tasks, key=lambda t: t.order_index)
             task = tasks[0] if tasks else None
 
         if task is None:
-            # Legacy: run main.py as-is
             if body.code is not None:
-                main = next((f for f in workspace.files if f.filename == "main.py"), None)
+                main = next((f for f in workspace.files if f.filename == RUN_ENTRYPOINT), None)
                 if main is None:
                     main = File(
                         workspace_id=workspace.id,
-                        filename="main.py",
+                        filename=RUN_ENTRYPOINT,
                         content=body.code,
                         read_only=False,
                     )
@@ -52,11 +56,13 @@ def execute(body: ExecuteRequest, db: Session = Depends(get_db)):
                     main.content = body.code
                 db.commit()
             path = sync_workspace_to_disk(workspace)
-            result = execute_python(path, stdin=body.stdin or "")
+            result = execute_python(path, entrypoint=RUN_ENTRYPOINT, stdin=body.stdin or "")
         else:
-            student_code = body.code if body.code is not None else student_code_for_task(workspace, task, None)
+            student_code = (
+                body.code if body.code is not None else student_code_for_task(workspace, task, None)
+            )
             path = prepare_run(db, workspace, task, student_code)
-            result = execute_python(path, stdin=body.stdin or "")
+            result = execute_python(path, entrypoint=RUN_ENTRYPOINT, stdin=body.stdin or "")
 
         return ExecuteResponse(
             output=result.output,
@@ -90,6 +96,12 @@ def judge(body: JudgeRequest, db: Session = Depends(get_db)):
     workspace.exam = exam
 
     try:
-        return judge_workspace(db, workspace, task_id=body.task_id, code=body.code)
+        return judge_workspace(
+            db,
+            workspace,
+            task_id=body.task_id,
+            code=body.code,
+            filename=body.filename,
+        )
     except Exception as exc:
         raise HTTPException(status_code=500, detail=f"Judging failed: {exc}") from exc

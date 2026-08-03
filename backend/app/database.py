@@ -29,9 +29,9 @@ def _add_column_if_missing(table: str, column: str, ddl: str) -> None:
 def ensure_schema() -> None:
     """Lightweight additive migrations for create_all-managed schemas."""
     _add_column_if_missing("tasks", "hints_json", "hints_json TEXT DEFAULT '[]'")
+    _add_column_if_missing("tasks", "solution_file", "solution_file VARCHAR(255) DEFAULT 'main.py'")
     _add_column_if_missing("tasks", "uses_preamble", "uses_preamble BOOLEAN DEFAULT FALSE")
     _add_column_if_missing("tasks", "starter", "starter TEXT DEFAULT ''")
-    _add_column_if_missing("tasks", "entry_filename", "entry_filename VARCHAR(255) DEFAULT 'main.py'")
     _add_column_if_missing("exams", "preamble", "preamble TEXT DEFAULT ''")
     _add_column_if_missing("exams", "shared_variable", "shared_variable VARCHAR(100) DEFAULT 'data'")
 

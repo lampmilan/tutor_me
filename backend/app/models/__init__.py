@@ -74,9 +74,10 @@ class Task(Base):
     order_index: Mapped[int] = mapped_column(Integer, default=0)
     # JSON list of educational hints shown when hidden tests fail
     hints_json: Mapped[str] = mapped_column(Text, default="[]")
+    # Python file students edit for this phase (e.g. beolvasas.py)
+    solution_file: Mapped[str] = mapped_column(String(255), default="main.py")
     uses_preamble: Mapped[bool] = mapped_column(default=False)
     starter: Mapped[str] = mapped_column(Text, default="")
-    entry_filename: Mapped[str] = mapped_column(String(255), default="main.py")
 
     exam: Mapped["Exam"] = relationship(back_populates="tasks")
     test_cases: Mapped[list["TestCase"]] = relationship(back_populates="task", cascade="all, delete-orphan")

@@ -35,9 +35,9 @@ class TaskOut(BaseModel):
     description: str
     points: int
     order_index: int
+    solution_file: str = "main.py"
     uses_preamble: bool = False
     starter: str = ""
-    entry_filename: str = "main.py"
     test_cases: list[TestCaseOut] = []
 
     model_config = {"from_attributes": True}
@@ -99,6 +99,7 @@ class ExecuteRequest(BaseModel):
     task_id: int | None = None
     # Optional: save this as the active feladat source before running
     code: str | None = None
+    filename: str | None = None  # optional; used to resolve task if task_id omitted
     stdin: str = ""
 
 
@@ -113,10 +114,12 @@ class JudgeRequest(BaseModel):
     workspace_id: int
     task_id: int | None = None  # None = all tasks
     code: str | None = None
+    filename: str | None = None  # optional file to save code into before judging
 
 
 class TestResult(BaseModel):
     test_case_id: int
+    task_id: int | None = None
     name: str
     label: str = ""
     passed: bool

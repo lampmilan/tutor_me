@@ -25,10 +25,6 @@ def _task_spec_dict(task: Any) -> dict[str, Any]:
     return dict(task)
 
 
-def entry_filename_for(order_index: int) -> str:
-    return f"feladat{order_index + 1}.py"
-
-
 def compose_source(exam: Exam, task: Task, student_code: str) -> str:
     """Option A: prepend canonical preamble when the task opts in."""
     code = student_code or ""
@@ -43,11 +39,7 @@ def materialize_loaded_exam(
     *,
     use_ai: bool = False,
 ) -> Exam:
-    """Create DB exam/tasks/tests from a loaded catalog exam.
-
-    Hidden fixture files (01.txt, …) are stored under the exam's data_file
-    name (e.g. cities.txt) so student code keeps opening the same path.
-    """
+    """Create DB exam/tasks/tests from a loaded catalog exam."""
     template = loaded.template
     data_file = template.data_file
     dataset_type = template.dataset_type
@@ -89,7 +81,7 @@ def materialize_loaded_exam(
         hints = list(spec.get("hints") or [])
         uses_preamble = bool(spec.get("uses_preamble", False))
         starter = spec.get("starter") or ""
-        entry = entry_filename_for(idx)
+        solution_file = spec.get("solution_file") or f"feladat{idx + 1}.py"
 
         task = Task(
             exam_id=exam.id,
@@ -98,9 +90,9 @@ def materialize_loaded_exam(
             points=points,
             order_index=idx,
             hints_json=json.dumps(hints, ensure_ascii=False),
+            solution_file=solution_file,
             uses_preamble=uses_preamble,
             starter=starter,
-            entry_filename=entry,
         )
         db.add(task)
         db.flush()
@@ -108,7 +100,7 @@ def materialize_loaded_exam(
         db.add(
             ExamFile(
                 exam_id=exam.id,
-                filename=entry,
+                filename=solution_file,
                 content=starter,
                 read_only=False,
             )

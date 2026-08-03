@@ -18,6 +18,9 @@ GENERIC_GENERALIZATION_HINT = (
 )
 GENERIC_RUNTIME_HINT = "Your program did not finish successfully on every dataset."
 
+# Composed run artifact (preamble + student code). Not shown as a phase file.
+RUN_ENTRYPOINT = "main.py"
+
 
 def _normalize_output(text: str) -> str:
     lines = [line.rstrip() for line in text.replace("\r\n", "\n").replace("\r", "\n").split("\n")]
@@ -57,7 +60,7 @@ def _collect_hints(
 def student_code_for_task(workspace: Workspace, task: Task, code: str | None) -> str:
     if code is not None:
         return code
-    entry = task.entry_filename or "main.py"
+    entry = task.solution_file or "main.py"
     match = next((f for f in workspace.files if f.filename == entry), None)
     if match is not None:
         return match.content
@@ -71,22 +74,37 @@ def prepare_run(
     task: Task,
     student_code: str,
 ) -> Path:
-    """Write composed source to main.py on disk for the executor."""
+    """Persist student solution file and write composed source to main.py for execution."""
     exam: Exam = workspace.exam
     composed = compose_source(exam, task, student_code)
 
-    main = next((f for f in workspace.files if f.filename == "main.py"), None)
+    main = next((f for f in workspace.files if f.filename == RUN_ENTRYPOINT), None)
     if main is None:
-        main = File(workspace_id=workspace.id, filename="main.py", content=composed, read_only=False)
+        main = File(
+            workspace_id=workspace.id,
+            filename=RUN_ENTRYPOINT,
+            content=composed,
+            read_only=False,
+        )
         db.add(main)
         workspace.files.append(main)
     else:
         main.content = composed
 
-    entry = task.entry_filename or "main.py"
-    entry_file = next((f for f in workspace.files if f.filename == entry), None)
-    if entry_file is not None and entry != "main.py":
-        entry_file.content = student_code
+    entry = task.solution_file or RUN_ENTRYPOINT
+    if entry != RUN_ENTRYPOINT:
+        entry_file = next((f for f in workspace.files if f.filename == entry), None)
+        if entry_file is None:
+            entry_file = File(
+                workspace_id=workspace.id,
+                filename=entry,
+                content=student_code,
+                read_only=False,
+            )
+            db.add(entry_file)
+            workspace.files.append(entry_file)
+        else:
+            entry_file.content = student_code
 
     db.commit()
     return sync_workspace_to_disk(workspace)
@@ -98,7 +116,9 @@ def judge_workspace(
     *,
     task_id: int | None = None,
     code: str | None = None,
+    filename: str | None = None,
 ) -> JudgeResponse:
+    del filename  # solution file comes from the task; kept for API compat
     tasks: list[Task] = list(workspace.exam.tasks)
     if task_id is not None:
         tasks = [t for t in tasks if t.id == task_id]
@@ -144,7 +164,12 @@ def judge_workspace(
             else:
                 label = f"Sample · {task.title}"
 
-            exec_result = execute_python(path, stdin=tc.stdin or "", extra_files=extra or None)
+            exec_result = execute_python(
+                path,
+                entrypoint=RUN_ENTRYPOINT,
+                stdin=tc.stdin or "",
+                extra_files=extra or None,
+            )
             actual = _normalize_output(exec_result.output)
             expected = _normalize_output(tc.expected_output)
             runtime_ok = exec_result.exit_code == 0
@@ -178,6 +203,7 @@ def judge_workspace(
                 results.append(
                     TestResult(
                         test_case_id=tc.id,
+                        task_id=task.id,
                         name=tc.name,
                         label=label,
                         passed=passed,
@@ -199,6 +225,7 @@ def judge_workspace(
                 results.append(
                     TestResult(
                         test_case_id=tc.id,
+                        task_id=task.id,
                         name=tc.name,
                         label=label,
                         passed=passed,

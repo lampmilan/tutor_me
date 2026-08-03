@@ -25,7 +25,8 @@
       "hints": [
         "Your solution works for the example dataset but fails on other datasets.",
         "Count every line in students.txt — class size changes between datasets."
-      ]
+      ],
+      "solution_file": "diakok_szama.py"
     },
     {
       "type": "average",
@@ -37,7 +38,8 @@
       "starter": "# A students.txt tartalmát a `students` változó tárolja.\n# Példa:\n# for diak in students:\n#     print(diak)\n# Példa elem: ('Anna', 5)\n#\n# 2. feladat: átlagjegy, int()-tel csonkolva.\n\nprint()\n",
       "hints": [
         "Compute the average grade from students.txt for each dataset, then truncate with int()."
-      ]
+      ],
+      "solution_file": "atlag.py"
     },
     {
       "type": "count_where",
@@ -51,7 +53,8 @@
       "starter": "# A students.txt tartalmát a `students` változó tárolja.\n# Példa:\n# for diak in students:\n#     print(diak[1])\n#\n# 3. feladat: hány diák kapott legalább 2-est?\n\nprint()\n",
       "hints": [
         "Filter students by reading each grade from students.txt — do not assume who passed."
-      ]
+      ],
+      "solution_file": "atment.py"
     }
   ]
 }

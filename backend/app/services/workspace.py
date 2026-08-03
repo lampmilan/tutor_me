@@ -35,11 +35,12 @@ def create_workspace(db: Session, exam: Exam, user_id: str = "anonymous") -> Wor
     workspace.path = str(path)
 
     files_to_copy: list[ExamFile] = list(exam.files)
-    if not any(f.filename == "main.py" for f in files_to_copy):
-        # Always ensure an editable main.py exists
-        main = ExamFile(exam_id=exam.id, filename="main.py", content="", read_only=False)
-        # Don't persist to exam template mid-flight; just use for workspace copy
-        files_to_copy.append(main)
+    has_python = any(f.filename.endswith(".py") for f in files_to_copy)
+    if not has_python:
+        # Fallback editable starter when an exam has no solution files yet
+        files_to_copy.append(
+            ExamFile(exam_id=exam.id, filename="main.py", content="", read_only=False)
+        )
 
     for ef in files_to_copy:
         content = ef.content

@@ -21,7 +21,8 @@
       "hints": [
         "Your solution works for the example dataset but fails on other datasets.",
         "Count every line in students.txt — class size changes between datasets."
-      ]
+      ],
+      "solution_file": "diakok_szama.py"
     },
     {
       "type": "average",
@@ -31,7 +32,8 @@
       "points": 2,
       "hints": [
         "Compute the average grade from students.txt for each dataset, then truncate with int()."
-      ]
+      ],
+      "solution_file": "atlag.py"
     },
     {
       "type": "count_where",
@@ -43,7 +45,8 @@
       "points": 2,
       "hints": [
         "Filter students by reading each grade from students.txt — do not assume who passed."
-      ]
+      ],
+      "solution_file": "atment.py"
     }
   ]
 }

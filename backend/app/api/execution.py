@@ -11,6 +11,22 @@ from app.services.workspace import sync_workspace_to_disk
 router = APIRouter(tags=["execution"])
 
 
+def _upsert_code(db: Session, workspace: Workspace, filename: str, code: str) -> None:
+    existing = next((f for f in workspace.files if f.filename == filename), None)
+    if existing is None:
+        created = File(
+            workspace_id=workspace.id,
+            filename=filename,
+            content=code,
+            read_only=False,
+        )
+        db.add(created)
+        workspace.files.append(created)
+    else:
+        existing.content = code
+    db.commit()
+
+
 @router.post("/execute", response_model=ExecuteResponse)
 def execute(body: ExecuteRequest, db: Session = Depends(get_db)):
     workspace = (
@@ -22,18 +38,12 @@ def execute(body: ExecuteRequest, db: Session = Depends(get_db)):
     if not workspace:
         raise HTTPException(status_code=404, detail="Workspace not found")
 
+    entrypoint = body.filename or "main.py"
     if body.code is not None:
-        main = next((f for f in workspace.files if f.filename == "main.py"), None)
-        if main is None:
-            main = File(workspace_id=workspace.id, filename="main.py", content=body.code, read_only=False)
-            db.add(main)
-            workspace.files.append(main)
-        else:
-            main.content = body.code
-        db.commit()
+        _upsert_code(db, workspace, entrypoint, body.code)
 
     path = sync_workspace_to_disk(workspace)
-    result = execute_python(path, stdin=body.stdin or "")
+    result = execute_python(path, entrypoint=entrypoint, stdin=body.stdin or "")
     return ExecuteResponse(
         output=result.output,
         error=result.error,
@@ -53,7 +63,6 @@ def judge(body: JudgeRequest, db: Session = Depends(get_db)):
     if not workspace:
         raise HTTPException(status_code=404, detail="Workspace not found")
 
-    # Ensure tasks + test cases are loaded
     exam = (
         db.query(Exam)
         .options(joinedload(Exam.tasks).joinedload(Task.test_cases))
@@ -62,4 +71,10 @@ def judge(body: JudgeRequest, db: Session = Depends(get_db)):
     )
     workspace.exam = exam
 
-    return judge_workspace(db, workspace, task_id=body.task_id, code=body.code)
+    return judge_workspace(
+        db,
+        workspace,
+        task_id=body.task_id,
+        code=body.code,
+        filename=body.filename,
+    )

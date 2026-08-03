@@ -22,7 +22,8 @@
       "hints": [
         "Your solution works for the example dataset but fails on other datasets.",
         "Find the minimum by scanning every celsius value in temps.txt."
-      ]
+      ],
+      "solution_file": "min_homerseklet.py"
     },
     {
       "type": "maximum",
@@ -32,7 +33,8 @@
       "points": 1,
       "hints": [
         "Read the temperature column from temps.txt for each dataset instead of assuming a fixed maximum."
-      ]
+      ],
+      "solution_file": "max_homerseklet.py"
     },
     {
       "type": "average",
@@ -42,7 +44,8 @@
       "points": 2,
       "hints": [
         "Compute the average from all readings in temps.txt, then truncate with int()."
-      ]
+      ],
+      "solution_file": "atlag_homerseklet.py"
     }
   ]
 }

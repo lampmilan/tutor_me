@@ -64,16 +64,19 @@ def materialize_loaded_exam(
             read_only=True,
         )
     )
-    db.add(ExamFile(exam_id=exam.id, filename="main.py", content="", read_only=False))
 
     visible_rows = parse_dataset(dataset_type, loaded.visible_content)
     hidden_rows_list = [parse_dataset(dataset_type, content) for content in loaded.hidden_contents]
 
+    solution_files: list[str] = []
     for idx, task_tmpl in enumerate(template.tasks):
         spec = _task_spec_dict(task_tmpl)
         expected_visible = expected_for_task(visible_rows, spec)
         points = int(spec.get("points", 1))
         hints = list(spec.get("hints") or [])
+        solution_file = spec.get("solution_file") or f"feladat_{idx + 1}.py"
+        if solution_file not in solution_files:
+            solution_files.append(solution_file)
 
         task = Task(
             exam_id=exam.id,
@@ -82,6 +85,7 @@ def materialize_loaded_exam(
             points=points,
             order_index=idx,
             hints_json=json.dumps(hints, ensure_ascii=False),
+            solution_file=solution_file,
         )
         db.add(task)
         db.flush()
@@ -113,6 +117,9 @@ def materialize_loaded_exam(
                     points=points,
                 )
             )
+
+    for solution_file in solution_files:
+        db.add(ExamFile(exam_id=exam.id, filename=solution_file, content="", read_only=False))
 
     db.commit()
     db.refresh(exam)

@@ -21,9 +21,13 @@ def ensure_schema() -> None:
     insp = inspect(engine)
     if "tasks" in insp.get_table_names():
         cols = {c["name"] for c in insp.get_columns("tasks")}
-        if "hints_json" not in cols:
-            with engine.begin() as conn:
+        with engine.begin() as conn:
+            if "hints_json" not in cols:
                 conn.execute(text("ALTER TABLE tasks ADD COLUMN hints_json TEXT DEFAULT '[]'"))
+            if "solution_file" not in cols:
+                conn.execute(
+                    text("ALTER TABLE tasks ADD COLUMN solution_file VARCHAR(255) DEFAULT 'main.py'")
+                )
 
 
 def get_db() -> Generator[Session, None, None]:

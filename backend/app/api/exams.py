@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session, joinedload
 
 from app.database import get_db
-from app.models import Exam
+from app.models import Exam, Task
 from app.schemas import ExamListItem, ExamOut
 from app.schemas.templates import TemplateGenerateBody
 from app.services.templates import create_exam_from_template
@@ -34,7 +34,7 @@ def generate_from_template(
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     return (
         db.query(Exam)
-        .options(joinedload(Exam.files), joinedload(Exam.tasks))
+        .options(joinedload(Exam.files), joinedload(Exam.tasks).joinedload(Task.test_cases))
         .filter(Exam.id == exam.id)
         .first()
     )
@@ -44,7 +44,10 @@ def generate_from_template(
 def get_exam(exam_id: int, db: Session = Depends(get_db)):
     exam = (
         db.query(Exam)
-        .options(joinedload(Exam.files), joinedload(Exam.tasks))
+        .options(
+            joinedload(Exam.files),
+            joinedload(Exam.tasks).joinedload(Task.test_cases),
+        )
         .filter(Exam.id == exam_id)
         .first()
     )

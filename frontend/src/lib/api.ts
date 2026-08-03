@@ -21,6 +21,9 @@ export type Task = {
   description: string;
   points: number;
   order_index: number;
+  uses_preamble: boolean;
+  starter: string;
+  entry_filename: string;
 };
 
 export type Exam = {
@@ -29,6 +32,8 @@ export type Exam = {
   description: string;
   story: string;
   template_type: string | null;
+  preamble: string;
+  shared_variable: string;
   created_at: string;
   files: ExamFile[];
   tasks: Task[];
@@ -110,10 +115,15 @@ export const api = {
       method: "PUT",
       body: JSON.stringify({ content }),
     }),
-  execute: (workspaceId: number, code?: string, stdin = "") =>
+  execute: (workspaceId: number, code?: string, stdin = "", taskId?: number) =>
     request<ExecuteResponse>("/execute", {
       method: "POST",
-      body: JSON.stringify({ workspace_id: workspaceId, code, stdin }),
+      body: JSON.stringify({
+        workspace_id: workspaceId,
+        code,
+        stdin,
+        task_id: taskId ?? null,
+      }),
     }),
   judge: (workspaceId: number, code?: string, taskId?: number) =>
     request<JudgeResponse>("/judge", {

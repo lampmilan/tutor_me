@@ -1,19 +1,16 @@
-"""Automatic judging: run student code against test cases and award points.
-
-Hidden tests mount alternate data files under the same filename (e.g. cities.txt)
-without revealing those inputs to the student. Educational hints are returned
-instead of hidden I/O.
-"""
+"""Automatic judging with optional canonical preamble injection (Option A)."""
 
 from __future__ import annotations
 
 import json
+from pathlib import Path
 
 from sqlalchemy.orm import Session
 
-from app.models import File, Submission, Task, TestCase, Workspace
+from app.models import Exam, File, Submission, Task, Workspace
 from app.schemas import JudgeResponse, TestResult
 from app.services.executor import execute_python
+from app.services.templates import compose_source
 from app.services.workspace import sync_workspace_to_disk
 
 GENERIC_GENERALIZATION_HINT = (
@@ -23,7 +20,6 @@ GENERIC_RUNTIME_HINT = "Your program did not finish successfully on every datase
 
 
 def _normalize_output(text: str) -> str:
-    """Normalize whitespace for comparison (érettségi-friendly)."""
     lines = [line.rstrip() for line in text.replace("\r\n", "\n").replace("\r", "\n").split("\n")]
     while lines and lines[-1] == "":
         lines.pop()
@@ -58,6 +54,44 @@ def _collect_hints(
     return hints[:3]
 
 
+def student_code_for_task(workspace: Workspace, task: Task, code: str | None) -> str:
+    if code is not None:
+        return code
+    entry = task.entry_filename or "main.py"
+    match = next((f for f in workspace.files if f.filename == entry), None)
+    if match is not None:
+        return match.content
+    main = next((f for f in workspace.files if f.filename == "main.py"), None)
+    return main.content if main else ""
+
+
+def prepare_run(
+    db: Session,
+    workspace: Workspace,
+    task: Task,
+    student_code: str,
+) -> Path:
+    """Write composed source to main.py on disk for the executor."""
+    exam: Exam = workspace.exam
+    composed = compose_source(exam, task, student_code)
+
+    main = next((f for f in workspace.files if f.filename == "main.py"), None)
+    if main is None:
+        main = File(workspace_id=workspace.id, filename="main.py", content=composed, read_only=False)
+        db.add(main)
+        workspace.files.append(main)
+    else:
+        main.content = composed
+
+    entry = task.entry_filename or "main.py"
+    entry_file = next((f for f in workspace.files if f.filename == entry), None)
+    if entry_file is not None and entry != "main.py":
+        entry_file.content = student_code
+
+    db.commit()
+    return sync_workspace_to_disk(workspace)
+
+
 def judge_workspace(
     db: Session,
     workspace: Workspace,
@@ -65,27 +99,25 @@ def judge_workspace(
     task_id: int | None = None,
     code: str | None = None,
 ) -> JudgeResponse:
-    if code is not None:
-        main = next((f for f in workspace.files if f.filename == "main.py"), None)
-        if main is None:
-            main = File(workspace_id=workspace.id, filename="main.py", content=code, read_only=False)
-            db.add(main)
-            workspace.files.append(main)
-        else:
-            main.content = code
-        db.commit()
-
-    path = sync_workspace_to_disk(workspace)
-
     tasks: list[Task] = list(workspace.exam.tasks)
     if task_id is not None:
         tasks = [t for t in tasks if t.id == task_id]
     tasks = sorted(tasks, key=lambda t: t.order_index)
+    if not tasks:
+        return JudgeResponse(
+            points_earned=0,
+            points_possible=0,
+            passed_count=0,
+            total_count=0,
+            summary_line="0/0 tests passed",
+            failed_labels=[],
+            hints=[],
+            results=[],
+        )
 
     results: list[TestResult] = []
     points_earned = 0.0
     points_possible = 0.0
-
     sample_passed = False
     any_sample_seen = False
     any_hidden_failed = False
@@ -95,7 +127,10 @@ def judge_workspace(
     hidden_counter = 0
 
     for task in tasks:
+        student_code = student_code_for_task(workspace, task, code if len(tasks) == 1 else None)
+        path = prepare_run(db, workspace, task, student_code)
         cases = sorted(task.test_cases, key=lambda tc: tc.id)
+
         for tc in cases:
             points_possible += tc.points
             try:
@@ -114,7 +149,6 @@ def judge_workspace(
             expected = _normalize_output(tc.expected_output)
             runtime_ok = exec_result.exit_code == 0
             passed = actual == expected and runtime_ok
-
             earned = tc.points if passed else 0
             points_earned += earned
 
@@ -122,9 +156,8 @@ def judge_workspace(
                 any_sample_seen = True
                 if passed:
                     sample_passed = True
-            else:
-                if not passed:
-                    any_hidden_failed = True
+            elif not passed:
+                any_hidden_failed = True
 
             if not passed and not runtime_ok:
                 any_runtime_fail = True
@@ -179,16 +212,12 @@ def judge_workspace(
                     )
                 )
 
-    # Only treat "sample passed" if we actually saw a sample that passed;
-    # if all samples failed, still allow task hints but skip generalization line
-    # unless at least one sample passed.
     hints = _collect_hints(
         sample_passed=sample_passed and any_sample_seen,
         any_hidden_failed=any_hidden_failed,
         any_runtime_fail=any_runtime_fail,
         failed_task_hints=failed_task_hints,
     )
-
     passed_count = sum(1 for r in results if r.passed)
     total_count = len(results)
     summary_line = f"{passed_count}/{total_count} tests passed"

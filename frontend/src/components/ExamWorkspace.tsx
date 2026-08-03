@@ -8,6 +8,7 @@ import {
   api,
   type Exam,
   type JudgeResponse,
+  type Task,
   type Workspace,
   type WorkspaceFile,
 } from "@/lib/api";
@@ -20,7 +21,7 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
   const [exam, setExam] = useState<Exam | null>(null);
   const [workspace, setWorkspace] = useState<Workspace | null>(null);
   const [files, setFiles] = useState<Record<string, WorkspaceFile>>({});
-  const [activeFile, setActiveFile] = useState("main.py");
+  const [activeTaskId, setActiveTaskId] = useState<number | null>(null);
   const [dirty, setDirty] = useState(false);
   const [busy, setBusy] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -30,6 +31,19 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
   const [exitCode, setExitCode] = useState<number | null>(null);
   const [judge, setJudge] = useState<JudgeResponse | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
+
+  const tasks = useMemo(
+    () => (exam ? [...exam.tasks].sort((a, b) => a.order_index - b.order_index) : []),
+    [exam],
+  );
+
+  const activeTask: Task | null = useMemo(() => {
+    if (!tasks.length) return null;
+    return tasks.find((t) => t.id === activeTaskId) ?? tasks[0];
+  }, [tasks, activeTaskId]);
+
+  const activeFile = activeTask?.entry_filename || "main.py";
+  const current = files[activeFile];
 
   useEffect(() => {
     let cancelled = false;
@@ -45,7 +59,8 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
         const map: Record<string, WorkspaceFile> = {};
         for (const f of ws.files) map[f.filename] = f;
         setFiles(map);
-        setActiveFile(map["main.py"] ? "main.py" : ws.files[0]?.filename || "main.py");
+        const sorted = [...examData.tasks].sort((a, b) => a.order_index - b.order_index);
+        setActiveTaskId(sorted[0]?.id ?? null);
       } catch (e) {
         if (!cancelled) setLoadError(e instanceof Error ? e.message : "Failed to load exam");
       }
@@ -55,13 +70,32 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
     };
   }, [examId]);
 
-  const current = files[activeFile];
   const fileList = useMemo(
     () =>
       Object.values(files)
         .map((f) => ({ filename: f.filename, read_only: f.read_only }))
+        .filter((f) => f.filename !== "main.py") // composed run artifact; edit feladatN.py
         .sort((a, b) => a.filename.localeCompare(b.filename)),
     [files],
+  );
+
+  const selectTask = useCallback(
+    async (task: Task) => {
+      if (dirty && workspace && current && !current.read_only) {
+        try {
+          const saved = await api.saveFile(workspace.id, current.filename, current.content);
+          setFiles((prev) => ({ ...prev, [saved.filename]: saved }));
+          setDirty(false);
+        } catch {
+          // keep going; user can still switch
+        }
+      }
+      setActiveTaskId(task.id);
+      setJudge(null);
+      setOutput("");
+      setError("");
+    },
+    [dirty, workspace, current],
   );
 
   const onChange = useCallback(
@@ -91,18 +125,18 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
   }, [workspace, current]);
 
   const run = useCallback(async () => {
-    if (!workspace) return;
+    if (!workspace || !activeTask || !current) return;
     setBusy(true);
     setJudge(null);
     setOutput("");
     setError("");
     try {
-      const code = files["main.py"]?.content ?? "";
-      if (files["main.py"] && dirty) {
-        await api.saveFile(workspace.id, "main.py", code);
+      const code = current.content;
+      if (dirty) {
+        await api.saveFile(workspace.id, current.filename, code);
         setDirty(false);
       }
-      const result = await api.execute(workspace.id, code);
+      const result = await api.execute(workspace.id, code, "", activeTask.id);
       setOutput(result.output);
       setError(result.error);
       setRuntime(result.runtime);
@@ -112,20 +146,18 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
     } finally {
       setBusy(false);
     }
-  }, [workspace, files, dirty]);
+  }, [workspace, activeTask, current, dirty]);
 
   const submit = useCallback(async () => {
-    if (!workspace) return;
+    if (!workspace || !activeTask || !current) return;
     setBusy(true);
     setOutput("");
     setError("");
     try {
-      const code = files["main.py"]?.content ?? "";
-      if (files["main.py"]) {
-        await api.saveFile(workspace.id, "main.py", code);
-        setDirty(false);
-      }
-      const result = await api.judge(workspace.id, code);
+      const code = current.content;
+      await api.saveFile(workspace.id, current.filename, code);
+      setDirty(false);
+      const result = await api.judge(workspace.id, code, activeTask.id);
       setJudge(result);
       setRuntime(null);
       setExitCode(null);
@@ -134,7 +166,7 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
     } finally {
       setBusy(false);
     }
-  }, [workspace, files]);
+  }, [workspace, activeTask, current]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -159,7 +191,7 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
     );
   }
 
-  if (!exam || !workspace || !current) {
+  if (!exam || !workspace || !activeTask || !current) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[var(--bg)] text-[var(--muted)]">
         Loading workspace…
@@ -208,23 +240,52 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
       <div className="grid shrink-0 gap-4 border-b border-[var(--border)] bg-[var(--panel)] px-4 py-3 md:grid-cols-[1.2fr_1fr]">
         <p className="text-sm leading-relaxed text-[var(--muted-strong)]">{exam.story}</p>
         <ol className="space-y-1 text-sm">
-          {exam.tasks
-            .slice()
-            .sort((a, b) => a.order_index - b.order_index)
-            .map((task, i) => (
-              <li key={task.id} className="text-[var(--fg)]">
-                <span className="text-[var(--muted)]">{i + 1}.</span> {task.title}
-                <span className="text-[var(--muted)]"> ({task.points} pt)</span>
-                <span className="block pl-4 text-xs text-[var(--muted-strong)]">
-                  {task.description}
-                </span>
+          {tasks.map((task, i) => {
+            const selected = task.id === activeTask.id;
+            return (
+              <li key={task.id}>
+                <button
+                  type="button"
+                  onClick={() => void selectTask(task)}
+                  className={`w-full rounded px-2 py-1.5 text-left transition ${
+                    selected
+                      ? "bg-[var(--accent-soft)] text-[var(--fg)]"
+                      : "text-[var(--fg)] hover:bg-[var(--border)]"
+                  }`}
+                >
+                  <span className="text-[var(--muted)]">{i + 1}.</span> {task.title}
+                  <span className="text-[var(--muted)]"> ({task.points} pt)</span>
+                  {task.uses_preamble ? (
+                    <span className="ml-2 text-[10px] uppercase tracking-wide text-[var(--muted)]">
+                      +{exam.shared_variable}
+                    </span>
+                  ) : null}
+                  <span className="block pl-4 text-xs text-[var(--muted-strong)]">
+                    {task.description}
+                  </span>
+                </button>
               </li>
-            ))}
+            );
+          })}
         </ol>
       </div>
 
+      {activeTask.uses_preamble ? (
+        <div className="border-b border-[var(--border)] bg-[var(--panel)] px-4 py-2 text-xs text-[var(--muted-strong)]">
+          Run/Submit injects the file load into <code className="text-[var(--accent)]">{exam.shared_variable}</code>{" "}
+          before your code. You do not need to open the data file again.
+        </div>
+      ) : null}
+
       <div className="flex min-h-0 flex-1">
-        <FileExplorer files={fileList} activeFile={activeFile} onSelect={setActiveFile} />
+        <FileExplorer
+          files={fileList}
+          activeFile={activeFile}
+          onSelect={(name) => {
+            const task = tasks.find((t) => t.entry_filename === name);
+            if (task) void selectTask(task);
+          }}
+        />
         <div className="flex min-w-0 flex-1 flex-col">
           <CodeEditor
             filename={activeFile}

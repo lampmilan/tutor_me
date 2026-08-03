@@ -25,6 +25,18 @@ def _task_spec_dict(task: Any) -> dict[str, Any]:
     return dict(task)
 
 
+def entry_filename_for(order_index: int) -> str:
+    return f"feladat{order_index + 1}.py"
+
+
+def compose_source(exam: Exam, task: Task, student_code: str) -> str:
+    """Option A: prepend canonical preamble when the task opts in."""
+    code = student_code or ""
+    if task.uses_preamble and (exam.preamble or "").strip():
+        return exam.preamble.rstrip() + "\n\n" + code
+    return code
+
+
 def materialize_loaded_exam(
     db: Session,
     loaded: LoadedExam,
@@ -52,6 +64,8 @@ def materialize_loaded_exam(
         description=template.description,
         story=story,
         template_type=template.id,
+        preamble=template.preamble or "",
+        shared_variable=template.shared_variable or "data",
     )
     db.add(exam)
     db.flush()
@@ -64,7 +78,6 @@ def materialize_loaded_exam(
             read_only=True,
         )
     )
-    db.add(ExamFile(exam_id=exam.id, filename="main.py", content="", read_only=False))
 
     visible_rows = parse_dataset(dataset_type, loaded.visible_content)
     hidden_rows_list = [parse_dataset(dataset_type, content) for content in loaded.hidden_contents]
@@ -74,6 +87,9 @@ def materialize_loaded_exam(
         expected_visible = expected_for_task(visible_rows, spec)
         points = int(spec.get("points", 1))
         hints = list(spec.get("hints") or [])
+        uses_preamble = bool(spec.get("uses_preamble", False))
+        starter = spec.get("starter") or ""
+        entry = entry_filename_for(idx)
 
         task = Task(
             exam_id=exam.id,
@@ -82,11 +98,22 @@ def materialize_loaded_exam(
             points=points,
             order_index=idx,
             hints_json=json.dumps(hints, ensure_ascii=False),
+            uses_preamble=uses_preamble,
+            starter=starter,
+            entry_filename=entry,
         )
         db.add(task)
         db.flush()
 
-        # Visible sample: empty input_files → uses workspace data_file
+        db.add(
+            ExamFile(
+                exam_id=exam.id,
+                filename=entry,
+                content=starter,
+                read_only=False,
+            )
+        )
+
         db.add(
             TestCase(
                 task_id=task.id,
@@ -102,7 +129,6 @@ def materialize_loaded_exam(
             zip(loaded.hidden_contents, hidden_rows_list), start=1
         ):
             expected_hidden = expected_for_task(hidden_rows, spec)
-            # Key is always data_file (cities.txt), never 01.txt
             db.add(
                 TestCase(
                     task_id=task.id,
@@ -125,10 +151,10 @@ def create_exam_from_template(
     *,
     exam_id: str | None = None,
     use_ai: bool = False,
-    seed: int | None = None,  # kept for API compat; fixtures are deterministic
+    seed: int | None = None,
 ) -> Exam:
     """Materialize an exam from catalog id or an inline template dict."""
-    del seed  # fixtures replace RNG generation
+    del seed
     if exam_id:
         loaded = load_exam_by_id(exam_id)
         return materialize_loaded_exam(db, loaded, use_ai=use_ai)
@@ -142,15 +168,12 @@ def create_exam_from_template(
     else:
         tmpl = ExamTemplate.model_validate(template)
 
-    # Inline templates must embed content via visible/hidden paths relative to catalog,
-    # or use the catalog folder for the same id.
     try:
         loaded = load_exam_by_id(tmpl.id)
     except FileNotFoundError as exc:
         raise ValueError(
             f"Inline template must match a catalog exam folder (missing: {tmpl.id})"
         ) from exc
-    # Prefer catalog datasets; allow title/story overrides from request
     loaded.template = tmpl.model_copy(
         update={
             "visible": loaded.template.visible,
@@ -162,6 +185,5 @@ def create_exam_from_template(
     return materialize_loaded_exam(db, loaded, use_ai=use_ai)
 
 
-# Default catalog exam for API fallbacks
 def default_exam_id() -> str:
     return "cities"

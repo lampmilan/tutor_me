@@ -2,9 +2,11 @@
   "id": "students",
   "title": "Students",
   "description": "Olvasd be a students.txt fájlt, és oldd meg a feladatokat!",
-  "story": "Egy osztálynapló a diákok év végi jegyeit tartalmazza. A students.txt fájl minden sora egy diák nevét és érdemjegyét tartalmazza (szóközzel elválasztva). Oldd meg a feladatokat a fájl alapján!",
+  "story": "Egy osztálynapló a diákok év végi jegyeit tartalmazza. A students.txt: név és jegy. Az 1. feladatban olvasd be a fájlt; a továbbiakban a `students` változó már rendelkezésre áll.",
   "data_file": "students.txt",
   "dataset_type": "students",
+  "shared_variable": "students",
+  "preamble": "students = []\nwith open(\"students.txt\", encoding=\"utf-8\") as f:\n    for line in f:\n        line = line.strip()\n        if not line:\n            continue\n        name, grade = line.split()\n        students.append((name, int(grade)))\n",
   "visible": "datasets/visible.txt",
   "hidden": [
     "datasets/hidden/01.txt",
@@ -16,8 +18,10 @@
     {
       "type": "count",
       "title": "Diákok száma",
-      "description": "Írd ki, hány diák van a students.txt fájlban!",
+      "description": "Olvasd be a students.txt fájlt a `students` listába, majd írd ki a diákok számát!",
       "points": 1,
+      "uses_preamble": false,
+      "starter": "# 1. feladat: olvasd be a students.txt fájlt a `students` változóba,\n# majd írd ki a diákok számát.\n# Sor formátum: név jegy\n\nstudents = []\n\nprint()\n",
       "hints": [
         "Your solution works for the example dataset but fails on other datasets.",
         "Count every line in students.txt — class size changes between datasets."
@@ -27,8 +31,10 @@
       "type": "average",
       "field": "grade",
       "title": "Átlagjegy",
-      "description": "Számold ki a jegyek átlagát, és írd ki egész számra csonkolva (int)!",
+      "description": "A `students` változó már rendelkezésre áll. Írd ki az átlagjegyet egész számra csonkolva!",
       "points": 2,
+      "uses_preamble": true,
+      "starter": "# A students.txt tartalmát a `students` változó tárolja.\n# Példa:\n# for diak in students:\n#     print(diak)\n# Példa elem: ('Anna', 5)\n#\n# 2. feladat: átlagjegy, int()-tel csonkolva.\n\nprint()\n",
       "hints": [
         "Compute the average grade from students.txt for each dataset, then truncate with int()."
       ]
@@ -39,8 +45,10 @@
       "op": "gte",
       "value": 2,
       "title": "Átment diákok",
-      "description": "Írd ki, hány diák szerezte meg legalább a 2-es jegyet!",
+      "description": "A `students` változó már rendelkezésre áll. Írd ki, hány diák kapott legalább 2-est!",
       "points": 2,
+      "uses_preamble": true,
+      "starter": "# A students.txt tartalmát a `students` változó tárolja.\n# Példa:\n# for diak in students:\n#     print(diak[1])\n#\n# 3. feladat: hány diák kapott legalább 2-est?\n\nprint()\n",
       "hints": [
         "Filter students by reading each grade from students.txt — do not assume who passed."
       ]

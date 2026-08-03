@@ -2,9 +2,11 @@
   "id": "temperatures",
   "title": "Temperatures",
   "description": "Olvasd be a temps.txt fájlt, és oldd meg a feladatokat!",
-  "story": "Egy meteorológiai állomás napi középhőmérsékleteket rögzít. A temps.txt fájl minden sora egy dátumot és a Celsius-fokban mért hőmérsékletet tartalmaz (szóközzel elválasztva). Oldd meg a feladatokat a fájl alapján!",
+  "story": "Egy meteorológiai állomás napi középhőmérsékleteket rögzít. A temps.txt fájl: dátum és Celsius-fok. Az 1. feladatban olvasd be a fájlt; a továbbiakban a `temps` változó már rendelkezésre áll.",
   "data_file": "temps.txt",
   "dataset_type": "temperatures",
+  "shared_variable": "temps",
+  "preamble": "temps = []\nwith open(\"temps.txt\", encoding=\"utf-8\") as f:\n    for line in f:\n        line = line.strip()\n        if not line:\n            continue\n        date, celsius = line.split()\n        temps.append((date, int(celsius)))\n",
   "visible": "datasets/visible.txt",
   "hidden": [
     "datasets/hidden/01.txt",
@@ -17,8 +19,10 @@
       "type": "minimum",
       "field": "celsius",
       "title": "Legalacsonyabb hőmérséklet",
-      "description": "Írd ki a legalacsonyabb hőmérsékletet (egész számként)!",
+      "description": "Olvasd be a temps.txt fájlt a `temps` listába, majd írd ki a legalacsonyabb hőmérsékletet!",
       "points": 1,
+      "uses_preamble": false,
+      "starter": "# 1. feladat: olvasd be a temps.txt fájlt a `temps` változóba,\n# majd írd ki a legalacsonyabb hőmérsékletet (egész szám).\n# Sor formátum: dátum celsius\n\ntemps = []\n\nprint()\n",
       "hints": [
         "Your solution works for the example dataset but fails on other datasets.",
         "Find the minimum by scanning every celsius value in temps.txt."
@@ -28,8 +32,10 @@
       "type": "maximum",
       "field": "celsius",
       "title": "Legmagasabb hőmérséklet",
-      "description": "Írd ki a legmagasabb hőmérsékletet (egész számként)!",
+      "description": "A `temps` változó már rendelkezésre áll. Írd ki a legmagasabb hőmérsékletet!",
       "points": 1,
+      "uses_preamble": true,
+      "starter": "# A temps.txt tartalmát a `temps` változó tárolja.\n# Példa:\n# for nap in temps:\n#     print(nap)\n# Példa elem: ('2024-06-01', 22)\n#\n# 2. feladat: írd ki a legmagasabb hőmérsékletet.\n\nprint()\n",
       "hints": [
         "Read the temperature column from temps.txt for each dataset instead of assuming a fixed maximum."
       ]
@@ -38,8 +44,10 @@
       "type": "average",
       "field": "celsius",
       "title": "Átlaghőmérséklet",
-      "description": "Számold ki az átlaghőmérsékletet, és írd ki egész számra csonkolva (int)!",
+      "description": "A `temps` változó már rendelkezésre áll. Írd ki az átlagot egész számra csonkolva!",
       "points": 2,
+      "uses_preamble": true,
+      "starter": "# A temps.txt tartalmát a `temps` változó tárolja.\n# Példa:\n# for nap in temps:\n#     print(nap[1])\n#\n# 3. feladat: átlaghőmérséklet, int()-tel csonkolva.\n\nprint()\n",
       "hints": [
         "Compute the average from all readings in temps.txt, then truncate with int()."
       ]

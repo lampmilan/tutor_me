@@ -2,9 +2,11 @@
   "id": "cities",
   "title": "Cities",
   "description": "Olvasd be a cities.txt fájlt, és oldd meg a feladatokat!",
-  "story": "Egy statisztikai hivatal a magyar városok népességét tartja nyilván. A cities.txt fájl városok nevét és lakosságszámát tartalmazza (szóközzel elválasztva). Oldd meg a feladatokat a fájl alapján!",
+  "story": "Egy statisztikai hivatal a magyar városok népességét tartja nyilván. A cities.txt fájl városok nevét és lakosságszámát tartalmazza (szóközzel elválasztva). Az 1. feladatban olvasd be a fájlt; a további feladatokban a `cities` változó már rendelkezésre áll.",
   "data_file": "cities.txt",
   "dataset_type": "cities",
+  "shared_variable": "cities",
+  "preamble": "cities = []\nwith open(\"cities.txt\", encoding=\"utf-8\") as f:\n    for line in f:\n        line = line.strip()\n        if not line:\n            continue\n        name, pop = line.split()\n        cities.append((name, int(pop)))\n",
   "visible": "datasets/visible.txt",
   "hidden": [
     "datasets/hidden/01.txt",
@@ -16,8 +18,10 @@
     {
       "type": "count",
       "title": "Városok száma",
-      "description": "Olvasd be a cities.txt fájlt, és írd ki a városok számát!",
+      "description": "Olvasd be a cities.txt fájlt a `cities` listába, majd írd ki a városok számát!",
       "points": 1,
+      "uses_preamble": false,
+      "starter": "# 1. feladat: olvasd be a cities.txt fájlt, majd írd ki a városok számát.\n# A sorok formátuma: név népesség\n# Tárold a sorokat a `cities` változóban (név, népesség) párokként.\n\ncities = []\n\nprint()\n",
       "hints": [
         "Your solution works for the example dataset but fails on other datasets.",
         "Count the cities by reading every line of cities.txt — do not hard-code the answer."
@@ -28,8 +32,10 @@
       "field": "population",
       "label_field": "name",
       "title": "Legnépesebb város",
-      "description": "Határozd meg a legnagyobb népességű város nevét, és írd ki!",
+      "description": "A `cities` változó már tartalmazza a fájl adatait. Írd ki a legnagyobb népességű város nevét!",
       "points": 2,
+      "uses_preamble": true,
+      "starter": "# A cities.txt tartalmát a `cities` változó tárolja.\n# Példa:\n# for varos in cities:\n#     print(varos)\n# Példa kimenet:\n# ('Budapest', 1780000)\n# ('Szeged', 160000)\n# ('Pecs', 140000)\n#\n# 2. feladat: írd ki a legnépesebb város nevét.\n\nprint()\n",
       "hints": [
         "Make sure you're calculating the largest city from the contents of cities.txt instead of assuming a fixed value."
       ]

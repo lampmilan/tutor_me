@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { confetti } from "@tsparticles/confetti";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { CodeEditor } from "@/components/CodeEditor";
 import { FileExplorer } from "@/components/FileExplorer";
@@ -20,6 +21,15 @@ type ExamWorkspaceProps = {
 };
 
 type PhaseStatus = "idle" | "passed" | "failed";
+
+function fireExamCompleteConfetti() {
+  void confetti({
+    particleCount: 100,
+    spread: 70,
+    // Bottom center of the viewport
+    origin: { x: 0.5, y: 1 },
+  });
+}
 
 function sortPythonFiles(
   files: WorkspaceFile[],
@@ -77,9 +87,11 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
   const [leftPct, setLeftPct] = useState(42);
   const splitRef = useRef<HTMLDivElement>(null);
   const dragging = useRef(false);
+  const celebratedRef = useRef(false);
 
   useEffect(() => {
     let cancelled = false;
+    celebratedRef.current = false;
     (async () => {
       try {
         const [examData, ws] = await Promise.all([
@@ -92,6 +104,7 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
         const map: Record<string, WorkspaceFile> = {};
         for (const f of ws.files) map[f.filename] = f;
         setFiles(map);
+        setPhaseStatus({});
 
         const firstTask = examData.tasks
           .slice()
@@ -245,7 +258,7 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
   }, [workspace, activeTask, current, dirtyFiles, saveAllDirty, files]);
 
   const submit = useCallback(async () => {
-    if (!workspace || !activeTask) return;
+    if (!workspace || !activeTask || !exam) return;
     setBusy(true);
     setOutput("");
     setError("");
@@ -258,13 +271,22 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
       setJudge(result);
       setRuntime(null);
       setExitCode(null);
-      setPhaseStatus((prev) => ({ ...prev, ...statusFromJudge(result) }));
+      setPhaseStatus((prev) => {
+        const next = { ...prev, ...statusFromJudge(result) };
+        const allPassed =
+          exam.tasks.length > 0 && exam.tasks.every((t) => next[t.id] === "passed");
+        if (allPassed && !celebratedRef.current) {
+          celebratedRef.current = true;
+          fireExamCompleteConfetti();
+        }
+        return next;
+      });
     } catch (e) {
       setError(e instanceof Error ? e.message : "Judging failed");
     } finally {
       setBusy(false);
     }
-  }, [workspace, activeTask, dirtyFiles, saveAllDirty, files]);
+  }, [workspace, activeTask, exam, dirtyFiles, saveAllDirty, files]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {

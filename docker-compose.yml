@@ -28,7 +28,9 @@ services:
       EXECUTION_TIMEOUT_SECONDS: "5"
       EXECUTION_MEMORY_LIMIT: 128m
       EXECUTION_CPU_LIMIT: "0.5"
-      EXECUTION_BACKEND: docker
+      # subprocess: works in Compose without Docker-CLI-in-container.
+      # docker: requires docker CLI + host-visible workspace bind mounts.
+      EXECUTION_BACKEND: ${EXECUTION_BACKEND:-subprocess}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
       OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4o-mini}
       AI_GENERATION_ENABLED: ${AI_GENERATION_ENABLED:-false}

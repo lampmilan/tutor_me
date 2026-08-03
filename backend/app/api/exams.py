@@ -5,7 +5,7 @@ from app.database import get_db
 from app.models import Exam
 from app.schemas import ExamListItem, ExamOut
 from app.schemas.templates import TemplateGenerateBody
-from app.services.templates import SAMPLE_TEMPLATE, create_exam_from_template
+from app.services.templates import create_exam_from_template
 
 router = APIRouter(prefix="/exams", tags=["exams"])
 
@@ -20,12 +20,18 @@ def generate_from_template(
     body: TemplateGenerateBody | None = None,
     db: Session = Depends(get_db),
 ):
-    """Create an exam from a JSON template (Phase 7)."""
+    """Create an exam from a catalog exam id or template (Phase 7)."""
     payload = body or TemplateGenerateBody()
-    template = payload.template or SAMPLE_TEMPLATE
-    exam = create_exam_from_template(
-        db, template, use_ai=payload.use_ai, seed=payload.seed
-    )
+    try:
+        exam = create_exam_from_template(
+            db,
+            template=payload.template,
+            exam_id=payload.exam_id,
+            use_ai=payload.use_ai,
+            seed=payload.seed,
+        )
+    except (FileNotFoundError, ValueError) as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
     return (
         db.query(Exam)
         .options(joinedload(Exam.files), joinedload(Exam.tasks))

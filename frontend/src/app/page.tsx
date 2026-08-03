@@ -53,7 +53,7 @@ export default async function HomePage() {
           </h2>
           {exams.length === 0 ? (
             <p className="text-[var(--muted)]">
-              No exams yet. Start the backend to seed the Cities exam.
+              No exams yet. Start the backend to seed the catalog exams.
             </p>
           ) : (
             <ul className="space-y-3">

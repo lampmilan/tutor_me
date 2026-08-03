@@ -1,0 +1,5 @@
+A1 Miskolc Debrecen 55
+A2 Debrecen Budapest 130
+A3 Szeged Kecskemet 40
+A4 Kecskemet Budapest 75
+A5 Pecs Budapest 175

@@ -1,0 +1,6 @@
+B10 Veszprem Szeged 200
+B11 Szeged Budapest 115
+B12 Budapest Gyor 85
+B13 Gyor Budapest 88
+B14 Nyiregyhaza Debrecen 50
+B15 Debrecen Nyiregyhaza 52

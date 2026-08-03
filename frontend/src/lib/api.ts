@@ -58,6 +58,7 @@ export type ExecuteResponse = {
 export type TestResult = {
   test_case_id: number;
   name: string;
+  label: string;
   passed: boolean;
   points_earned: number;
   points_possible: number;
@@ -71,6 +72,11 @@ export type TestResult = {
 export type JudgeResponse = {
   points_earned: number;
   points_possible: number;
+  passed_count: number;
+  total_count: number;
+  summary_line: string;
+  failed_labels: string[];
+  hints: string[];
   results: TestResult[];
 };
 

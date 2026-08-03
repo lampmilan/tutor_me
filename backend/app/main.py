@@ -5,8 +5,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api import exams, execution, workspaces
 from app.config import get_settings
-from app.database import Base, SessionLocal, engine
-from app.seed import seed_cities_exam
+from app.database import Base, SessionLocal, engine, ensure_schema
+from app.seed import seed_all_exams
 from app.services.workspace import ensure_workspaces_root
 
 
@@ -15,9 +15,10 @@ async def lifespan(_: FastAPI):
     settings = get_settings()
     ensure_workspaces_root()
     Base.metadata.create_all(bind=engine)
+    ensure_schema()
     db = SessionLocal()
     try:
-        seed_cities_exam(db)
+        seed_all_exams(db)
     finally:
         db.close()
     yield

@@ -56,18 +56,19 @@ If Docker is not available, set `EXECUTION_BACKEND=subprocess` in `.env`
 ## Core workflow
 
 1. Open an exam (e.g. **Cities**).
-2. Workspace is created with `main.py` + `cities.txt`.
+2. Workspace is created with `main.py` + the exam data file (e.g. `cities.txt`).
 3. Edit code in Monaco.
-4. Click **Run** → `POST /execute` → isolated Python run → stdout/stderr/runtime.
-5. Click **Submit** → automatic judging against test cases → points.
+4. Click **Run** → executes `main.py` against the **visible** dataset (what you see in the file explorer).
+5. Click **Submit** → runs the same code against **hidden** datasets. Each hidden test overwrites the data file **under the same filename** (still `cities.txt`) in a temporary sandbox — your code keeps using `open("cities.txt")`. Hidden inputs are never shown; you get a pass summary and educational hints instead.
 
 ## Project layout
 
 ```
-frontend/          Next.js app (Monaco workspace UI)
-backend/           FastAPI API, models, judge, templates
-docker/executor/   Slim Python image for student code
-docker-compose.yml Postgres + backend + frontend
+frontend/                 Next.js app (Monaco workspace UI)
+backend/app/exams/        Exam catalog (one folder per exam)
+backend/app/services/     Judge, executor, materializer
+docker/executor/          Slim Python image for student code
+docker-compose.yml        Postgres + backend + frontend
 ```
 
 ## API highlights
@@ -78,29 +79,58 @@ docker-compose.yml Postgres + backend + frontend
 | GET | `/exams/{id}` | Exam details + tasks |
 | POST | `/exams/{id}/start` | Create workspace |
 | PUT | `/workspaces/{id}/files/{name}` | Save file |
-| POST | `/execute` | Run `main.py` |
-| POST | `/judge` | Grade against tests |
-| POST | `/exams/from-template` | Generate exam from JSON template |
+| POST | `/execute` | Run `main.py` (visible dataset) |
+| POST | `/judge` | Grade against sample + hidden tests |
+| POST | `/exams/from-template` | Materialize exam from catalog id |
 
-## Exam templates (Phase 7)
+## Exam catalog
 
-Templates define dataset type and task types. Grading logic comes from the
-template — never from the LLM.
+Each exam lives under `backend/app/exams/<id>/`:
 
-Example: `backend/app/templates/cities.json`
+```text
+cities/
+  template.json
+  datasets/
+    visible.txt          # shown in the student workspace as data_file
+    hidden/
+      01.txt             # authoring names only — mounted as cities.txt at judge time
+      02.txt
+      ...
+```
+
+`template.json` defines metadata, the workspace filename (`data_file`), task types, and hints.
+**Expected outputs are not authored** — they are computed from each dataset + task type
+(`count`, `maximum`, `minimum`, `average`, `count_where`, …).
+
+Example (abbreviated):
 
 ```json
 {
+  "id": "cities",
   "title": "Cities",
-  "dataset": { "type": "cities", "fields": ["name", "population"] },
-  "tasks": [{ "type": "count" }, { "type": "maximum", "field": "population" }]
+  "data_file": "cities.txt",
+  "dataset_type": "cities",
+  "visible": "datasets/visible.txt",
+  "hidden": ["datasets/hidden/01.txt", "datasets/hidden/02.txt"],
+  "tasks": [
+    {
+      "type": "count",
+      "title": "Városok száma",
+      "points": 1,
+      "hints": [
+        "Your solution works for the example dataset but fails on other datasets."
+      ]
+    }
+  ]
 }
 ```
+
+Seeded exams: **Cities**, **Trains**, **Temperatures**, **Students**.
 
 ```bash
 curl -X POST http://localhost:8000/exams/from-template \
   -H 'Content-Type: application/json' \
-  -d '{"template": {...}, "use_ai": false, "seed": 42}'
+  -d '{"exam_id": "cities", "use_ai": false}'
 ```
 
 ## AI generation (Phase 8)
@@ -112,8 +142,8 @@ AI_GENERATION_ENABLED=true
 OPENAI_API_KEY=sk-...
 ```
 
-The LLM may only rewrite story text and vary realistic data.
-Task types and expected outputs are always computed from the template.
+The LLM may only rewrite story text.
+Task types and expected outputs are always computed from the template + datasets.
 
 ## Security (code execution)
 
@@ -127,7 +157,7 @@ Docker runs with:
 
 ## Example exam: Cities
 
-`cities.txt`:
+Visible `cities.txt`:
 
 ```
 Budapest 1780000
@@ -138,6 +168,6 @@ Pecs 140000
 Sample solution for task 1 (count cities):
 
 ```python
-with open("cities.txt") as f:
+with open("cities.txt", encoding="utf-8") as f:
     print(len([line for line in f if line.strip()]))
 ```

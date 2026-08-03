@@ -1,6 +1,6 @@
 from collections.abc import Generator
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, inspect, text
 from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
 
 from app.config import get_settings
@@ -14,6 +14,16 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 class Base(DeclarativeBase):
     pass
+
+
+def ensure_schema() -> None:
+    """Lightweight additive migrations for create_all-managed schemas."""
+    insp = inspect(engine)
+    if "tasks" in insp.get_table_names():
+        cols = {c["name"] for c in insp.get_columns("tasks")}
+        if "hints_json" not in cols:
+            with engine.begin() as conn:
+                conn.execute(text("ALTER TABLE tasks ADD COLUMN hints_json TEXT DEFAULT '[]'"))
 
 
 def get_db() -> Generator[Session, None, None]:

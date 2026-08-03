@@ -1,0 +1,50 @@
+{
+  "id": "trains",
+  "title": "Trains",
+  "description": "Olvasd be a trains.txt fájlt, és oldd meg a feladatokat!",
+  "story": "Egy vasúttársaság a napi járatokat tartja nyilván. A trains.txt fájl minden sora egy járatot tartalmaz: azonosító, indulási város, célállomás és menetidő percben (szóközzel elválasztva). Oldd meg a feladatokat a fájl alapján!",
+  "data_file": "trains.txt",
+  "dataset_type": "trains",
+  "visible": "datasets/visible.txt",
+  "hidden": [
+    "datasets/hidden/01.txt",
+    "datasets/hidden/02.txt",
+    "datasets/hidden/03.txt",
+    "datasets/hidden/04.txt"
+  ],
+  "tasks": [
+    {
+      "type": "count",
+      "title": "Járatok száma",
+      "description": "Írd ki, hány járat van a trains.txt fájlban!",
+      "points": 1,
+      "hints": [
+        "Your solution works for the example dataset but fails on other datasets.",
+        "Count every line in trains.txt — the number of trains can change between datasets."
+      ]
+    },
+    {
+      "type": "maximum",
+      "field": "minutes",
+      "label_field": "id",
+      "title": "Leghosszabb járat",
+      "description": "Írd ki a leghosszabb menetidejű járat azonosítóját!",
+      "points": 2,
+      "hints": [
+        "Compare the minutes field from each line of trains.txt instead of assuming a fixed train id."
+      ]
+    },
+    {
+      "type": "count_where",
+      "field": "to",
+      "op": "eq",
+      "value": "Budapest",
+      "title": "Budapestre tartó járatok",
+      "description": "Írd ki, hány járat érkezik Budapestre!",
+      "points": 2,
+      "hints": [
+        "Filter trains by reading the destination column from trains.txt for each dataset."
+      ]
+    }
+  ]
+}

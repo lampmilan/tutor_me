@@ -1,4 +1,5 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+// Browser: same-origin /api is rewritten to the backend (see next.config.ts).
+const API_URL = "/api";
 
 export type ExamListItem = {
   id: number;

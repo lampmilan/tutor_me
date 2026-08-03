@@ -10,9 +10,9 @@ Online coding practice platform for the Hungarian programming **érettségi**.
 | Backend | FastAPI + Python |
 | Database | PostgreSQL |
 | Execution | Isolated Docker containers |
-| Local dev | Docker Compose |
+| Runtime | Docker Compose only |
 
-## Quick start (Docker Compose)
+## Quick start
 
 ```bash
 # 1. Copy env
@@ -20,7 +20,6 @@ cp .env.example .env
 
 # 2. Build the executor image (used for student code)
 docker compose build executor
-docker compose --profile build-only build executor
 # or:
 docker build -t erettsegi-executor:latest ./docker/executor
 
@@ -28,30 +27,11 @@ docker build -t erettsegi-executor:latest ./docker/executor
 docker compose up --build
 ```
 
-- Frontend: http://localhost:3000  
-- Backend API: http://localhost:8000  
+- App: http://localhost:3000  
 - API docs: http://localhost:8000/docs  
 
-## Local development (without Compose)
-
-Requires Python 3.12+, Node 22+, and optionally Docker for secure execution.
-
-```bash
-# Backend
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r backend/requirements.txt
-export $(grep -v '^#' .env | xargs)
-cd backend && uvicorn app.main:app --reload --port 8000
-
-# Frontend (another terminal)
-cd frontend
-npm install
-npm run dev
-```
-
-If Docker is not available, set `EXECUTION_BACKEND=subprocess` in `.env`
-(less isolated — for development only).
+The frontend talks to the backend over the Compose network (`backend:8000`).
+Browser calls go to `/api/*` on port 3000 and Next.js rewrites them to the backend.
 
 ## Core workflow
 
@@ -82,6 +62,8 @@ docker-compose.yml        Postgres + backend + frontend
 | POST | `/execute` | Run `main.py` (visible dataset) |
 | POST | `/judge` | Grade against sample + hidden tests |
 | POST | `/exams/from-template` | Materialize exam from catalog id |
+
+(Browser clients should use `/api/...` via the frontend proxy.)
 
 ## Exam catalog
 

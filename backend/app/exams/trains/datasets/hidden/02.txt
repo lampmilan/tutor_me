@@ -1,0 +1,3 @@
+X9 Sopron Budapest 140
+Y8 Budapest Vienna 160
+Z7 Szombathely Sopron 45

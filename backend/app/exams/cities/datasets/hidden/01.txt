@@ -1,0 +1,4 @@
+Debrecen 200000
+Miskolc 150000
+Gyor 130000
+Kecskemet 110000

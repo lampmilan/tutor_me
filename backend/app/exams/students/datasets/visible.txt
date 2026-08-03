@@ -1,0 +1,5 @@
+Anna 5
+Bela 3
+Csilla 4
+Daniel 1
+Eszter 5

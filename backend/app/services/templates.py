@@ -1,186 +1,167 @@
 """Exam template engine.
 
-Templates define grading logic and task types.
-AI (Phase 8) may only rewrite story text and generate realistic data —
-never grading rules.
+Templates define dataset files and task types. Expected outputs are always
+computed from dataset contents + task builders — never authored separately.
+AI may only rewrite story text, never grading rules.
 """
 
 from __future__ import annotations
 
 import json
-import random
 from typing import Any
 
 from sqlalchemy.orm import Session
 
+from app.exams.builders import expected_for_task, parse_dataset
+from app.exams.loader import LoadedExam, load_exam_by_id
 from app.models import Exam, ExamFile, Task, TestCase
+from app.schemas.templates import ExamTemplate
 from app.services import ai_generator
 
 
-# Built-in Hungarian city names for dataset generation
-DEFAULT_CITIES = [
-    ("Budapest", 1780000),
-    ("Debrecen", 200000),
-    ("Szeged", 160000),
-    ("Miskolc", 150000),
-    ("Pecs", 140000),
-    ("Gyor", 130000),
-    ("Nyiregyhaza", 116000),
-    ("Kecskemet", 110000),
-    ("Szekesfehervar", 97000),
-    ("Szombathely", 78000),
-]
+def _task_spec_dict(task: Any) -> dict[str, Any]:
+    if hasattr(task, "model_dump"):
+        return task.model_dump()
+    return dict(task)
 
 
-def _format_cities_file(rows: list[tuple[str, int]]) -> str:
-    return "\n".join(f"{name} {pop}" for name, pop in rows) + "\n"
-
-
-def _task_count(rows: list[tuple[str, int]]) -> tuple[str, str, str]:
-    title = "Városok száma"
-    description = "Olvasd be a cities.txt fájlt, és írd ki a városok számát!"
-    expected = str(len(rows))
-    return title, description, expected
-
-
-def _task_maximum(rows: list[tuple[str, int]], field: str = "population") -> tuple[str, str, str]:
-    title = "Legnépesebb város"
-    description = "Határozd meg a legnagyobb népességű város nevét, és írd ki!"
-    best = max(rows, key=lambda r: r[1])
-    expected = best[0]
-    return title, description, expected
-
-
-def _task_sum(rows: list[tuple[str, int]]) -> tuple[str, str, str]:
-    title = "Össznépesség"
-    description = "Számold ki a városok össznépességét, és írd ki!"
-    expected = str(sum(r[1] for r in rows))
-    return title, description, expected
-
-
-TASK_BUILDERS = {
-    "count": lambda rows, spec: _task_count(rows),
-    "maximum": lambda rows, spec: _task_maximum(rows, spec.get("field", "population")),
-    "sum": lambda rows, spec: _task_sum(rows),
-}
-
-
-def generate_dataset(template: dict[str, Any], rng: random.Random) -> list[tuple[str, int]]:
-    dataset = template.get("dataset", {})
-    dtype = dataset.get("type", "cities")
-    if dtype != "cities":
-        raise ValueError(f"Unsupported dataset type: {dtype}")
-
-    count = dataset.get("count", rng.randint(3, 8))
-    pool = list(DEFAULT_CITIES)
-    rng.shuffle(pool)
-    rows = pool[: min(count, len(pool))]
-    # Slight population jitter so variants differ
-    return [(name, max(1000, pop + rng.randint(-5000, 5000))) for name, pop in rows]
-
-
-def build_story(template: dict[str, Any], rows: list[tuple[str, int]], use_ai: bool = False) -> str:
-    default = (
-        "Egy statisztikai hivatal a magyar városok népességét tartja nyilván. "
-        f"A cities.txt fájl {len(rows)} város nevét és lakosságszámát tartalmazza "
-        "(szóközzel elválasztva). Oldd meg a feladatokat a fájl alapján!"
-    )
-    if use_ai:
-        return ai_generator.rewrite_story(default, context={"title": template.get("title", "Cities"), "rows": rows})
-    return template.get("story") or default
-
-
-def create_exam_from_template(
+def materialize_loaded_exam(
     db: Session,
-    template: dict[str, Any],
+    loaded: LoadedExam,
     *,
     use_ai: bool = False,
-    seed: int | None = None,
 ) -> Exam:
-    rng = random.Random(seed)
+    """Create DB exam/tasks/tests from a loaded catalog exam.
 
-    rows = generate_dataset(template, rng)
+    Hidden fixture files (01.txt, …) are stored under the exam's data_file
+    name (e.g. cities.txt) so student code keeps opening the same path.
+    """
+    template = loaded.template
+    data_file = template.data_file
+    dataset_type = template.dataset_type
+
+    story = template.story
     if use_ai:
-        rows = ai_generator.vary_dataset(rows, rng)
-
-    story = build_story(template, rows, use_ai=use_ai)
-    title = template.get("title", "Cities")
-    description = template.get("description", "Adatfeldolgozás szöveges fájlból")
+        story = ai_generator.rewrite_story(
+            story or template.description,
+            context={"title": template.title, "exam_id": template.id},
+        )
 
     exam = Exam(
-        title=title,
-        description=description,
+        title=template.title,
+        description=template.description,
         story=story,
-        template_type=template.get("dataset", {}).get("type", "cities"),
+        template_type=template.id,
     )
     db.add(exam)
     db.flush()
 
-    dataset_content = _format_cities_file(rows)
-    db.add(ExamFile(exam_id=exam.id, filename="cities.txt", content=dataset_content, read_only=True))
+    db.add(
+        ExamFile(
+            exam_id=exam.id,
+            filename=data_file,
+            content=loaded.visible_content,
+            read_only=True,
+        )
+    )
     db.add(ExamFile(exam_id=exam.id, filename="main.py", content="", read_only=False))
 
-    for idx, task_spec in enumerate(template.get("tasks", [])):
-        ttype = task_spec.get("type", "count")
-        builder = TASK_BUILDERS.get(ttype)
-        if not builder:
-            raise ValueError(f"Unknown task type: {ttype}")
-        title_t, desc, expected = builder(rows, task_spec)
-        points = int(task_spec.get("points", 1))
+    visible_rows = parse_dataset(dataset_type, loaded.visible_content)
+    hidden_rows_list = [parse_dataset(dataset_type, content) for content in loaded.hidden_contents]
+
+    for idx, task_tmpl in enumerate(template.tasks):
+        spec = _task_spec_dict(task_tmpl)
+        expected_visible = expected_for_task(visible_rows, spec)
+        points = int(spec.get("points", 1))
+        hints = list(spec.get("hints") or [])
 
         task = Task(
             exam_id=exam.id,
-            title=title_t,
-            description=desc,
+            title=spec.get("title") or spec.get("type", "task"),
+            description=spec.get("description") or "",
             points=points,
             order_index=idx,
+            hints_json=json.dumps(hints, ensure_ascii=False),
         )
         db.add(task)
         db.flush()
 
-        # Visible sample test uses the main dataset
+        # Visible sample: empty input_files → uses workspace data_file
         db.add(
             TestCase(
                 task_id=task.id,
-                name=f"{ttype}-sample",
+                name=f"{spec.get('type', 'task')}-sample",
                 input_files="{}",
-                expected_output=expected,
+                expected_output=expected_visible,
                 is_hidden=False,
                 points=points,
             )
         )
 
-        # Hidden variant with a smaller shuffled subset
-        hidden_rows = rows[:]
-        rng.shuffle(hidden_rows)
-        hidden_rows = hidden_rows[: max(2, len(hidden_rows) - 1)]
-        _, _, hidden_expected = builder(hidden_rows, task_spec)
-        db.add(
-            TestCase(
-                task_id=task.id,
-                name=f"{ttype}-hidden",
-                input_files=json.dumps({"cities.txt": _format_cities_file(hidden_rows)}),
-                expected_output=hidden_expected,
-                is_hidden=True,
-                points=points,
+        for h_idx, (hidden_content, hidden_rows) in enumerate(
+            zip(loaded.hidden_contents, hidden_rows_list), start=1
+        ):
+            expected_hidden = expected_for_task(hidden_rows, spec)
+            # Key is always data_file (cities.txt), never 01.txt
+            db.add(
+                TestCase(
+                    task_id=task.id,
+                    name=f"{spec.get('type', 'task')}-hidden-{h_idx:02d}",
+                    input_files=json.dumps({data_file: hidden_content}, ensure_ascii=False),
+                    expected_output=expected_hidden,
+                    is_hidden=True,
+                    points=points,
+                )
             )
-        )
 
     db.commit()
     db.refresh(exam)
     return exam
 
 
-SAMPLE_TEMPLATE: dict[str, Any] = {
-    "title": "Cities",
-    "description": "Olvasd be a cities.txt fájlt, és oldd meg a feladatokat!",
-    "dataset": {
-        "type": "cities",
-        "fields": ["name", "population"],
-        "count": 3,
-    },
-    "tasks": [
-        {"type": "count", "points": 1},
-        {"type": "maximum", "field": "population", "points": 2},
-    ],
-}
+def create_exam_from_template(
+    db: Session,
+    template: dict[str, Any] | ExamTemplate | None = None,
+    *,
+    exam_id: str | None = None,
+    use_ai: bool = False,
+    seed: int | None = None,  # kept for API compat; fixtures are deterministic
+) -> Exam:
+    """Materialize an exam from catalog id or an inline template dict."""
+    del seed  # fixtures replace RNG generation
+    if exam_id:
+        loaded = load_exam_by_id(exam_id)
+        return materialize_loaded_exam(db, loaded, use_ai=use_ai)
+
+    if template is None:
+        loaded = load_exam_by_id("cities")
+        return materialize_loaded_exam(db, loaded, use_ai=use_ai)
+
+    if isinstance(template, ExamTemplate):
+        tmpl = template
+    else:
+        tmpl = ExamTemplate.model_validate(template)
+
+    # Inline templates must embed content via visible/hidden paths relative to catalog,
+    # or use the catalog folder for the same id.
+    try:
+        loaded = load_exam_by_id(tmpl.id)
+    except FileNotFoundError as exc:
+        raise ValueError(
+            f"Inline template must match a catalog exam folder (missing: {tmpl.id})"
+        ) from exc
+    # Prefer catalog datasets; allow title/story overrides from request
+    loaded.template = tmpl.model_copy(
+        update={
+            "visible": loaded.template.visible,
+            "hidden": loaded.template.hidden,
+            "data_file": loaded.template.data_file,
+            "dataset_type": loaded.template.dataset_type,
+        }
+    )
+    return materialize_loaded_exam(db, loaded, use_ai=use_ai)
+
+
+# Default catalog exam for API fallbacks
+def default_exam_id() -> str:
+    return "cities"

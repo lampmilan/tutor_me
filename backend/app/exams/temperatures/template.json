@@ -1,0 +1,48 @@
+{
+  "id": "temperatures",
+  "title": "Temperatures",
+  "description": "Olvasd be a temps.txt fájlt, és oldd meg a feladatokat!",
+  "story": "Egy meteorológiai állomás napi középhőmérsékleteket rögzít. A temps.txt fájl minden sora egy dátumot és a Celsius-fokban mért hőmérsékletet tartalmaz (szóközzel elválasztva). Oldd meg a feladatokat a fájl alapján!",
+  "data_file": "temps.txt",
+  "dataset_type": "temperatures",
+  "visible": "datasets/visible.txt",
+  "hidden": [
+    "datasets/hidden/01.txt",
+    "datasets/hidden/02.txt",
+    "datasets/hidden/03.txt",
+    "datasets/hidden/04.txt"
+  ],
+  "tasks": [
+    {
+      "type": "minimum",
+      "field": "celsius",
+      "title": "Legalacsonyabb hőmérséklet",
+      "description": "Írd ki a legalacsonyabb hőmérsékletet (egész számként)!",
+      "points": 1,
+      "hints": [
+        "Your solution works for the example dataset but fails on other datasets.",
+        "Find the minimum by scanning every celsius value in temps.txt."
+      ]
+    },
+    {
+      "type": "maximum",
+      "field": "celsius",
+      "title": "Legmagasabb hőmérséklet",
+      "description": "Írd ki a legmagasabb hőmérsékletet (egész számként)!",
+      "points": 1,
+      "hints": [
+        "Read the temperature column from temps.txt for each dataset instead of assuming a fixed maximum."
+      ]
+    },
+    {
+      "type": "average",
+      "field": "celsius",
+      "title": "Átlaghőmérséklet",
+      "description": "Számold ki az átlaghőmérsékletet, és írd ki egész számra csonkolva (int)!",
+      "points": 2,
+      "hints": [
+        "Compute the average from all readings in temps.txt, then truncate with int()."
+      ]
+    }
+  ]
+}

@@ -43,26 +43,61 @@ export function OutputPanel({
           <pre className="whitespace-pre-wrap text-[var(--fg)]">{output}</pre>
         ) : null}
         {!output && !error && !judge && !busy ? (
-          <p className="text-[var(--muted)]">Press Run to execute main.py</p>
+          <p className="text-[var(--muted)]">Press Run to execute main.py against the visible dataset</p>
         ) : null}
         {judge ? (
-          <ul className="mt-2 space-y-1">
-            {judge.results.map((r) => (
-              <li
-                key={r.test_case_id}
-                className={r.passed ? "text-[var(--success)]" : "text-[var(--danger)]"}
-              >
-                {r.passed ? "✓" : "✗"} {r.name}
-                {r.is_hidden ? " (hidden)" : ""} — {r.points_earned}/{r.points_possible}
-                {!r.passed && r.error ? ` · ${r.error}` : ""}
-                {!r.is_hidden && !r.passed ? (
-                  <span className="block pl-4 text-[var(--muted-strong)]">
-                    expected: {JSON.stringify(r.expected)} · got: {JSON.stringify(r.actual)}
+          <div className="space-y-2">
+            <p
+              className={
+                judge.passed_count === judge.total_count
+                  ? "text-[var(--success)]"
+                  : "text-[var(--fg)]"
+              }
+            >
+              {judge.passed_count === judge.total_count ? "✓" : "✗"}{" "}
+              {judge.summary_line ||
+                `${judge.passed_count}/${judge.total_count} tests passed`}
+            </p>
+            {judge.failed_labels.length > 0 ? (
+              <ul className="space-y-0.5 text-[var(--danger)]">
+                {judge.failed_labels.map((label) => (
+                  <li key={label}>✗ {label} failed</li>
+                ))}
+              </ul>
+            ) : null}
+            {judge.hints.length > 0 ? (
+              <div className="space-y-1 border-t border-[var(--border)] pt-2 font-sans text-[12px] leading-relaxed text-[var(--muted-strong)]">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--muted)]">
+                  Hints
+                </p>
+                {judge.hints.map((hint) => (
+                  <p key={hint}>{hint}</p>
+                ))}
+              </div>
+            ) : null}
+            <ul className="mt-2 space-y-1 border-t border-[var(--border)] pt-2">
+              {judge.results.map((r) => (
+                <li
+                  key={r.test_case_id}
+                  className={r.passed ? "text-[var(--success)]" : "text-[var(--danger)]"}
+                >
+                  {r.passed ? "✓" : "✗"} {r.label || r.name}
+                  <span className="text-[var(--muted)]">
+                    {" "}
+                    — {r.points_earned}/{r.points_possible}
                   </span>
-                ) : null}
-              </li>
-            ))}
-          </ul>
+                  {!r.passed && r.error ? (
+                    <span className="text-[var(--muted-strong)]"> · {r.error}</span>
+                  ) : null}
+                  {!r.is_hidden && !r.passed ? (
+                    <span className="block pl-4 text-[var(--muted-strong)]">
+                      expected: {JSON.stringify(r.expected)} · got: {JSON.stringify(r.actual)}
+                    </span>
+                  ) : null}
+                </li>
+              ))}
+            </ul>
+          </div>
         ) : null}
       </div>
     </section>

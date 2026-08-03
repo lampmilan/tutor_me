@@ -1,0 +1,38 @@
+{
+  "id": "cities",
+  "title": "Cities",
+  "description": "Olvasd be a cities.txt fájlt, és oldd meg a feladatokat!",
+  "story": "Egy statisztikai hivatal a magyar városok népességét tartja nyilván. A cities.txt fájl városok nevét és lakosságszámát tartalmazza (szóközzel elválasztva). Oldd meg a feladatokat a fájl alapján!",
+  "data_file": "cities.txt",
+  "dataset_type": "cities",
+  "visible": "datasets/visible.txt",
+  "hidden": [
+    "datasets/hidden/01.txt",
+    "datasets/hidden/02.txt",
+    "datasets/hidden/03.txt",
+    "datasets/hidden/04.txt"
+  ],
+  "tasks": [
+    {
+      "type": "count",
+      "title": "Városok száma",
+      "description": "Olvasd be a cities.txt fájlt, és írd ki a városok számát!",
+      "points": 1,
+      "hints": [
+        "Your solution works for the example dataset but fails on other datasets.",
+        "Count the cities by reading every line of cities.txt — do not hard-code the answer."
+      ]
+    },
+    {
+      "type": "maximum",
+      "field": "population",
+      "label_field": "name",
+      "title": "Legnépesebb város",
+      "description": "Határozd meg a legnagyobb népességű város nevét, és írd ki!",
+      "points": 2,
+      "hints": [
+        "Make sure you're calculating the largest city from the contents of cities.txt instead of assuming a fixed value."
+      ]
+    }
+  ]
+}

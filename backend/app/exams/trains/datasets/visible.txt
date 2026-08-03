@@ -1,0 +1,4 @@
+T101 Budapest Debrecen 140
+T202 Szeged Budapest 110
+T303 Pecs Budapest 180
+T404 Gyor Vienna 95

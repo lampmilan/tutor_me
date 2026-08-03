@@ -1,0 +1,49 @@
+{
+  "id": "students",
+  "title": "Students",
+  "description": "Olvasd be a students.txt fájlt, és oldd meg a feladatokat!",
+  "story": "Egy osztálynapló a diákok év végi jegyeit tartalmazza. A students.txt fájl minden sora egy diák nevét és érdemjegyét tartalmazza (szóközzel elválasztva). Oldd meg a feladatokat a fájl alapján!",
+  "data_file": "students.txt",
+  "dataset_type": "students",
+  "visible": "datasets/visible.txt",
+  "hidden": [
+    "datasets/hidden/01.txt",
+    "datasets/hidden/02.txt",
+    "datasets/hidden/03.txt",
+    "datasets/hidden/04.txt"
+  ],
+  "tasks": [
+    {
+      "type": "count",
+      "title": "Diákok száma",
+      "description": "Írd ki, hány diák van a students.txt fájlban!",
+      "points": 1,
+      "hints": [
+        "Your solution works for the example dataset but fails on other datasets.",
+        "Count every line in students.txt — class size changes between datasets."
+      ]
+    },
+    {
+      "type": "average",
+      "field": "grade",
+      "title": "Átlagjegy",
+      "description": "Számold ki a jegyek átlagát, és írd ki egész számra csonkolva (int)!",
+      "points": 2,
+      "hints": [
+        "Compute the average grade from students.txt for each dataset, then truncate with int()."
+      ]
+    },
+    {
+      "type": "count_where",
+      "field": "grade",
+      "op": "gte",
+      "value": 2,
+      "title": "Átment diákok",
+      "description": "Írd ki, hány diák szerezte meg legalább a 2-es jegyet!",
+      "points": 2,
+      "hints": [
+        "Filter students by reading each grade from students.txt — do not assume who passed."
+      ]
+    }
+  ]
+}

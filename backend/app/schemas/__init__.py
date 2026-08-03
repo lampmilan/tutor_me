@@ -112,6 +112,7 @@ class JudgeRequest(BaseModel):
 class TestResult(BaseModel):
     test_case_id: int
     name: str
+    label: str = ""
     passed: bool
     points_earned: int
     points_possible: int
@@ -125,6 +126,11 @@ class TestResult(BaseModel):
 class JudgeResponse(BaseModel):
     points_earned: float
     points_possible: float
+    passed_count: int = 0
+    total_count: int = 0
+    summary_line: str = ""
+    failed_labels: list[str] = []
+    hints: list[str] = []
     results: list[TestResult]
 
 

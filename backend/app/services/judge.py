@@ -1,4 +1,9 @@
-"""Automatic judging: run student code against test cases and award points."""
+"""Automatic judging: run student code against test cases and award points.
+
+Hidden tests mount alternate data files under the same filename (e.g. cities.txt)
+without revealing those inputs to the student. Educational hints are returned
+instead of hidden I/O.
+"""
 
 from __future__ import annotations
 
@@ -11,6 +16,11 @@ from app.schemas import JudgeResponse, TestResult
 from app.services.executor import execute_python
 from app.services.workspace import sync_workspace_to_disk
 
+GENERIC_GENERALIZATION_HINT = (
+    "Your solution works for the example dataset but fails on other datasets."
+)
+GENERIC_RUNTIME_HINT = "Your program did not finish successfully on every dataset."
+
 
 def _normalize_output(text: str) -> str:
     """Normalize whitespace for comparison (érettségi-friendly)."""
@@ -18,6 +28,34 @@ def _normalize_output(text: str) -> str:
     while lines and lines[-1] == "":
         lines.pop()
     return "\n".join(lines)
+
+
+def _task_hints(task: Task) -> list[str]:
+    try:
+        data = json.loads(task.hints_json or "[]")
+    except json.JSONDecodeError:
+        return []
+    if isinstance(data, list):
+        return [str(x) for x in data if str(x).strip()]
+    return []
+
+
+def _collect_hints(
+    *,
+    sample_passed: bool,
+    any_hidden_failed: bool,
+    any_runtime_fail: bool,
+    failed_task_hints: list[str],
+) -> list[str]:
+    hints: list[str] = []
+    if sample_passed and any_hidden_failed:
+        hints.append(GENERIC_GENERALIZATION_HINT)
+    if any_runtime_fail:
+        hints.append(GENERIC_RUNTIME_HINT)
+    for hint in failed_task_hints:
+        if hint not in hints:
+            hints.append(hint)
+    return hints[:3]
 
 
 def judge_workspace(
@@ -42,48 +80,132 @@ def judge_workspace(
     tasks: list[Task] = list(workspace.exam.tasks)
     if task_id is not None:
         tasks = [t for t in tasks if t.id == task_id]
+    tasks = sorted(tasks, key=lambda t: t.order_index)
 
     results: list[TestResult] = []
     points_earned = 0.0
     points_possible = 0.0
 
-    for task in sorted(tasks, key=lambda t: t.order_index):
-        for tc in task.test_cases:
+    sample_passed = False
+    any_sample_seen = False
+    any_hidden_failed = False
+    any_runtime_fail = False
+    failed_task_hints: list[str] = []
+    failed_labels: list[str] = []
+    hidden_counter = 0
+
+    for task in tasks:
+        cases = sorted(task.test_cases, key=lambda tc: tc.id)
+        for tc in cases:
             points_possible += tc.points
             try:
                 extra = json.loads(tc.input_files or "{}")
             except json.JSONDecodeError:
                 extra = {}
 
+            if tc.is_hidden:
+                hidden_counter += 1
+                label = f"Hidden Test #{hidden_counter}"
+            else:
+                label = f"Sample · {task.title}"
+
             exec_result = execute_python(path, stdin=tc.stdin or "", extra_files=extra or None)
             actual = _normalize_output(exec_result.output)
             expected = _normalize_output(tc.expected_output)
-            passed = actual == expected and exec_result.exit_code == 0
+            runtime_ok = exec_result.exit_code == 0
+            passed = actual == expected and runtime_ok
 
             earned = tc.points if passed else 0
             points_earned += earned
 
-            results.append(
-                TestResult(
-                    test_case_id=tc.id,
-                    name=tc.name,
-                    passed=passed,
-                    points_earned=earned,
-                    points_possible=tc.points,
-                    expected=None if tc.is_hidden else expected,
-                    actual=None if tc.is_hidden else actual,
-                    error="" if passed else (exec_result.error or ("Wrong answer" if exec_result.exit_code == 0 else f"Exit code {exec_result.exit_code}")),
-                    runtime=exec_result.runtime,
-                    is_hidden=tc.is_hidden,
+            if not tc.is_hidden:
+                any_sample_seen = True
+                if passed:
+                    sample_passed = True
+            else:
+                if not passed:
+                    any_hidden_failed = True
+
+            if not passed and not runtime_ok:
+                any_runtime_fail = True
+
+            if not passed:
+                failed_labels.append(label)
+                for hint in _task_hints(task):
+                    if hint not in failed_task_hints:
+                        failed_task_hints.append(hint)
+
+            if tc.is_hidden:
+                error_msg = ""
+                if not passed:
+                    if not runtime_ok:
+                        error_msg = "Runtime error" if exec_result.exit_code != 124 else "Timed out"
+                    else:
+                        error_msg = "Wrong answer"
+                results.append(
+                    TestResult(
+                        test_case_id=tc.id,
+                        name=tc.name,
+                        label=label,
+                        passed=passed,
+                        points_earned=earned,
+                        points_possible=tc.points,
+                        expected=None,
+                        actual=None,
+                        error=error_msg,
+                        runtime=exec_result.runtime,
+                        is_hidden=True,
+                    )
                 )
-            )
+            else:
+                error_msg = ""
+                if not passed:
+                    error_msg = exec_result.error or (
+                        "Wrong answer" if runtime_ok else f"Exit code {exec_result.exit_code}"
+                    )
+                results.append(
+                    TestResult(
+                        test_case_id=tc.id,
+                        name=tc.name,
+                        label=label,
+                        passed=passed,
+                        points_earned=earned,
+                        points_possible=tc.points,
+                        expected=expected,
+                        actual=actual,
+                        error=error_msg,
+                        runtime=exec_result.runtime,
+                        is_hidden=False,
+                    )
+                )
+
+    # Only treat "sample passed" if we actually saw a sample that passed;
+    # if all samples failed, still allow task hints but skip generalization line
+    # unless at least one sample passed.
+    hints = _collect_hints(
+        sample_passed=sample_passed and any_sample_seen,
+        any_hidden_failed=any_hidden_failed,
+        any_runtime_fail=any_runtime_fail,
+        failed_task_hints=failed_task_hints,
+    )
+
+    passed_count = sum(1 for r in results if r.passed)
+    total_count = len(results)
+    summary_line = f"{passed_count}/{total_count} tests passed"
 
     submission = Submission(
         workspace_id=workspace.id,
         task_id=task_id,
         points_earned=points_earned,
         points_possible=points_possible,
-        result_json=json.dumps([r.model_dump() for r in results]),
+        result_json=json.dumps(
+            {
+                "summary_line": summary_line,
+                "hints": hints,
+                "results": [r.model_dump() for r in results],
+            },
+            ensure_ascii=False,
+        ),
     )
     db.add(submission)
     db.commit()
@@ -91,5 +213,10 @@ def judge_workspace(
     return JudgeResponse(
         points_earned=points_earned,
         points_possible=points_possible,
+        passed_count=passed_count,
+        total_count=total_count,
+        summary_line=summary_line,
+        failed_labels=failed_labels,
+        hints=hints,
         results=results,
     )

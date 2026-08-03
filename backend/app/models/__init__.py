@@ -69,6 +69,8 @@ class Task(Base):
     description: Mapped[str] = mapped_column(Text, default="")
     points: Mapped[int] = mapped_column(Integer, default=1)
     order_index: Mapped[int] = mapped_column(Integer, default=0)
+    # JSON list of educational hints shown when hidden tests fail
+    hints_json: Mapped[str] = mapped_column(Text, default="[]")
 
     exam: Mapped["Exam"] = relationship(back_populates="tasks")
     test_cases: Mapped[list["TestCase"]] = relationship(back_populates="task", cascade="all, delete-orphan")

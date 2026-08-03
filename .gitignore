@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.next/
+out/
+dist/
+build/
+*.egg-info/
+
+# Environment & data
+.env
+data/
+*.db
+*.sqlite3
+
+# IDE / OS
+.DS_Store
+.idea/
+.vscode/
+*.log
+
+# Docker
+postgres_data/

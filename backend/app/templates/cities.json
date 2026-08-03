@@ -1,0 +1,13 @@
+{
+  "title": "Cities",
+  "description": "Olvasd be a cities.txt fájlt, és oldd meg a feladatokat!",
+  "dataset": {
+    "type": "cities",
+    "fields": ["name", "population"],
+    "count": 3
+  },
+  "tasks": [
+    { "type": "count", "points": 1 },
+    { "type": "maximum", "field": "population", "points": 2 }
+  ]
+}

@@ -65,7 +65,16 @@ docker-compose.yml        Postgres + backend + frontend
 
 (Browser clients should use `/api/...` via the frontend proxy.)
 
-## Exam catalog
+## Per-task files and preamble (Option A)
+
+Each feladat is a separate editable file (`feladat1.py`, `feladat2.py`, …).
+
+- **Task 1** usually loads the data file into a shared variable (e.g. `cities`).
+- **Later tasks** set `uses_preamble: true`. On Run/Submit the platform **prepends** a
+  canonical loader (`exam.preamble`) before the student code, so Monaco only shows
+  scaffold comments about the variable — the student does not re-open the file.
+
+Hidden tests still replace the data filename only (e.g. `cities.txt`).
 
 Each exam lives under `backend/app/exams/<id>/`:
 

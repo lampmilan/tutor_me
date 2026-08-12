@@ -9,6 +9,7 @@ class TaskTemplate(BaseModel):
     field: str | None = None
     label_field: str | None = None
     op: str | None = None
+    # Used by count_where (threshold) and literal (authored expected output)
     value: str | int | float | None = None
     solution_file: str | None = None
     hints: list[str] = Field(default_factory=list)

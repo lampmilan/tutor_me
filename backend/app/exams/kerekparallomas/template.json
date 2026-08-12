@@ -1,0 +1,62 @@
+{
+  "id": "kerekparallomas",
+  "title": "Kerékpárállomás",
+  "description": "Caveats demo — 8 állomás max/sum/count; kölcsönzés state kihagyva. (közép synthetic)",
+  "story": "Egy városi kerékpármegosztó rendszer 8 állomásán reggel megszámolták a rendelkezésre álló kerékpárokat. Az adatok a kerekpar.txt fájlban vannak: allomas_sorszam darab.\n\nPélda:\n1 12\n2 5\n3 8\n4 3\n5 15\n6 7\n7 9\n8 4\n\nAz 1. feladatban olvasd be a fájlt; a továbbiakban az `allomasok` változó már rendelkezésre áll.\n\nCaveat (szándékos egyszerűsítés): az eredeti feladat bekér egy állomást + kölcsönzött darabot, kiírja `A kolcsonzes sikeres.` / `Nincs elegendo kerekpar.`, majd a sikeres kölcsönzés utáni összes készletet. Ehhez stdin + megosztott állapot kellene a platformon — ezért itt a 3. feladat helyett azt kérdezzük: hány állomáson van legalább 8 kerékpár.",
+  "data_file": "kerekpar.txt",
+  "dataset_type": "temperatures",
+  "shared_variable": "allomasok",
+  "preamble": "allomasok = []\nwith open(\"kerekpar.txt\", encoding=\"utf-8\") as f:\n    for line in f:\n        line = line.strip()\n        if not line:\n            continue\n        station, bikes = line.split()\n        allomasok.append((station, int(bikes)))\n",
+  "visible": "datasets/visible.txt",
+  "hidden": [
+    "datasets/hidden/01.txt",
+    "datasets/hidden/02.txt",
+    "datasets/hidden/03.txt",
+    "datasets/hidden/04.txt"
+  ],
+  "tasks": [
+    {
+      "type": "maximum",
+      "field": "celsius",
+      "label_field": "date",
+      "title": "Legtöbb kerékpár — állomás",
+      "description": "Olvasd be a kerekpar.txt fájlt, majd írd ki annak az állomásnak a sorszámát, ahol a legtöbb kerékpár van! Ha több ilyen van, az elsőt.",
+      "points": 1,
+      "uses_preamble": false,
+      "starter": "# 1. feladat: olvasd be a kerekpar.txt fájlt,\n# majd írd ki a legtöbb kerékpárral rendelkező állomás sorszámát.\n# Sor formátum: allomas_sorszam darab\n\nallomasok = []\n\nprint()\n",
+      "hints": [
+        "Your solution works for the example dataset but fails on other datasets.",
+        "Track the station index of the maximum bike count — print the station, not the count."
+      ],
+      "solution_file": "legtobb_allomas.py"
+    },
+    {
+      "type": "sum",
+      "field": "celsius",
+      "title": "Összes kerékpár",
+      "description": "Az `allomasok` változó már rendelkezésre áll. Írd ki, hogy összesen hány kerékpár van a rendszerben!",
+      "points": 1,
+      "uses_preamble": true,
+      "starter": "# A kerekpar.txt tartalmát az `allomasok` változó tárolja.\n# Példa elem: ('5', 15)\n#\n# 2. feladat: összes kerékpár a 8 állomáson.\n\nprint()\n",
+      "hints": [
+        "Sum the bike counts from every station in kerekpar.txt."
+      ],
+      "solution_file": "osszes_kerekpar.py"
+    },
+    {
+      "type": "count_where",
+      "field": "celsius",
+      "op": "gte",
+      "value": 8,
+      "title": "Jól feltöltött állomások",
+      "description": "Az `allomasok` változó már rendelkezésre áll. Írd ki, hány állomáson van legalább 8 kerékpár! (Ez helyettesíti az eredeti kölcsönzéses 3–4. feladatot.)",
+      "points": 2,
+      "uses_preamble": true,
+      "starter": "# A kerekpar.txt tartalmát az `allomasok` változó tárolja.\n# Példa elem: ('1', 12)\n#\n# 3. feladat: hány állomáson van legalább 8 kerékpár?\n\nprint()\n",
+      "hints": [
+        "Count stations whose bike count is >= 8 — the threshold is fixed, the data is not."
+      ],
+      "solution_file": "jol_feltoltott.py"
+    }
+  ]
+}

@@ -63,11 +63,17 @@ def parse_students(content: str) -> list[Row]:
     return rows
 
 
+def parse_lines(content: str) -> list[Row]:
+    """Raw non-empty lines (for free-form text files such as MRZ)."""
+    return [{"text": line, "index": i} for i, line in enumerate(_nonempty_lines(content), start=1)]
+
+
 PARSERS: dict[str, Callable[[str], list[Row]]] = {
     "cities": parse_cities,
     "trains": parse_trains,
     "temperatures": parse_temperatures,
     "students": parse_students,
+    "lines": parse_lines,
 }
 
 
@@ -155,6 +161,8 @@ def _task_count_where(rows: list[Row], spec: dict[str, Any]) -> str:
 
 def _format_row(row: Row, dataset_hint: str | None = None) -> str:
     """Best-effort line dump for 'read' tasks (echo dataset content)."""
+    if "text" in row and len(row) <= 2:
+        return str(row["text"])
     if "name" in row and "population" in row:
         return f"{row['name']} {row['population']}"
     if "id" in row and "from" in row and "to" in row and "minutes" in row:
@@ -171,6 +179,13 @@ def _task_read(rows: list[Row], _spec: dict[str, Any]) -> str:
     return "\n".join(_format_row(r) for r in rows)
 
 
+def _task_literal(_rows: list[Row], spec: dict[str, Any]) -> str:
+    """Authored expected output (preview / non-derivable feladat text)."""
+    if "value" not in spec:
+        raise ValueError("literal task requires 'value'")
+    return str(spec["value"])
+
+
 TASK_BUILDERS: dict[str, Callable[[list[Row], dict[str, Any]], str]] = {
     "read": _task_read,
     "count": _task_count,
@@ -179,6 +194,7 @@ TASK_BUILDERS: dict[str, Callable[[list[Row], dict[str, Any]], str]] = {
     "sum": _task_sum,
     "average": _task_average,
     "count_where": _task_count_where,
+    "literal": _task_literal,
 }
 
 

@@ -1,0 +1,60 @@
+{
+  "id": "versenyido",
+  "title": "Versenyidő",
+  "description": "Trivial demo — hét napi edzésperc: összeg, átlag, maximum. (közép synthetic)",
+  "story": "Egy úszóedző hét napra feljegyezte a délutáni edzések időtartamát percben. A percek a versenyido.txt fájlban vannak: nap_sorszám perc.\n\nPélda:\n1 45\n2 50\n3 40\n4 55\n5 60\n6 35\n7 50\n\nAz 1. feladatban olvasd be a fájlt; a továbbiakban a `napok` változó már rendelkezésre áll.\n\nMegjegyzés: az eredeti érettségi-feladat interaktív „átlag felett/alatt” bekérést is tartalmazott — ez a demo csak a tiszta fájl+aggregátum részt ülteti át.",
+  "data_file": "versenyido.txt",
+  "dataset_type": "temperatures",
+  "shared_variable": "napok",
+  "preamble": "napok = []\nwith open(\"versenyido.txt\", encoding=\"utf-8\") as f:\n    for line in f:\n        line = line.strip()\n        if not line:\n            continue\n        day, minutes = line.split()\n        napok.append((day, int(minutes)))\n",
+  "visible": "datasets/visible.txt",
+  "hidden": [
+    "datasets/hidden/01.txt",
+    "datasets/hidden/02.txt",
+    "datasets/hidden/03.txt",
+    "datasets/hidden/04.txt"
+  ],
+  "tasks": [
+    {
+      "type": "sum",
+      "field": "celsius",
+      "title": "Összes perc",
+      "description": "Olvasd be a versenyido.txt fájlt, majd írd ki az összes edzett percet (egy egész szám)!",
+      "points": 1,
+      "uses_preamble": false,
+      "starter": "# 1. feladat: olvasd be a versenyido.txt fájlt,\n# majd írd ki az összes edzett perc összegét.\n# Sor formátum: nap_sorszám perc\n\nnapok = []\n\nprint()\n",
+      "hints": [
+        "Your solution works for the example dataset but fails on other datasets.",
+        "Sum the minutes column from every line in versenyido.txt."
+      ],
+      "solution_file": "osszes_perc.py"
+    },
+    {
+      "type": "average",
+      "field": "celsius",
+      "title": "Napi átlag",
+      "description": "A `napok` változó már rendelkezésre áll. Írd ki a napi átlagot egészre csonkítva!",
+      "points": 1,
+      "uses_preamble": true,
+      "starter": "# A versenyido.txt tartalmát a `napok` változó tárolja.\n# Példa elem: ('1', 45)  →  (nap, perc)\n#\n# 2. feladat: napi átlag, int()-tel csonkolva.\n\nprint()\n",
+      "hints": [
+        "Average all minutes in versenyido.txt, then truncate with int()."
+      ],
+      "solution_file": "napi_atlag.py"
+    },
+    {
+      "type": "maximum",
+      "field": "celsius",
+      "label_field": "date",
+      "title": "Leghosszabb edzés napja",
+      "description": "A `napok` változó már rendelkezésre áll. Írd ki a leghosszabb edzés napjának sorszámát! Ha több ilyen van, az elsőt.",
+      "points": 2,
+      "uses_preamble": true,
+      "starter": "# A versenyido.txt tartalmát a `napok` változó tárolja.\n# Példa elem: ('5', 60)\n#\n# 3. feladat: a leghosszabb edzés napjának sorszáma.\n\nprint()\n",
+      "hints": [
+        "Find the maximum minutes value, then print that row's day number — not the minutes."
+      ],
+      "solution_file": "leghosszabb.py"
+    }
+  ]
+}

@@ -160,8 +160,8 @@ Generic types (`count`, `maximum`, `minimum`, `average`, `count_where`, `read`, 
 `store`) live in `backend/app/exams/builders.py`. Unique exams add
 `backend/app/exams/<id>/builders.py` with `parse()` and `TASK_BUILDERS`.
 
-Converting an official érettségi PDF into this layout: see
-`.cursor/skills/erettsegi-to-catalog/SKILL.md`.
+Converting an official érettségi from the sanitized MD corpus: see
+`.cursor/skills/erettsegi-to-catalog/SKILL.md` and `reference.md`.
 
 Example (abbreviated):
 

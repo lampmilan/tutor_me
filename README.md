@@ -51,33 +51,25 @@ Schema + exam seed run automatically when the API starts.
 
 Project id: `project-3809701b-6b98-4468-890` (billing must be enabled).
 
-**GitHub Action** needs secret `NEON_DATABASE_URL` and secret `GCP_SA_KEY` (a service-account JSON key). The key cannot be created from GitHub — Google only issues it to someone already logged into that project.
+This org blocks service-account JSON keys (`iam.disableServiceAccountKeyCreation`). Deploy from Cloud Shell as your user — no `GCP_SA_KEY`.
 
-1. Open [Cloud Shell for this project](https://console.cloud.google.com/cloudshell?project=project-3809701b-6b98-4468-890).
-2. Run:
+1. Open [Cloud Shell](https://console.cloud.google.com/cloudshell?project=project-3809701b-6b98-4468-890).
+2. If the repo is not already there:
 
 ```bash
 git clone https://github.com/lampmilan/tutor_me.git
 cd tutor_me
-git checkout cursor/deploy-vercel-cloudrun-neon-b3e5
-chmod +x scripts/create-gcp-sa.sh
-./scripts/create-gcp-sa.sh
 ```
 
-3. GitHub → Settings → Secrets and variables → Actions → New repository secret  
-   Name: `GCP_SA_KEY`  
-   Value: paste the entire `gcp-sa-key.json` contents, then `rm gcp-sa-key.json`.
-4. Actions → **Deploy backend to Cloud Run** → Run workflow.
-
-Or deploy from any machine that already has `gcloud` auth:
+3. Deploy (use the pooled Neon URL — the same value as GitHub secret `NEON_DATABASE_URL`):
 
 ```bash
-export DATABASE_URL='postgresql://...neon.tech/neondb?sslmode=require'
-export CORS_ORIGINS='*'   # tighten to the Vercel URL later
+export DATABASE_URL='postgresql://USER:PASSWORD@...-pooler...neon.tech/neondb?sslmode=require'
+export CORS_ORIGINS='*'
 ./scripts/deploy-cloudrun.sh
 ```
 
-The deploy prints `https://erettsegi-api-….run.app`. Confirm `/health`.
+The script prints `https://erettsegi-api-….run.app`. Open `/health` to confirm. Do not commit `DATABASE_URL`.
 
 ### 3. Vercel
 

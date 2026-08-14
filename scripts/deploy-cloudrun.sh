@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
-# Deploy the FastAPI backend to Cloud Run.
-# Required: gcloud CLI, authenticated account, billing-enabled project.
+# Deploy the FastAPI backend to Cloud Run from Cloud Shell (or any logged-in gcloud).
+# JSON service-account keys are blocked on this GCP org — deploy as your user instead.
 #
-#   export GCP_PROJECT=your-project-id
 #   export DATABASE_URL='postgresql://...@...neon.tech/neondb?sslmode=require'
-#   export CORS_ORIGINS='https://your-app.vercel.app'
+#   export CORS_ORIGINS='*'
 #   ./scripts/deploy-cloudrun.sh
 
 set -euo pipefail

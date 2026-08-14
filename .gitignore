@@ -16,6 +16,8 @@ build/
 data/
 *.db
 *.sqlite3
+gcp-sa-key.json
+*-sa-key.json
 
 # IDE / OS
 .DS_Store

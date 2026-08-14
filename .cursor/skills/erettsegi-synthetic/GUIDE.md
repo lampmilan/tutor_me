@@ -1,12 +1,20 @@
 # Érettségi synthetic generation — manifesto / guideline
 
-Guide for agents generating **synthetic** Informatika / Digitális kultúra **algoritmizálás** exams into the sanitized corpora.
+Guide for agents generating **synthetic** Informatika / Digitális kultúra **algoritmizálás** exams.
 
-**Corpora (SSOT for examples):**
-- Közép: `Informatika and Digitális kultúra érettségi - Sanitized.md`
-- Emelt: `Informatika and Digitális kultúra érettségi EMELT  - Sanitized.md`
+**Layout (this repo is SSOT):**
 
-Append new synthetics under `# Synthetic Exams`. Never overwrite real exams.
+```text
+official/kozep.md          # READ-ONLY real közép (quality comparison)
+official/emelt.md          # READ-ONLY real emelt
+official/exam_as_text/     # tone / blocklist source
+synthetic/kozep/           # write new files here
+synthetic/emelt/
+```
+
+**Never overwrite or append to `official/`.** One new file per synthetic exam: `synthetic/{kozep|emelt}/{year}_{session}_{id}.md`.
+
+Catalog conversion (`backend/app/exams/`) is a **different skill** (`erettsegi-to-catalog`). This guide stops at sanitized MD.
 
 ---
 
@@ -38,10 +46,11 @@ Place **Expected Input:** / **Expected Output:** under the task (or nested subta
 - session: május | október
 - language: hu | idegen
 - difficulty: 1-5
+- seed: integer       # REQUIRED if any task is tagged [random]; omit otherwise
 ```
 
 ### Tags — exam-level and task-level use ONLY this list
-`IO`, `count`, `sum`, `min_max`, `search`, `validate`, `simulation`, `group`, `string`, `path`, `table`, `lookup` `function` `random` `weighted_sum`
+`IO`, `count`, `sum`, `min_max`, `search`, `validate`, `simulation`, `group`, `string`, `path`, `table`, `lookup`, `function`, `random`, `weighted_sum`
 
 Same list for `#### Tags` and for each task. Multiple tags per task are valid. **Do not invent tags** (`store`, `input`, `counting`, `file_read`, `file_write`, `geometry`, `physics`, `carry`, `categorize`, `interactive`, `list`, `loops`).
 
@@ -75,20 +84,27 @@ Tags in backticks+brackets before the sentence. Multiple tags allowed, but only 
 - Prompt text stays on the line; wrap the typed value as `input(…)`.
 - Wrap values that depend on that input, or a chosen exact-string alternative, as `output(…)`.
 - File-derived constants from the official sample stay literal (`A felajánlások száma: 465`).
-- Do **not** put `N. feladat` headers inside Expected blocks.
+- Do **not** put `N. feladat` headers inside Expected blocks (gold Virágágyások; catalog exact-match).
 - Nested subtasks get their own Expected block.
+- `[random]` values: compute with `random.seed(Meta.seed)` (Python `random`). Put `seed` in Meta; do not mention the seed in the task text.
 
 ### Data policy
 - Short samples only (a few lines / a handful of records).
 - Always: `**files:** \`name.txt\` (N sor)` when file-backed.
-- Közép: if the array is hardcoded in source, still show a short Sample under Data and note that task 1 stores it in the program (real style: `tárolja el a program forrásában`).
+- Közép: if the array is hardcoded in source, still show a short Sample under Data and note that task 1 stores it in the program (real style: `tárolja el a program forrásában`). Catalog conversion will still emit a swappable `data_file`.
 - Add **Explanation** of record layout under Data when fields need decoding.
-- Do **not** paste full real datasets.
+- Do **not** paste full real datasets into MD (those live in `official/exam_as_text/` for comparison only).
+
+### `[random]` + seed
+- If any task is tagged `[random]`, Meta **must** include `seed: <int>`.
+- Expected Output is whatever Python `random` produces after `random.seed(seed)`.
+- No-file random exams: seed still required; hidden catalog tests will not vary — do not invent fake hidden literals.
+- Do not print the seed in Scenario / Tasks (the platform injects `random.seed` in the preamble).
 
 ### Global exam conventions (assume always; do not restate as the whole Constraints block)
 - Do not validate user input unless the task asks.
-- Print task number before results (`2. feladat`).
-- Show prompt text on input.
+- Official papers often print `2. feladat` before results. **Do not put that header in Expected Output** — gold Virágágyások and this catalog judge omit it. Exact strings in Expected blocks are what conversion will grade.
+- Show prompt text on input (`print` then `input()`, not `input("prompt")`).
 - Accent-free output OK.
 - Sample-output fidelity (`a mintának megfelelően`) is a **global** convention — do **not** repeat it on every subtask (see §3).
 
@@ -411,33 +427,34 @@ Also avoid near-duplicates of **existing közép synthetics**: Kerékpárállom�
 
 Before finishing an exam, verify:
 
-1. **Schema valid** — only the closed tag list in §2; Meta complete; no empty optional sections; Expected I/O inlined under tasks.
+1. **Schema valid** — only the closed tag list in §2; Meta complete (`seed` iff `[random]`); no empty optional sections; Expected I/O inlined under tasks.
 2. **Tone matches level** — emelt: scenario 60–90 / ~3–4 sent/task; közép: scenario 40–70 / ~2–3 sent/task.
 3. **Sample phrasing budget** — `a mintának megfelelően` / `minta szerint` on ≤ 1/4 of subtasks.
 4. **Chaining** — later tasks reuse earlier data/state.
 5. **Edge cases** — ties (first / smallest id), missing keys, empty results — spelled out in the task text.
-6. **Sample math** — recompute Expected Input/Output from Data; fix mismatches.
+6. **Sample math** — recompute Expected Input/Output from Data (and `Meta.seed` when `[random]`); fix mismatches. No `N. feladat` in Expected blocks.
 7. **Level fit** — közép: no forced file I/O, no named function; emelt: file-first.
-8. **Novelty** — domain not on §4c (emelt) or §4d (közép); differs on the level’s matrix axes; don’t clone a title from the same batch.
+8. **Novelty** — domain not on §4c (emelt) or §4d (közép); differs on the level’s matrix axes; don’t clone a title from `official/` or existing `synthetic/`.
 9. **Function quota** — emelt batch only: ≥ 1 exam has a named function consumed later.
 10. **Közép arc mix** — batch is not all “small list → min_max → one validate”.
 11. **Exact strings** — listed when mandated; proofread for typos.
 12. **Language** — task body in Hungarian (even if `language: idegen` for the paper track); accent-free OK in Exact strings / sample output.
 13. **Difficulty mix** — do not rate every exam the same (közép: include some 4–5; emelt: not all 4).
+14. **Output path** — new file under `synthetic/{kozep|emelt}/`; `official/` untouched; no catalog writes.
 
 ---
 
 ## 6. Generation workflow for agents
 
-1. Read this guide + 1–2 **real** exams from the target corpus (not only synthetics).
+1. Read this guide + 1–2 **real** exams from `official/` at the target level (not only synthetics).
 2. **Pick level**, then a **matrix coordinate**:
    - Emelt → §4 Axis A+B+C; domain absent from §4c.
    - Közép → §4a Axis A+B+C; domain absent from §4d.
-3. Draft Meta / Tags / Scenario / Constraints / Data (short template). Scenario target by level (§3).
+3. Draft Meta / Tags / Scenario / Constraints / Data (short template). Scenario target by level (§3). Add `seed` if any task will be `[random]`.
 4. Draft Tasks in the official rhythm with tags. Emelt: include a named function when the batch quota requires it. Közép: never invent one.
-5. Hand-compute Expected Input/Output and place them under the matching task; add Exact strings if needed; proofread them.
-6. Append under `# Synthetic Exams` with `---` separators.
-7. Self-check against §5.
+5. Hand-compute Expected Input/Output (with `random.seed` when needed) and place them under the matching task; add Exact strings if needed; proofread them.
+6. Write **one new file** `synthetic/{kozep|emelt}/{year}_{session}_{id}.md`. Refuse if it exists unless the user asked to replace it.
+7. Self-check against §5. Do not edit `official/` or `backend/app/exams/`.
 
 ### Batch guidance
 - Prefer **3–6 exams per batch**.
@@ -452,10 +469,13 @@ Before finishing an exam, verify:
 - Telegraphic tasks (`Hány X?`).
 - Invented tags (`file_read`, `store`, `counting`, `geometry`).
 - Constraints that only repeat global rules.
-- Expected Input/Output that doesn’t match Data.
+- Expected Input/Output that doesn’t match Data (or that ignores `Meta.seed` on `[random]`).
+- `[random]` without `Meta.seed`.
+- `N. feladat` lines inside Expected blocks.
 - Emelt exam with **no** input file.
 - Dumping huge datasets into the MD (templates stay short).
-- Editing or renumbering **real** exams when adding synthetics.
+- Editing `official/` or appending under `# Synthetic Exams` in the gold files.
+- Writing `backend/app/exams/` from this skill.
 - Purple prose / English task bodies / emoji.
 - Ending nearly every subtask with `a mintának megfelelően` (machine-written tell).
 - Emelt batch with **no** named function subtask anywhere.
@@ -481,6 +501,7 @@ Before finishing an exam, verify:
 - session: május
 - language: hu
 - difficulty: 4
+# - seed: 2027   # required iff any task is [random]
 
 #### Tags
 - IO
@@ -541,6 +562,7 @@ N. `[IO]` … írja a `ki.txt` állományba …
 - session: május
 - language: hu
 - difficulty: 2
+# - seed: 2027   # required iff any task is [random]
 
 #### Tags
 - IO
@@ -586,9 +608,11 @@ For fully interactive / path / random / table-driven közép exams, omit unused 
 
 ## 9. Reference exemplars in-corpus
 
-**Emelt — tone / structure (real):** Virágágyások (inline Expected I/O + nested subtasks), Beléptető rendszer, Reklám, Fehérje, Autók mozgása, Ütemezés (function subtask), Céges autók (key-derived output file).  
-**Emelt — function-subtask exemplars (real):** Ütemezés (`sorszam`), Jeladó (`eltelt`), Szállítószalag (`tav`), RGB színek (`hatar`), Építményadó (`ado`).  
-**Közép — tone / structure (real):** Befőzés, Létra, Szólánc, Robot, Fogyókúra, Liftvezérlő, Palacsinta.  
-**Közép — live synthetics (do not clone arcs):** Kerékpárállomás, Jelszóellenőrző, Drónjárat, Telefoneladás, Házfestő, Karácsonyfa, Gyorsétterem, Avokádó.
+Read these from **`official/`** (real papers). Use **`synthetic/`** only to avoid cloning arcs you already generated.
+
+**Emelt — tone / structure (real, `official/emelt.md`):** Virágágyások (inline Expected I/O + nested subtasks), Beléptető rendszer, Reklám, Fehérje, Autók mozgása, Ütemezés (function subtask).  
+**Emelt — function-subtask exemplars (real):** Ütemezés (`sorszam`), Jeladó (`eltelt`), Szállítószalag (`tav`), RGB színek (`hatar`), Építményadó (`ado`) — also `official/exam_as_text/`.  
+**Közép — tone / structure (real, `official/kozep.md`):** Befőzés, Létra, Szólánc, Robot, Fogyókúra, Liftvezérlő, Palacsinta.  
+**Közép — live synthetics (do not clone arcs):** files under `synthetic/kozep/` plus older titles Kerékpárállomás, Jelszóellenőrző, Drónjárat, Telefoneladás, Házfestő, Karácsonyfa, Gyorsétterem, Avokádó.
 
 When unsure, **copy the sentence rhythm** of a real exam’s Tasks block, then swap domain content — but pick the domain from a **new** matrix coordinate, not from the exemplar’s title.

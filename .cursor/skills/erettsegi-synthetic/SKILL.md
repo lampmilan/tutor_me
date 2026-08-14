@@ -2,35 +2,72 @@
 name: erettsegi-synthetic
 description: >-
   Generate or revise Hungarian Informatika / Digitális kultúra érettségi
-  (közép or emelt) algoritmizálás exams in the sanitized corpus schema.
-  Use when the user asks for synthetic érettségi, exam tasks, Digkult/Informatika
-  sanitized MD, or tutoring corpora under Synthetic Exams.
+  (közép or emelt) algoritmizálás exams as sanitized MD under
+  .cursor/skills/erettsegi-synthetic/synthetic/. Use when the user asks for
+  synthetic érettségi, exam tasks, Digkult/Informatika MD, or official-quality
+  tutoring corpora. Do not write catalog folders (that is erettsegi-to-catalog).
 ---
 
 # Érettségi synthetic exam generation
 
-## Corpora
+Write **new sanitized MD exams** that match official OH quality. Compare against **read-only official** papers; never mix gold and generated text in one file.
 
-- Közép: `h:\obsidian\personal\personal\Informatika and Digitális kultúra érettségi - Sanitized.md`
-- Emelt: `h:\obsidian\personal\personal\Informatika and Digitális kultúra érettségi EMELT  - Sanitized.md`
-- Full manifesto: `h:\obsidian\personal\personal\Érettségi synthetic generation GUIDE.md`
+Conversion to `backend/app/exams/` is **`erettsegi-to-catalog`**. This skill must not touch the catalog.
 
-**Always read the GUIDE + 1–2 real exams before generating.** Append under `# Synthetic Exams` only.
+Full manifesto: [GUIDE.md](GUIDE.md).
+
+## Layout
+
+```text
+.cursor/skills/erettsegi-synthetic/
+  SKILL.md
+  GUIDE.md
+  official/                         # READ-ONLY gold (quality comparison)
+    kozep.md
+    emelt.md
+    exam_as_text/                   # tone / blocklist source
+  synthetic/                        # the only writable output
+    kozep/{year}_{session}_{id}.md
+    emelt/{year}_{session}_{id}.md
+```
+
+Local Obsidian copies (if those drives exist) are optional mirrors, **not** the SSOT in this repo:
+
+- `h:\obsidian\personal\personal\Informatika and Digitális kultúra érettségi - Sanitized.md`
+- `h:\obsidian\personal\personal\Informatika and Digitális kultúra érettségi EMELT  - Sanitized.md`
+
+If both exist, still **write only** `synthetic/{level}/…`. Never append to `official/` or to the Obsidian gold files.
+
+**Always read GUIDE.md + 1–2 real exams from `official/` (same level) before generating.** Prefer real papers over other synthetics for tone.
 
 ## Non-negotiables
 
-1. **Schema** — Meta (level, year, session, language, difficulty), Tags, Scenario, Constraints, Tasks with inline **Expected Input** / **Expected Output** (Virágágyások). Optional: Example, Data, Tables, Exact strings (omit if unused). No trailing Sample I/O block.
+1. **Schema** — Meta (level, year, session, language, difficulty; **`seed` if any task is `[random]`**), Tags, Scenario, Constraints, Tasks with inline **Expected Input** / **Expected Output** (Virágágyások). Optional: Example, Data, Tables, Exact strings (omit if unused). No trailing Sample I/O block.
 2. **Tags** — exam-level and task-level use the **same** closed list. Multiple tags per task are valid; only these are allowed:
-   `IO`, `count`, `sum`, `min_max`, `search`, `validate`, `simulation`, `group`, `string`, `path`, `table`, `lookup` `function` `random` `weighted_sum`
+   `IO`, `count`, `sum`, `min_max`, `search`, `validate`, `simulation`, `group`, `string`, `path`, `table`, `lookup`, `function`, `random`, `weighted_sum`
    Match what the subtask actually asks (`IO` = file/console read-write or user prompt; `function` = named helper). Do not invent tags (`store`, `input`, `counting`, `file_read`, …). `function` is emelt-only wording — still do not invent function subtasks for közép.
 3. **Tone (level-specific)** — official OH imperatives + edge cases; ban telegraphic stubs like `Hány X?`.
    - **Emelt:** scenario 60–90 words; every subtask ~3–4 sentences / ~30–40 words.
    - **Közép:** scenario 40–70 words; every subtask ~2–3 sentences / ~20–35 words (shorter papers — do not pad to emelt density).
-4. **Data** — short template samples + Explanation. Large files come later in production. Közép often hardcodes a small array in source (`tárolja el a programban`) instead of a file.
-5. **Consistency** — Expected Input/Output must match sample Data (compute it).
-6. **Synthetics** — year ≥ 2027; do not edit real exams.
+4. **Data** — short template samples + Explanation. Do not paste full official production files. Közép may say the array is stored in source (`tárolja el a programban`); still include a Sample under Data. Catalog conversion will still emit a `data_file`.
+5. **Consistency** — Expected Input/Output must match sample Data (compute it). If `[random]`, compute them **with `Meta.seed`**.
+6. **Synthetics** — year ≥ 2027; one new file under `synthetic/{level}/`; **do not edit** `official/` or real exams.
 7. **Function subtask (emelt only)** — roughly 1 emelt exam in 4 must include `Készítsen függvényt <név> néven, amely …`, and a *later* subtask must consume it. In an emelt batch of 4–6, at least one exam has it. **Do not** invent function subtasks for közép.
 8. **Sample-output phrasing** — `a mintának megfelelően` is a *global* convention, not a per-task suffix. Use it on at most 1 subtask in 4, and only where the format is unusual.
+9. **Do not write** `backend/app/exams/` or `builders.py`. Stop after the MD file exists.
+
+## `[random]` and seed
+
+Any exam with a `[random]` task **must** declare an integer seed in Meta:
+
+```yaml
+- seed: 2027
+```
+
+- Hand-compute Expected Output using `random.seed(seed)` (Python `random` module).
+- Do **not** put the seed in the student-facing task text (platform injects it later, like `f.read()`).
+- If random only draws from the data file, hidden catalog tests can still vary. If there is **no** data file, sample and hidden answers are identical — still seed it so the sample is gradeable; do not fake varying `literal` hidden tests.
+- Fully interactive no-file közép: seed still belongs in Meta when `[random]` is present.
 
 ## Level patterns
 
@@ -67,6 +104,7 @@ Put **Expected Input:** / **Expected Output:** under the task or nested subtask 
 - Values that depend on that input (or a chosen exact-string branch) as `output(…)`.
 - File-derived constants stay literal. Nested subtasks each get their own Expected block.
 - Omit a block when that task has no screen I/O (file write only, named function definition).
+- **Do not** put `N. feladat` headers inside Expected blocks (gold: Virágágyások; the catalog judge exact-matches these strings).
 
 ## Task wording template
 
@@ -88,17 +126,32 @@ A függvény kapja meg paraméterként <paraméterek típussal>, a visszaadott �
 A függvényt a későbbi feladatok megoldásánál felhasználhatja.
 ```
 
+## Output file
+
+`synthetic/{level}/{year}_{session}_{id}.md`
+
+- `level`: `kozep` or `emelt` (folder; ASCII)
+- `session`: `majus` or `oktober`
+- `id`: title lowercased, accents stripped (`á→a`, `é→e`, `í→i`, `ó/ö/ő→o`, `ú/ü/ű→u`), spaces → `_`, only `a-z` and `_`
+- Example: `### Hűtőház` → `synthetic/emelt/2027_oktober_hutohaz.md`
+- Refuse if that path exists unless the user asked to replace it
+
+Do **not** append under `# Synthetic Exams` in `official/*.md`.
+
 ## Before finishing
 
-- [ ] Allowed tags only (closed list above; multiple OK; none invented)
+- [ ] New file only under `synthetic/{kozep|emelt}/`; `official/` untouched
+- [ ] Allowed tags only (closed list above, commas between names; none invented)
 - [ ] Tone matches **level** (emelt 60–90 / 3–4 sent; közép 40–70 / 2–3 sent)
 - [ ] `a mintának megfelelően` on ≤ 1/4 of subtasks
+- [ ] `[random]` ⇒ `Meta.seed` integer; Expected I/O computed with that seed
+- [ ] Expected blocks have **no** `N. feladat` headers
 - [ ] Emelt batch: ≥ 1 exam has a named function subtask consumed later
 - [ ] Közép batch: ≥ 1 exam is **not** the “small list → min_max → one validate” cookie-cutter (GUIDE §4a)
-- [ ] Domain not on the level’s real-paper blocklist (GUIDE §4c / §4d); differs on matrix axes from other corpus entries
+- [ ] Domain not on the level’s real-paper blocklist (GUIDE §4c / §4d); compared against `official/` + existing `synthetic/`
 - [ ] Constraints = domain limits (not only global rules)
 - [ ] Expected Input/Output recomputed and inlined under the matching task
 - [ ] Exact strings listed when mandated; proofread for typos
-- [ ] Separated with `---`
+- [ ] Catalog paths not modified
 
-If anything conflicts, prefer **real exam wording rhythm** from the corpora over inventing a shorter style.
+If anything conflicts, prefer **real exam wording rhythm** from `official/` over inventing a shorter style.

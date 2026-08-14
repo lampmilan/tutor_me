@@ -15,7 +15,7 @@
   "data_file": "felajanlas.txt",
   "dataset_type": "viragagyasok",
   "shared_variable": "felajanlasok",
-  "preamble": "felajanlasok = []\nagyasok_szama = 0\nwith open(\"felajanlas.txt\", encoding=\"utf-8\") as f:\n    agyasok_szama = int(f.readline().strip())\n    for line in f:\n        line = line.strip()\n        if not line:\n            continue\n        start, end, color = line.split()\n        felajanlasok.append((int(start), int(end), color))\n",
+  "preamble": "with open(\"felajanlas.txt\", encoding=\"utf-8\") as f:\n    felajanlasok = f.read()\n",
   "visible": "datasets/visible.txt",
   "hidden": [
     "datasets/hidden/01.txt",
@@ -31,7 +31,7 @@
       "points": 1,
       "solution_file": "beolvasas.py",
       "uses_preamble": false,
-      "starter": "# 1. feladat: olvassa be a felajanlas.txt tartalmát.\n# Az első sor az ágyások száma, a további sorok: kezdet vég szín.\n# Tárolja a felajánlásokat a `felajanlasok` listában.\n\nagyasok_szama = 0\nfelajanlasok = []\n\n",
+      "starter": "# 1. feladat: olvassa be a felajanlas.txt tartalmát.\n# Tárolja a teljes szöveget a `felajanlasok` változóban.\n\nfelajanlasok = \"\"\n\n",
       "hints": [
         "Read every offer line after the first bed-count line — do not hard-code 465 offers."
       ]
@@ -44,7 +44,7 @@
       "points": 1,
       "solution_file": "felajanlasok_szama.py",
       "uses_preamble": true,
-      "starter": "# A felajanlas.txt tartalmát a `felajanlasok` lista és az `agyasok_szama`\n# változó tárolja. Példa elem: (2073, 2107, 'P')\n#\n# 2. feladat: írja ki a felajánlások számát a minta szerint.\n\nprint(f\"A felajánlások száma: \")\n",
+      "starter": "# A felajanlas.txt tartalma a `felajanlasok` változóban van (str).\n# Első sor: ágyások száma; további sorok: kezdet vég szín\n#\n# 2. feladat: írja ki a felajánlások számát a minta szerint.\n\nprint(f\"A felajánlások száma: \")\n",
       "hints": [
         "Count the offer rows — the first line of the file is the number of beds, not offers."
       ]
@@ -57,7 +57,7 @@
       "points": 2,
       "solution_file": "bejart.py",
       "uses_preamble": true,
-      "starter": "# 3. feladat: azok a felajánlások, ahol a kezdő sorszám nagyobb, mint a záró\n# (körbeérnek a bejáraton). A sorszámok 1-től indulnak, szóközzel elválasztva.\n\nprint(\"A bejárat mindkét oldalán ültetők:\")\n",
+      "starter": "# A felajanlas.txt tartalma a `felajanlasok` változóban van (str).\n# Első sor: ágyások száma; további sorok: kezdet vég szín\n#\n# 3. feladat: azok a felajánlások, ahol a kezdő sorszám nagyobb, mint a záró\n# (körbeérnek a bejáraton). A sorszámok 1-től indulnak, szóközzel elválasztva.\n\nprint(\"A bejárat mindkét oldalán ültetők:\")\n",
       "hints": [
         "An offer covers both sides of the entrance when its start index is greater than its end index."
       ]
@@ -71,7 +71,7 @@
       "stdin": "100\n",
       "solution_file": "egy_agyas.py",
       "uses_preamble": true,
-      "starter": "# 4. feladat: kérjen be egy ágyás sorszámát, majd válaszoljon a három kérdésre.\n# A platform teszteléskor a 100-as ágyást adja bemenetként.\n\nprint(\"Adja meg az ágyás sorszámát!\")\nagyas = int(input())\n\n",
+      "starter": "# A felajanlas.txt tartalma a `felajanlasok` változóban van (str).\n# 4. feladat: kérjen be egy ágyás sorszámát, majd válaszoljon a három kérdésre.\n# A platform teszteléskor a 100-as ágyást adja bemenetként (stdin).\n\nprint(\"Adja meg az ágyás sorszámát!\")\nagyas = int(input())\n\n",
       "hints": [
         "A wrapping offer (start > end) covers the bed if the bed is >= start or <= end.",
         "Unique colors should appear in the order the offers are listed in the file."
@@ -85,7 +85,7 @@
       "points": 2,
       "solution_file": "megoldhatosag.py",
       "uses_preamble": true,
-      "starter": "# 5. feladat: a három hivatalos mondat közül írja ki a megfelelőt.\n\nprint()\n",
+      "starter": "# A felajanlas.txt tartalma a `felajanlasok` változóban van (str).\n# 5. feladat: a három hivatalos mondat közül írja ki a megfelelőt.\n\nprint()\n",
       "hints": [
         "First check whether the union of all offer intervals covers every bed, then compare the summed interval lengths with the bed count."
       ]
@@ -99,7 +99,7 @@
       "expected_file": "szinek.txt",
       "solution_file": "szinek.py",
       "uses_preamble": true,
-      "starter": "# 6. feladat: first-come-first-served ültetés, eredmény a szinek.txt-be.\n# Soronként: szín felajánlás_sorszáma   pl. \"K 10\" vagy \"# 0\"\n\nwith open(\"szinek.txt\", \"w\", encoding=\"utf-8\") as f:\n    pass\n",
+      "starter": "# A felajanlas.txt tartalma a `felajanlasok` változóban van (str).\n# 6. feladat: first-come-first-served ültetés, eredmény a szinek.txt-be.\n# Soronként: szín felajánlás_sorszáma   pl. \"K 10\" vagy \"# 0\"\n\nwith open(\"szinek.txt\", \"w\", encoding=\"utf-8\") as f:\n    pass\n",
       "hints": [
         "Plant beds in offer order; skip a bed if it already has a color.",
         "Write one line per bed from 1 to agyasok_szama — unplanted beds are `# 0`."

@@ -14,7 +14,7 @@
   "data_file": "cities.txt",
   "dataset_type": "cities",
   "shared_variable": "cities",
-  "preamble": "cities = []\nwith open(\"cities.txt\", encoding=\"utf-8\") as f:\n    for line in f:\n        line = line.strip()\n        if not line:\n            continue\n        name, pop = line.split()\n        cities.append((name, int(pop)))\n",
+  "preamble": "with open(\"cities.txt\", encoding=\"utf-8\") as f:\n    cities = f.read()\n",
   "visible": "datasets/visible.txt",
   "hidden": [
     "datasets/hidden/01.txt",
@@ -31,7 +31,7 @@
       "points": 1,
       "solution_file": "beolvasas.py",
       "uses_preamble": false,
-      "starter": "# 1. feladat: olvass be a cities.txt fájlt, és írd ki a teljes tartalmát.\n# Opcionálisan tárold a sorokat a `cities` változóban a későbbi feladatokhoz.\n\ncities = []\n\n",
+      "starter": "# 1. feladat: olvass be a cities.txt fájlt, és írd ki a teljes tartalmát.\n# Tárold a fájl szövegét a `cities` változóban a későbbi feladatokhoz.\n\ncities = \"\"\n\n",
       "hints": [
         "Your solution works for the example dataset but fails on other datasets.",
         "Print every line of cities.txt — do not hard-code the sample cities."
@@ -45,7 +45,7 @@
       "points": 1,
       "solution_file": "varosok_szama.py",
       "uses_preamble": true,
-      "starter": "# A cities.txt tartalmát a `cities` változó tárolja.\n# Példa:\n# for varos in cities:\n#     print(varos)\n# Példa kimenet:\n# ('Budapest', 1780000)\n# ('Szeged', 160000)\n# ('Pecs', 140000)\n#\n# 2. feladat: írd ki a városok számát.\n\nprint()\n",
+      "starter": "# A cities.txt tartalma a `cities` változóban van (str).\n# Minden sor: városnév lakosságszám\n#\n# 2. feladat: írd ki a városok számát.\n\nprint()\n",
       "hints": [
         "Your solution works for the example dataset but fails on other datasets.",
         "Count the cities by reading every line of cities.txt — do not hard-code the answer."
@@ -61,7 +61,7 @@
       "points": 2,
       "solution_file": "nepesseg.py",
       "uses_preamble": true,
-      "starter": "# A cities.txt tartalmát a `cities` változó tárolja.\n# Példa:\n# for varos in cities:\n#     print(varos)\n# Példa kimenet:\n# ('Budapest', 1780000)\n# ('Szeged', 160000)\n# ('Pecs', 140000)\n#\n# 3. feladat: írd ki a legnépesebb város nevét.\n\nprint()\n",
+      "starter": "# A cities.txt tartalma a `cities` változóban van (str).\n# Minden sor: városnév lakosságszám\n#\n# 3. feladat: írd ki a legnépesebb város nevét.\n\nprint()\n",
       "hints": [
         "Make sure you're calculating the largest city from the contents of cities.txt instead of assuming a fixed value."
       ]

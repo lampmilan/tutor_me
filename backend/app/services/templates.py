@@ -12,7 +12,7 @@ from typing import Any
 
 from sqlalchemy.orm import Session
 
-from app.exams.builders import expected_for_task, parse_dataset
+from app.exams.builders import expected_for_task, parse_dataset, raw_file_preamble
 from app.exams.loader import LoadedExam, load_exam_by_id
 from app.models import Exam, ExamFile, Task, TestCase
 from app.schemas.templates import ExamTemplate
@@ -51,13 +51,18 @@ def materialize_loaded_exam(
             context={"title": template.title, "exam_id": template.id},
         )
 
+    shared_variable = template.shared_variable or "data"
+    preamble = (template.preamble or "").strip() or raw_file_preamble(
+        template.data_file, shared_variable
+    )
+
     exam = Exam(
         title=template.title,
         description=template.description,
         story=story,
         template_type=template.id,
-        preamble=template.preamble or "",
-        shared_variable=template.shared_variable or "data",
+        preamble=preamble,
+        shared_variable=shared_variable,
         level=template.level or "kozep",
         difficulty=int(template.difficulty or 2),
         tags_json=json.dumps(list(template.tags or []), ensure_ascii=False),
@@ -76,12 +81,15 @@ def materialize_loaded_exam(
         )
     )
 
-    visible_rows = parse_dataset(dataset_type, loaded.visible_content)
-    hidden_rows_list = [parse_dataset(dataset_type, content) for content in loaded.hidden_contents]
+    plugin = loaded.plugin
+    visible_rows = parse_dataset(dataset_type, loaded.visible_content, plugin=plugin)
+    hidden_rows_list = [
+        parse_dataset(dataset_type, content, plugin=plugin) for content in loaded.hidden_contents
+    ]
 
     for idx, task_tmpl in enumerate(template.tasks):
         spec = _task_spec_dict(task_tmpl)
-        expected_visible = expected_for_task(visible_rows, spec)
+        expected_visible = expected_for_task(visible_rows, spec, plugin=plugin)
         points = int(spec.get("points", 1))
         hints = list(spec.get("hints") or [])
         uses_preamble = bool(spec.get("uses_preamble", False))
@@ -132,7 +140,7 @@ def materialize_loaded_exam(
         for h_idx, (hidden_content, hidden_rows) in enumerate(
             zip(loaded.hidden_contents, hidden_rows_list), start=1
         ):
-            expected_hidden = expected_for_task(hidden_rows, spec)
+            expected_hidden = expected_for_task(hidden_rows, spec, plugin=plugin)
             db.add(
                 TestCase(
                     task_id=task.id,

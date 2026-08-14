@@ -13,7 +13,7 @@
   "data_file": "students.txt",
   "dataset_type": "students",
   "shared_variable": "students",
-  "preamble": "students = []\nwith open(\"students.txt\", encoding=\"utf-8\") as f:\n    for line in f:\n        line = line.strip()\n        if not line:\n            continue\n        name, grade = line.split()\n        students.append((name, int(grade)))\n",
+  "preamble": "with open(\"students.txt\", encoding=\"utf-8\") as f:\n    students = f.read()\n",
   "visible": "datasets/visible.txt",
   "hidden": [
     "datasets/hidden/01.txt",
@@ -29,7 +29,7 @@
       "description": "Olvasd be a students.txt fájlt a `students` listába, majd írd ki a diákok számát!",
       "points": 1,
       "uses_preamble": false,
-      "starter": "# 1. feladat: olvasd be a students.txt fájlt a `students` változóba,\n# majd írd ki a diákok számát.\n# Sor formátum: név jegy\n\nstudents = []\n\nprint()\n",
+      "starter": "# 1. feladat: olvasd be a students.txt fájlt a `students` változóba (str),\n# majd írd ki a diákok számát.\n# Sor formátum: név jegy\n\nstudents = \"\"\n\nprint()\n",
       "hints": [
         "Your solution works for the example dataset but fails on other datasets.",
         "Count every line in students.txt — class size changes between datasets."
@@ -44,7 +44,7 @@
       "description": "A `students` változó már rendelkezésre áll. Írd ki az átlagjegyet egész számra csonkolva!",
       "points": 2,
       "uses_preamble": true,
-      "starter": "# A students.txt tartalmát a `students` változó tárolja.\n# Példa:\n# for diak in students:\n#     print(diak)\n# Példa elem: ('Anna', 5)\n#\n# 2. feladat: átlagjegy, int()-tel csonkolva.\n\nprint()\n",
+      "starter": "# A students.txt tartalma a `students` változóban van (str).\n# Minden sor: név jegy\n#\n# 2. feladat: átlagjegy, int()-tel csonkolva.\n\nprint()\n",
       "hints": [
         "Compute the average grade from students.txt for each dataset, then truncate with int()."
       ],
@@ -60,7 +60,7 @@
       "description": "A `students` változó már rendelkezésre áll. Írd ki, hány diák kapott legalább 2-est!",
       "points": 2,
       "uses_preamble": true,
-      "starter": "# A students.txt tartalmát a `students` változó tárolja.\n# Példa:\n# for diak in students:\n#     print(diak[1])\n#\n# 3. feladat: hány diák kapott legalább 2-est?\n\nprint()\n",
+      "starter": "# A students.txt tartalma a `students` változóban van (str).\n# Minden sor: név jegy\n#\n# 3. feladat: hány diák kapott legalább 2-est?\n\nprint()\n",
       "hints": [
         "Filter students by reading each grade from students.txt — do not assume who passed."
       ],

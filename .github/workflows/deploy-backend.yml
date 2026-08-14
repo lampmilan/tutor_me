@@ -12,16 +12,16 @@ jobs:
     steps:
       - name: Require GitHub configuration
         env:
-          GCP_PROJECT: ${{ vars.GCP_PROJECT }}
+          GCP_PROJECT: ${{ vars.GCP_PROJECT || secrets.GCP_PROJECT || 'project-3809701b-6b98-4468-890' }}
           DATABASE_URL: ${{ secrets.NEON_DATABASE_URL }}
           HAS_GCP_SA_KEY: ${{ secrets.GCP_SA_KEY != '' }}
         run: |
           missing=0
-          [ "$HAS_GCP_SA_KEY" = "true" ] || { echo "Missing secret GCP_SA_KEY"; missing=1; }
+          [ "$HAS_GCP_SA_KEY" = "true" ] || { echo "Missing secret GCP_SA_KEY — run scripts/create-gcp-sa.sh in Cloud Shell and paste the JSON."; missing=1; }
           [ -n "$DATABASE_URL" ] || { echo "Missing secret NEON_DATABASE_URL"; missing=1; }
-          [ -n "$GCP_PROJECT" ] || { echo "Missing variable GCP_PROJECT"; missing=1; }
+          [ -n "$GCP_PROJECT" ] || { echo "Missing GCP_PROJECT"; missing=1; }
           if [ "$missing" -ne 0 ]; then
-            echo "See README.md → Deploy for the Cloud Run secrets/variables to set."
+            echo "See README.md → Deploy for the Cloud Run secrets to set."
             exit 1
           fi
 
@@ -36,7 +36,7 @@ jobs:
       - name: Deploy to Cloud Run
         run: bash scripts/deploy-cloudrun.sh
         env:
-          GCP_PROJECT: ${{ vars.GCP_PROJECT }}
+          GCP_PROJECT: ${{ vars.GCP_PROJECT || secrets.GCP_PROJECT || 'project-3809701b-6b98-4468-890' }}
           GCP_REGION: ${{ vars.GCP_REGION || 'europe-west1' }}
           CLOUD_RUN_SERVICE: ${{ vars.CLOUD_RUN_SERVICE || 'erettsegi-api' }}
           DATABASE_URL: ${{ secrets.NEON_DATABASE_URL }}

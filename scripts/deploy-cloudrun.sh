@@ -10,7 +10,7 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-PROJECT="${GCP_PROJECT:?Set GCP_PROJECT to your Google Cloud project id}"
+PROJECT="${GCP_PROJECT:-project-3809701b-6b98-4468-890}"
 REGION="${GCP_REGION:-europe-west1}"
 SERVICE="${CLOUD_RUN_SERVICE:-erettsegi-api}"
 DATABASE_URL="${DATABASE_URL:?Set DATABASE_URL to the Neon pooled connection string}"

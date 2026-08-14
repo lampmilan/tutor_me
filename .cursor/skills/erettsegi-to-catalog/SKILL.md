@@ -20,8 +20,8 @@ Field-level mapping, gold exam, and builder patterns: [reference.md](reference.m
 
 - **Exam name** (required): heading under `###`, e.g. `Virágágyások`, `Toronyépítés`
 - **MD file** (optional): if omitted, search both corpora when those paths exist:
-  - `h:\obsidian\personal\personal\Informatika and Digitális kultúra érettségi - Sanitized.md`
-  - `h:\obsidian\personal\personal\Informatika and Digitális kultúra érettségi EMELT  - Sanitized.md`
+  - `\synthetic\kozep.md`
+  - `\synthetic\emelt.md`
   - Cloud / other machines: ask for the MD path or contents if those drives are missing
 - **Output root**: `backend/app/exams/` (same as `f:\github\tutor_me\backend\app\exams\` on the author's machine)
 

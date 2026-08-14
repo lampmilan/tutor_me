@@ -1,14 +1,6 @@
 #!/usr/bin/env bash
 # Deploy the FastAPI backend to Cloud Run from Cloud Shell (or any logged-in gcloud).
 # JSON service-account keys are blocked on this GCP org — deploy as your user instead.
-#
-# DATABASE_URL is read from Secret Manager (neon-database-url), not the shell.
-# Create the secret once, then deploy:
-#
-#   echo -n 'postgresql://USER:PASSWORD@...-pooler...neon.tech/neondb?sslmode=require' \
-#     | gcloud secrets create neon-database-url --data-file=-
-#   export CORS_ORIGINS='*'
-#   ./scripts/deploy-cloudrun.sh
 
 set -euo pipefail
 
@@ -16,7 +8,7 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 PROJECT="${GCP_PROJECT:-project-3809701b-6b98-4468-890}"
 REGION="${GCP_REGION:-europe-west1}"
 SERVICE="${CLOUD_RUN_SERVICE:-erettsegi-api}"
-DATABASE_SECRET="${DATABASE_SECRET:-neon-database-url}"
+DATABASE_SECRET="${DATABASE_SECRET:-DATABASE_URL}"
 CORS_ORIGINS="${CORS_ORIGINS:-*}"
 MEMORY="${CLOUD_RUN_MEMORY:-512Mi}"
 

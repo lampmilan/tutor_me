@@ -61,15 +61,21 @@ git clone https://github.com/lampmilan/tutor_me.git
 cd tutor_me
 ```
 
-3. Deploy (use the pooled Neon URL — the same value as GitHub secret `NEON_DATABASE_URL`):
+3. Store the pooled Neon URL in Secret Manager **once** (same value as GitHub secret `NEON_DATABASE_URL`). Do not export it in Cloud Shell or commit it:
 
 ```bash
-export DATABASE_URL='postgresql://USER:PASSWORD@...-pooler...neon.tech/neondb?sslmode=require'
+echo -n 'postgresql://USER:PASSWORD@...-pooler...neon.tech/neondb?sslmode=require' \
+  | gcloud secrets create neon-database-url --data-file=-
+```
+
+4. Deploy (no `DATABASE_URL` in the shell — Cloud Run reads `neon-database-url`):
+
+```bash
 export CORS_ORIGINS='*'
 ./scripts/deploy-cloudrun.sh
 ```
 
-The script prints `https://erettsegi-api-….run.app`. Open `/health` to confirm. Do not commit `DATABASE_URL`.
+The script prints `https://erettsegi-api-….run.app`. Open `/health` to confirm. If `DATABASE_URL` was previously a plaintext Cloud Run env var, the script removes it and rebinds the name as a secret.
 
 ### 3. Vercel
 

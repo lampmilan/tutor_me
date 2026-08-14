@@ -51,7 +51,7 @@ services:
     environment:
       # SSR fetches talk to the backend service on the Compose network
       API_URL: http://backend:8000
-      # next.config.ts rewrites /api/* → this URL (browser + proxy)
+      # next.config.ts rewrites /api/* → this URL (browser + Vercel)
       BACKEND_URL: http://backend:8000
     volumes:
       - ./frontend/src:/app/src

@@ -1,10 +1,14 @@
 import type { NextConfig } from "next";
 
-const backendUrl = process.env.BACKEND_URL || "http://backend:8000";
+const backendUrl = (
+  process.env.BACKEND_URL ||
+  process.env.API_URL ||
+  "http://localhost:8000"
+).replace(/\/$/, "");
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  // Browser calls /api/*; Next proxies to the backend service on the Compose network.
+  // Browser calls /api/*; Next rewrites to Cloud Run (prod) or Compose/local backend.
   async rewrites() {
     return [
       {

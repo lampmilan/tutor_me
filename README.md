@@ -125,11 +125,16 @@ docker-compose.yml        Postgres + backend + frontend
 ## Per-task files and preamble (Option A)
 
 Each feladat is a separate editable file (`feladat1.py`, `feladat2.py`, …).
+**Do not** collapse an exam into one `.py`.
 
-- **Task 1** usually loads the data file into a shared variable (e.g. `cities`).
+- **Task 1** reads the data file and stores it as a **string** (e.g. `cities = f.read()`).
 - **Later tasks** set `uses_preamble: true`. On Run/Submit the platform **prepends** a
-  canonical loader (`exam.preamble`) before the student code, so Monaco only shows
-  scaffold comments about the variable — the student does not re-open the file.
+  canonical loader that re-reads the data file into that same string variable.
+  Students split/convert the string themselves — the platform does not inject a parsed list.
+- `input()` is real: the backend pipes `task.stdin` (shown as minta bemenet). Do not
+  monkeypatch `input()`. Prompt lines that are part of the official output stay on stdout.
+- Output files (e.g. `szinek.txt`) use `expected_file`; the judge captures that file
+  instead of stdout.
 
 Hidden tests still replace the data filename only (e.g. `cities.txt`).
 
@@ -142,13 +147,21 @@ cities/
     visible.txt          # shown in the student workspace as data_file
     hidden/
       01.txt             # authoring names only — mounted as cities.txt at judge time
-      02.txt
-      ...
+viragagyasok/
+  template.json
+  builders.py            # exam-specific oracle (students never see this)
+  datasets/
+    ...
 ```
 
 `template.json` defines metadata, the workspace filename (`data_file`), task types, and hints.
-**Expected outputs are not authored** — they are computed from each dataset + task type
-(`count`, `maximum`, `minimum`, `average`, `count_where`, …).
+**Expected outputs are not authored** — they are computed from each dataset + task type.
+Generic types (`count`, `maximum`, `minimum`, `average`, `count_where`, `read`, `literal`,
+`store`) live in `backend/app/exams/builders.py`. Unique exams add
+`backend/app/exams/<id>/builders.py` with `parse()` and `TASK_BUILDERS`.
+
+Converting an official érettségi from the sanitized MD corpus: see
+`.cursor/skills/erettsegi-to-catalog/SKILL.md` and `reference.md`.
 
 Example (abbreviated):
 
@@ -173,7 +186,7 @@ Example (abbreviated):
 }
 ```
 
-Seeded exams: **Cities**, **Trains**, **Temperatures**, **Students**.
+Seeded exams: **Cities**, **Trains**, **Temperatures**, **Students**, **Virágágyások**, **MRZ kód**.
 
 ```bash
 curl -X POST http://localhost:8000/exams/from-template \

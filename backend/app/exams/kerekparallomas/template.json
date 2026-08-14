@@ -13,7 +13,7 @@
   "data_file": "kerekpar.txt",
   "dataset_type": "temperatures",
   "shared_variable": "allomasok",
-  "preamble": "allomasok = []\nwith open(\"kerekpar.txt\", encoding=\"utf-8\") as f:\n    for line in f:\n        line = line.strip()\n        if not line:\n            continue\n        station, bikes = line.split()\n        allomasok.append((station, int(bikes)))\n",
+  "preamble": "with open(\"kerekpar.txt\", encoding=\"utf-8\") as f:\n    allomasok = f.read()\n",
   "visible": "datasets/visible.txt",
   "hidden": [
     "datasets/hidden/01.txt",
@@ -31,7 +31,7 @@
       "description": "Olvasd be a kerekpar.txt fájlt, majd írd ki annak az állomásnak a sorszámát, ahol a legtöbb kerékpár van! Ha több ilyen van, az elsőt.",
       "points": 1,
       "uses_preamble": false,
-      "starter": "# 1. feladat: olvasd be a kerekpar.txt fájlt,\n# majd írd ki a legtöbb kerékpárral rendelkező állomás sorszámát.\n# Sor formátum: allomas_sorszam darab\n\nallomasok = []\n\nprint()\n",
+      "starter": "# 1. feladat: olvasd be a kerekpar.txt fájlt,\n# majd írd ki a legtöbb kerékpárral rendelkező állomás sorszámát.\n# Sor formátum: allomas_sorszam darab\n\nallomasok = \"\"\n\nprint()\n",
       "hints": [
         "Your solution works for the example dataset but fails on other datasets.",
         "Track the station index of the maximum bike count — print the station, not the count."
@@ -46,7 +46,7 @@
       "description": "Az `allomasok` változó már rendelkezésre áll. Írd ki, hogy összesen hány kerékpár van a rendszerben!",
       "points": 1,
       "uses_preamble": true,
-      "starter": "# A kerekpar.txt tartalmát az `allomasok` változó tárolja.\n# Példa elem: ('5', 15)\n#\n# 2. feladat: összes kerékpár a 8 állomáson.\n\nprint()\n",
+      "starter": "# A kerekpar.txt tartalma az `allomasok` változóban van (str).\n# Minden sor: allomas_sorszam darab\n#\n# 2. feladat: összes kerékpár a 8 állomáson.\n\nprint()\n",
       "hints": [
         "Sum the bike counts from every station in kerekpar.txt."
       ],
@@ -62,7 +62,7 @@
       "description": "Az `allomasok` változó már rendelkezésre áll. Írd ki, hány állomáson van legalább 8 kerékpár! (Ez helyettesíti az eredeti kölcsönzéses 3–4. feladatot.)",
       "points": 2,
       "uses_preamble": true,
-      "starter": "# A kerekpar.txt tartalmát az `allomasok` változó tárolja.\n# Példa elem: ('1', 12)\n#\n# 3. feladat: hány állomáson van legalább 8 kerékpár?\n\nprint()\n",
+      "starter": "# A kerekpar.txt tartalma az `allomasok` változóban van (str).\n# Minden sor: allomas_sorszam darab\n#\n# 3. feladat: hány állomáson van legalább 8 kerékpár?\n\nprint()\n",
       "hints": [
         "Count stations whose bike count is >= 8 — the threshold is fixed, the data is not."
       ],

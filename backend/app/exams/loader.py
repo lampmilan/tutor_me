@@ -6,6 +6,7 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 
+from app.exams.builders import ExamPlugin, load_exam_plugin
 from app.schemas.templates import ExamTemplate
 
 EXAMS_ROOT = Path(__file__).resolve().parent
@@ -17,6 +18,7 @@ class LoadedExam:
     root: Path
     visible_content: str
     hidden_contents: list[str]
+    plugin: ExamPlugin | None = None
 
 
 def list_exam_dirs() -> list[Path]:
@@ -55,6 +57,7 @@ def load_exam_dir(exam_dir: Path) -> LoadedExam:
         root=exam_dir,
         visible_content=visible_content,
         hidden_contents=hidden_contents,
+        plugin=load_exam_plugin(exam_dir),
     )
 
 

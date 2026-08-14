@@ -4,6 +4,7 @@ import json
 
 from sqlalchemy.orm import Session, joinedload
 
+from app.exams.builders import raw_file_preamble
 from app.exams.loader import discover_exams
 from app.models import Exam, Task
 from app.services.templates import materialize_loaded_exam
@@ -21,7 +22,17 @@ def _needs_rematerialize(exam: Exam, loaded, expected_hidden: int) -> bool:
     hidden = sum(1 for task in exam.tasks for tc in task.test_cases if tc.is_hidden)
     if hidden < expected_hidden:
         return True
-    if not (exam.preamble or "").strip() and (loaded.template.preamble or "").strip():
+    want_preamble = (loaded.template.preamble or "").strip()
+    if not want_preamble:
+        want_preamble = raw_file_preamble(
+            loaded.template.data_file,
+            loaded.template.shared_variable or "data",
+        ).strip()
+    if (exam.preamble or "").strip() != want_preamble:
+        return True
+    if (getattr(exam, "shared_variable", None) or "data") != (
+        loaded.template.shared_variable or "data"
+    ):
         return True
     if len(exam.tasks) != len(loaded.template.tasks):
         return True
@@ -44,6 +55,8 @@ def _needs_rematerialize(exam: Exam, loaded, expected_hidden: int) -> bool:
     for task, tmpl in zip(by_order, loaded.template.tasks):
         want = tmpl.solution_file or None
         if want and getattr(task, "solution_file", None) != want:
+            return True
+        if (getattr(task, "starter", None) or "") != (tmpl.starter or ""):
             return True
         if bool(getattr(task, "uses_preamble", False)) != bool(tmpl.uses_preamble):
             return True

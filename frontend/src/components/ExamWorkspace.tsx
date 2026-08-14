@@ -368,9 +368,10 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
 
       {activeTask.uses_preamble ? (
         <div className="border-b border-[var(--border)] bg-[var(--panel)] px-4 py-2 text-xs text-[var(--muted-strong)]">
-          Run/Submit injects the file load into{" "}
-          <code className="text-[var(--accent)]">{exam.shared_variable}</code> before your code.
-          You do not need to open the data file again.
+          Run/Submit injects the file contents as a string into{" "}
+          <code className="text-[var(--accent)]">{exam.shared_variable}</code> before
+          your code. You do not need to open the data file again — split and convert
+          it yourself.
         </div>
       ) : null}
 

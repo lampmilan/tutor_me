@@ -13,7 +13,7 @@
   "data_file": "trains.txt",
   "dataset_type": "trains",
   "shared_variable": "trains",
-  "preamble": "trains = []\nwith open(\"trains.txt\", encoding=\"utf-8\") as f:\n    for line in f:\n        line = line.strip()\n        if not line:\n            continue\n        tid, frm, to, minutes = line.split()\n        trains.append({\"id\": tid, \"from\": frm, \"to\": to, \"minutes\": int(minutes)})\n",
+  "preamble": "with open(\"trains.txt\", encoding=\"utf-8\") as f:\n    trains = f.read()\n",
   "visible": "datasets/visible.txt",
   "hidden": [
     "datasets/hidden/01.txt",
@@ -29,7 +29,7 @@
       "description": "Olvasd be a trains.txt fájlt a `trains` listába, majd írd ki a járatok számát!",
       "points": 1,
       "uses_preamble": false,
-      "starter": "# 1. feladat: olvasd be a trains.txt fájlt a `trains` változóba, majd írd ki a járatok számát.\n# Sor formátum: id from to minutes\n\ntrains = []\n\nprint()\n",
+      "starter": "# 1. feladat: olvasd be a trains.txt fájlt a `trains` változóba (str),\n# majd írd ki a járatok számát.\n# Sor formátum: id from to minutes\n\ntrains = \"\"\n\nprint()\n",
       "hints": [
         "Your solution works for the example dataset but fails on other datasets.",
         "Count every line in trains.txt — the number of trains can change between datasets."
@@ -45,7 +45,7 @@
       "description": "A `trains` változó már rendelkezésre áll. Írd ki a leghosszabb menetidejű járat azonosítóját!",
       "points": 2,
       "uses_preamble": true,
-      "starter": "# A trains.txt tartalmát a `trains` változó tárolja.\n# Példa:\n# for jarat in trains:\n#     print(jarat)\n# Példa elem: {'id': 'T101', 'from': 'Budapest', 'to': 'Debrecen', 'minutes': 140}\n#\n# 2. feladat: írd ki a leghosszabb járat azonosítóját.\n\nprint()\n",
+      "starter": "# A trains.txt tartalma a `trains` változóban van (str).\n# Minden sor: id from to minutes\n#\n# 2. feladat: írd ki a leghosszabb járat azonosítóját.\n\nprint()\n",
       "hints": [
         "Compare the minutes field from each line of trains.txt instead of assuming a fixed train id."
       ],
@@ -61,7 +61,7 @@
       "description": "A `trains` változó már rendelkezésre áll. Írd ki, hány járat érkezik Budapestre!",
       "points": 2,
       "uses_preamble": true,
-      "starter": "# A trains.txt tartalmát a `trains` változó tárolja.\n# Példa:\n# for jarat in trains:\n#     print(jarat[\"to\"])\n#\n# 3. feladat: hány járat érkezik Budapestre?\n\nprint()\n",
+      "starter": "# A trains.txt tartalma a `trains` változóban van (str).\n# Minden sor: id from to minutes\n#\n# 3. feladat: hány járat érkezik Budapestre?\n\nprint()\n",
       "hints": [
         "Filter trains by reading the destination column from trains.txt for each dataset."
       ],

@@ -1,14 +1,60 @@
-"""Dataset parsers and task expected-output builders.
+"""Shared dataset parsers and generic task expected-output builders.
 
 Expected outputs are always derived from dataset contents + task type —
 never authored as a separate field in templates.
+
+Exam-specific oracles live next to the exam:
+`backend/app/exams/<id>/builders.py` (loaded by path; folder names may contain hyphens).
+
+Student runtime is independent of this module: later feladats get a raw file
+string via `raw_file_preamble()`, then split/convert it themselves.
 """
 
 from __future__ import annotations
 
+import importlib.util
+import sys
+from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Any, Callable
 
 Row = dict[str, Any]
+
+
+@dataclass
+class ExamPlugin:
+    """Optional per-exam parse + task builders (students never see this)."""
+
+    parse: Callable[[str], list[Row]] | None = None
+    task_builders: dict[str, Callable[[list[Row], dict[str, Any]], str]] = field(
+        default_factory=dict
+    )
+
+
+def raw_file_preamble(data_file: str, shared_variable: str) -> str:
+    """Canonical later-feladat inject: file contents as str, read at runtime."""
+    return (
+        f'with open("{data_file}", encoding="utf-8") as f:\n'
+        f"    {shared_variable} = f.read()\n"
+    )
+
+
+def load_exam_plugin(exam_dir: Path) -> ExamPlugin | None:
+    path = exam_dir / "builders.py"
+    if not path.is_file():
+        return None
+    mod_name = f"app.exams._plugin_{exam_dir.name.replace('-', '_')}"
+    spec = importlib.util.spec_from_file_location(mod_name, path)
+    if spec is None or spec.loader is None:
+        raise ImportError(f"Cannot load exam plugin: {path}")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[mod_name] = module
+    spec.loader.exec_module(module)
+    builders = getattr(module, "TASK_BUILDERS", None) or {}
+    return ExamPlugin(
+        parse=getattr(module, "parse", None),
+        task_builders=dict(builders),
+    )
 
 
 def _nonempty_lines(content: str) -> list[str]:
@@ -68,42 +114,23 @@ def parse_lines(content: str) -> list[Row]:
     return [{"text": line, "index": i} for i, line in enumerate(_nonempty_lines(content), start=1)]
 
 
-def parse_viragagyasok(content: str) -> list[Row]:
-    """Flower-bed offers: first line is bed count, then start end color."""
-    lines = _nonempty_lines(content)
-    if not lines:
-        return []
-    n_beds = int(lines[0])
-    rows: list[Row] = []
-    for i, line in enumerate(lines[1:], start=1):
-        parts = line.split()
-        if len(parts) < 3:
-            raise ValueError(f"Invalid viragagyasok line: {line!r}")
-        rows.append(
-            {
-                "index": i,
-                "start": int(parts[0]),
-                "end": int(parts[1]),
-                "color": parts[2],
-                "n_beds": n_beds,
-            }
-        )
-    if not rows:
-        rows.append({"index": 0, "start": 0, "end": 0, "color": "", "n_beds": n_beds, "_empty": True})
-    return rows
-
-
 PARSERS: dict[str, Callable[[str], list[Row]]] = {
     "cities": parse_cities,
     "trains": parse_trains,
     "temperatures": parse_temperatures,
     "students": parse_students,
     "lines": parse_lines,
-    "viragagyasok": parse_viragagyasok,
 }
 
 
-def parse_dataset(dataset_type: str, content: str) -> list[Row]:
+def parse_dataset(
+    dataset_type: str,
+    content: str,
+    *,
+    plugin: ExamPlugin | None = None,
+) -> list[Row]:
+    if plugin and plugin.parse is not None:
+        return plugin.parse(content)
     parser = PARSERS.get(dataset_type)
     if not parser:
         raise ValueError(f"Unsupported dataset type: {dataset_type}")
@@ -187,6 +214,7 @@ def _task_count_where(rows: list[Row], spec: dict[str, Any]) -> str:
 
 def _format_row(row: Row, dataset_hint: str | None = None) -> str:
     """Best-effort line dump for 'read' tasks (echo dataset content)."""
+    del dataset_hint
     if "text" in row and len(row) <= 2:
         return str(row["text"])
     if "name" in row and "population" in row:
@@ -217,99 +245,6 @@ def _task_store(_rows: list[Row], _spec: dict[str, Any]) -> str:
     return ""
 
 
-def _offers(rows: list[Row]) -> list[Row]:
-    return [r for r in rows if r.get("index") and not r.get("_empty")]
-
-
-def _n_beds(rows: list[Row]) -> int:
-    if not rows:
-        return 0
-    return int(rows[0]["n_beds"])
-
-
-def _iter_beds(start: int, end: int, n: int) -> list[int]:
-    if start <= end:
-        return list(range(start, end + 1))
-    return list(range(start, n + 1)) + list(range(1, end + 1))
-
-
-def _covers(start: int, end: int, bed: int) -> bool:
-    if start <= end:
-        return start <= bed <= end
-    return bed >= start or bed <= end
-
-
-def _interval_len(start: int, end: int, n: int) -> int:
-    if start <= end:
-        return end - start + 1
-    return n - start + 1 + end
-
-
-def _bed_from_spec(spec: dict[str, Any]) -> int:
-    raw = str(spec.get("stdin") or "1").strip().split()[0]
-    return int(raw)
-
-
-def _task_offer_count(rows: list[Row], _spec: dict[str, Any]) -> str:
-    return f"A felajánlások száma: {len(_offers(rows))}"
-
-
-def _task_wrap_offers(rows: list[Row], _spec: dict[str, Any]) -> str:
-    ids = [str(r["index"]) for r in _offers(rows) if int(r["start"]) > int(r["end"])]
-    return "A bejárat mindkét oldalán ültetők: " + " ".join(ids)
-
-
-def _task_bed_query(rows: list[Row], spec: dict[str, Any]) -> str:
-    bed = _bed_from_spec(spec)
-    hits = [r for r in _offers(rows) if _covers(int(r["start"]), int(r["end"]), bed)]
-    lines = [
-        "Adja meg az ágyás sorszámát!",
-        f"A felajánlók száma: {len(hits)}",
-    ]
-    if not hits:
-        lines.append("Ezt az ágyást nem ültetik be.")
-        return "\n".join(lines)
-    lines.append(f"A virágágyás színe, ha csak az első ültet: {hits[0]['color']}")
-    unique: list[str] = []
-    for row in hits:
-        color = str(row["color"])
-        if color not in unique:
-            unique.append(color)
-    lines.append("A virágágyás színei: " + " ".join(unique))
-    return "\n".join(lines)
-
-
-def _task_planting_status(rows: list[Row], _spec: dict[str, Any]) -> str:
-    n = _n_beds(rows)
-    covered: set[int] = set()
-    pledged = 0
-    for row in _offers(rows):
-        start, end = int(row["start"]), int(row["end"])
-        pledged += _interval_len(start, end, n)
-        covered.update(_iter_beds(start, end, n))
-    if n and len(covered) == n:
-        return "Minden ágyás beültetésére van jelentkező."
-    if pledged >= n:
-        return "Átszervezéssel megoldható a beültetés."
-    return "A beültetés nem oldható meg."
-
-
-def _task_colors_file(rows: list[Row], _spec: dict[str, Any]) -> str:
-    n = _n_beds(rows)
-    colors = ["#"] * n
-    who = [0] * n
-    for row in _offers(rows):
-        idx = int(row["index"])
-        start, end = int(row["start"]), int(row["end"])
-        color = str(row["color"])
-        for bed in _iter_beds(start, end, n):
-            pos = bed - 1
-            if colors[pos] == "#":
-                colors[pos] = color
-                who[pos] = idx
-    return "\n".join(f"{c} {w}" for c, w in zip(colors, who))
-
-
 TASK_BUILDERS: dict[str, Callable[[list[Row], dict[str, Any]], str]] = {
     "read": _task_read,
     "count": _task_count,
@@ -320,16 +255,18 @@ TASK_BUILDERS: dict[str, Callable[[list[Row], dict[str, Any]], str]] = {
     "count_where": _task_count_where,
     "literal": _task_literal,
     "store": _task_store,
-    "offer_count": _task_offer_count,
-    "wrap_offers": _task_wrap_offers,
-    "bed_query": _task_bed_query,
-    "planting_status": _task_planting_status,
-    "colors_file": _task_colors_file,
 }
 
 
-def expected_for_task(rows: list[Row], task_spec: dict[str, Any]) -> str:
+def expected_for_task(
+    rows: list[Row],
+    task_spec: dict[str, Any],
+    *,
+    plugin: ExamPlugin | None = None,
+) -> str:
     ttype = task_spec.get("type", "count")
+    if plugin and ttype in plugin.task_builders:
+        return plugin.task_builders[ttype](rows, task_spec)
     builder = TASK_BUILDERS.get(ttype)
     if not builder:
         raise ValueError(f"Unknown task type: {ttype}")

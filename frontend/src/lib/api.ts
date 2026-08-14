@@ -6,6 +6,9 @@ export type ExamListItem = {
   title: string;
   description: string;
   created_at: string;
+  level?: string;
+  difficulty?: number;
+  tags?: string[];
 };
 
 export type ExamFile = {
@@ -24,10 +27,14 @@ export type Task = {
   solution_file: string;
   uses_preamble: boolean;
   starter: string;
+  tags?: string[];
+  stdin?: string;
+  expected_file?: string;
   test_cases?: {
     id: number;
     name: string;
     expected_output: string | null;
+    stdin?: string;
     is_hidden: boolean;
     points: number;
   }[];
@@ -41,6 +48,11 @@ export type Exam = {
   template_type: string | null;
   preamble: string;
   shared_variable: string;
+  level?: string;
+  difficulty?: number;
+  tags?: string[];
+  constraints?: string[];
+  data_explanation?: string;
   created_at: string;
   files: ExamFile[];
   tasks: Task[];

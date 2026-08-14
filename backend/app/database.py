@@ -68,6 +68,14 @@ def ensure_schema() -> None:
     _add_column_if_missing("tasks", "starter", "starter TEXT DEFAULT ''")
     _add_column_if_missing("exams", "preamble", "preamble TEXT DEFAULT ''")
     _add_column_if_missing("exams", "shared_variable", "shared_variable VARCHAR(100) DEFAULT 'data'")
+    _add_column_if_missing("exams", "level", "level VARCHAR(20) DEFAULT 'kozep'")
+    _add_column_if_missing("exams", "difficulty", "difficulty INTEGER DEFAULT 2")
+    _add_column_if_missing("exams", "tags_json", "tags_json TEXT DEFAULT '[]'")
+    _add_column_if_missing("exams", "constraints_json", "constraints_json TEXT DEFAULT '[]'")
+    _add_column_if_missing("exams", "data_explanation", "data_explanation TEXT DEFAULT ''")
+    _add_column_if_missing("tasks", "tags_json", "tags_json TEXT DEFAULT '[]'")
+    _add_column_if_missing("tasks", "stdin", "stdin TEXT DEFAULT ''")
+    _add_column_if_missing("tasks", "expected_file", "expected_file VARCHAR(255) DEFAULT ''")
 
 
 def get_db() -> Generator[Session, None, None]:

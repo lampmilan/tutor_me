@@ -1,8 +1,15 @@
 {
   "id": "trains",
   "title": "Trains",
+  "level": "kozep",
+  "difficulty": 2,
+  "tags": ["list", "loops", "store", "counting", "search"],
   "description": "Olvasd be a trains.txt fájlt, és oldd meg a feladatokat!",
-  "story": "Egy vasúttársaság a napi járatokat tartja nyilván. A trains.txt fájl minden sora: azonosító, indulás, cél, perc. Az 1. feladatban olvasd be a fájlt; a továbbiakban a `trains` változó már rendelkezésre áll.",
+  "story": "Egy vasúttársaság a napi járatokat tartja nyilván.",
+  "constraints": [
+    "Minden sor egy járat: azonosító, indulás, cél, perc."
+  ],
+  "data_explanation": "A trains.txt fájl minden sora egy járat adatait tartalmazza: azonosító, indulási állomás, célállomás, menetidő percben, szóközzel elválasztva.",
   "data_file": "trains.txt",
   "dataset_type": "trains",
   "shared_variable": "trains",
@@ -17,6 +24,7 @@
   "tasks": [
     {
       "type": "count",
+      "tags": ["store", "counting"],
       "title": "Járatok száma",
       "description": "Olvasd be a trains.txt fájlt a `trains` listába, majd írd ki a járatok számát!",
       "points": 1,
@@ -30,6 +38,7 @@
     },
     {
       "type": "maximum",
+      "tags": ["search"],
       "field": "minutes",
       "label_field": "id",
       "title": "Leghosszabb járat",
@@ -44,6 +53,7 @@
     },
     {
       "type": "count_where",
+      "tags": ["counting", "search"],
       "field": "to",
       "op": "eq",
       "value": "Budapest",

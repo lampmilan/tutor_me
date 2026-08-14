@@ -16,6 +16,7 @@ class TestCaseOut(BaseModel):
     id: int
     name: str
     expected_output: str | None = None
+    stdin: str = ""
     is_hidden: bool
     points: int
 
@@ -25,6 +26,7 @@ class TestCaseOut(BaseModel):
     def redact_hidden(self) -> "TestCaseOut":
         if self.is_hidden:
             self.expected_output = None
+            self.stdin = ""
         return self
 
 
@@ -38,6 +40,9 @@ class TaskOut(BaseModel):
     solution_file: str = "main.py"
     uses_preamble: bool = False
     starter: str = ""
+    tags: list[str] = []
+    stdin: str = ""
+    expected_file: str = ""
     test_cases: list[TestCaseOut] = []
 
     model_config = {"from_attributes": True}
@@ -51,6 +56,11 @@ class ExamOut(BaseModel):
     template_type: str | None
     preamble: str = ""
     shared_variable: str = "data"
+    level: str = "kozep"
+    difficulty: int = 2
+    tags: list[str] = []
+    constraints: list[str] = []
+    data_explanation: str = ""
     created_at: datetime
     files: list[ExamFileOut] = []
     tasks: list[TaskOut] = []
@@ -63,6 +73,9 @@ class ExamListItem(BaseModel):
     title: str
     description: str
     created_at: datetime
+    level: str = "kozep"
+    difficulty: int = 2
+    tags: list[str] = []
 
     model_config = {"from_attributes": True}
 

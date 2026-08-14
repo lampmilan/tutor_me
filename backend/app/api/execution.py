@@ -62,10 +62,25 @@ def execute(body: ExecuteRequest, db: Session = Depends(get_db)):
                 body.code if body.code is not None else student_code_for_task(workspace, task, None)
             )
             path = prepare_run(db, workspace, task, student_code)
-            result = execute_python(path, entrypoint=RUN_ENTRYPOINT, stdin=body.stdin or "")
+            stdin = body.stdin if body.stdin else (task.stdin or "")
+            capture = [task.expected_file] if (task.expected_file or "").strip() else None
+            result = execute_python(
+                path,
+                entrypoint=RUN_ENTRYPOINT,
+                stdin=stdin,
+                capture_files=capture,
+                isolate=bool(capture),
+            )
+
+        output = result.output
+        if result.files:
+            chunks = [output.rstrip()] if output.strip() else []
+            for name, content in result.files.items():
+                chunks.append(f"--- {name} ---\n{content.rstrip()}")
+            output = "\n\n".join(chunks) + ("\n" if chunks else "")
 
         return ExecuteResponse(
-            output=result.output,
+            output=output,
             error=result.error,
             runtime=result.runtime,
             exit_code=result.exit_code,

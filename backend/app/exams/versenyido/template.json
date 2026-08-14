@@ -1,8 +1,15 @@
 {
   "id": "versenyido",
   "title": "Versenyidő",
+  "level": "kozep",
+  "difficulty": 2,
+  "tags": ["list", "loops", "store", "counting", "search"],
   "description": "Trivial demo — hét napi edzésperc: összeg, átlag, maximum. (közép synthetic)",
-  "story": "Egy úszóedző hét napra feljegyezte a délutáni edzések időtartamát percben. A percek a versenyido.txt fájlban vannak: nap_sorszám perc.\n\nPélda:\n1 45\n2 50\n3 40\n4 55\n5 60\n6 35\n7 50\n\nAz 1. feladatban olvasd be a fájlt; a továbbiakban a `napok` változó már rendelkezésre áll.\n\nMegjegyzés: az eredeti érettségi-feladat interaktív „átlag felett/alatt” bekérést is tartalmazott — ez a demo csak a tiszta fájl+aggregátum részt ülteti át.",
+  "story": "Egy úszóedző hét napra feljegyezte a délutáni edzések időtartamát percben.",
+  "constraints": [
+    "Minden sor: nap sorszáma és perc."
+  ],
+  "data_explanation": "A versenyido.txt fájlban a percek nap_sorszám perc formában szerepelnek. Az 1. feladatban olvasd be a fájlt; a továbbiakban a `napok` változó már rendelkezésre áll.",
   "data_file": "versenyido.txt",
   "dataset_type": "temperatures",
   "shared_variable": "napok",
@@ -17,6 +24,7 @@
   "tasks": [
     {
       "type": "sum",
+      "tags": ["store", "counting"],
       "field": "celsius",
       "title": "Összes perc",
       "description": "Olvasd be a versenyido.txt fájlt, majd írd ki az összes edzett percet (egy egész szám)!",
@@ -31,6 +39,7 @@
     },
     {
       "type": "average",
+      "tags": ["counting"],
       "field": "celsius",
       "title": "Napi átlag",
       "description": "A `napok` változó már rendelkezésre áll. Írd ki a napi átlagot egészre csonkítva!",
@@ -44,6 +53,7 @@
     },
     {
       "type": "maximum",
+      "tags": ["search"],
       "field": "celsius",
       "label_field": "date",
       "title": "Leghosszabb edzés napja",

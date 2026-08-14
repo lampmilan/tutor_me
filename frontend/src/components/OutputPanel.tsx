@@ -33,7 +33,7 @@ export function OutputPanel({
         ) : null}
         {judge ? (
           <span className="ml-auto font-mono normal-case tracking-normal text-[var(--fg)]">
-            Score: {judge.points_earned}/{judge.points_possible}
+            {judge.passed_count}/{judge.total_count} passed
           </span>
         ) : null}
       </div>
@@ -86,10 +86,6 @@ export function OutputPanel({
                   className={r.passed ? "text-[var(--success)]" : "text-[var(--danger)]"}
                 >
                   {r.passed ? "✓" : "✗"} {r.label || r.name}
-                  <span className="text-[var(--muted)]">
-                    {" "}
-                    — {r.points_earned}/{r.points_possible}
-                  </span>
                   {!r.passed && r.error ? (
                     <span className="text-[var(--muted-strong)]"> · {r.error}</span>
                   ) : null}

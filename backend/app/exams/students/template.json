@@ -1,8 +1,15 @@
 {
   "id": "students",
   "title": "Students",
+  "level": "kozep",
+  "difficulty": 2,
+  "tags": ["list", "loops", "store", "counting"],
   "description": "Olvasd be a students.txt fájlt, és oldd meg a feladatokat!",
-  "story": "Egy osztálynapló a diákok év végi jegyeit tartalmazza. A students.txt: név és jegy. Az 1. feladatban olvasd be a fájlt; a továbbiakban a `students` változó már rendelkezésre áll.",
+  "story": "Egy osztálynapló a diákok év végi jegyeit tartalmazza.",
+  "constraints": [
+    "Minden sor egy diák: név és jegy."
+  ],
+  "data_explanation": "A students.txt minden sora egy diák nevét és év végi jegyét tartalmazza, szóközzel elválasztva.",
   "data_file": "students.txt",
   "dataset_type": "students",
   "shared_variable": "students",
@@ -17,6 +24,7 @@
   "tasks": [
     {
       "type": "count",
+      "tags": ["store", "counting"],
       "title": "Diákok száma",
       "description": "Olvasd be a students.txt fájlt a `students` listába, majd írd ki a diákok számát!",
       "points": 1,
@@ -30,6 +38,7 @@
     },
     {
       "type": "average",
+      "tags": ["counting"],
       "field": "grade",
       "title": "Átlagjegy",
       "description": "A `students` változó már rendelkezésre áll. Írd ki az átlagjegyet egész számra csonkolva!",
@@ -43,6 +52,7 @@
     },
     {
       "type": "count_where",
+      "tags": ["counting", "search"],
       "field": "grade",
       "op": "gte",
       "value": 2,

@@ -12,7 +12,7 @@ import subprocess
 import sys
 import tempfile
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 from app.config import get_settings
@@ -26,6 +26,7 @@ class ExecutionResult:
     error: str
     runtime: float
     exit_code: int
+    files: dict[str, str] = field(default_factory=dict)
 
 
 def execute_python(
@@ -35,6 +36,8 @@ def execute_python(
     stdin: str = "",
     timeout: int | None = None,
     extra_files: dict[str, str] | None = None,
+    capture_files: list[str] | None = None,
+    isolate: bool = False,
 ) -> ExecutionResult:
     """Run a Python entrypoint inside an isolated environment.
 
@@ -44,8 +47,10 @@ def execute_python(
     timeout = timeout or settings.execution_timeout_seconds
     src = Path(workspace_path)
     script = entrypoint or "main.py"
+    capture = [name for name in (capture_files or []) if name]
+    needs_copy = isolate or extra_files is not None or bool(capture)
 
-    if extra_files:
+    if needs_copy:
         with tempfile.TemporaryDirectory(prefix="exec-") as tmp:
             tmp_path = Path(tmp)
             for item in src.iterdir():
@@ -54,9 +59,15 @@ def execute_python(
                     shutil.copy2(item, dest)
                 elif item.is_dir():
                     shutil.copytree(item, dest)
-            for name, content in extra_files.items():
-                (tmp_path / name).write_text(content, encoding="utf-8")
-            return _run(tmp_path, entrypoint=script, stdin=stdin, timeout=timeout)
+            if extra_files:
+                for name, content in extra_files.items():
+                    (tmp_path / name).write_text(content, encoding="utf-8")
+            result = _run(tmp_path, entrypoint=script, stdin=stdin, timeout=timeout)
+            for name in capture:
+                path = tmp_path / name
+                if path.is_file():
+                    result.files[name] = path.read_text(encoding="utf-8")
+            return result
 
     return _run(src, entrypoint=script, stdin=stdin, timeout=timeout)
 
@@ -99,7 +110,7 @@ def _run_docker(
         "--tmpfs",
         "/tmp:rw,size=16m",
         "-v",
-        f"{host_path}:/workspace:ro",
+        f"{host_path}:/workspace:rw",
         "-w",
         "/workspace",
         settings.executor_image,

@@ -1,9 +1,17 @@
 {
   "id": "mrz-kod",
   "title": "MRZ kód",
+  "level": "emelt",
+  "difficulty": 4,
+  "tags": ["list", "loops", "store", "search", "validate"],
   "description": "Headache demo — fájlnév/stdin, névparse, súlyozott ellenőrzőjegy. Auto-grade csak részben.",
   "story": "Az útlevél adatoldalán 2×44 karakteres MRZ (Machine Readable Zone) kód van. Megengedett jelek: A–Z, számjegy, `<`.\n\nEz a demo a mrz.txt fájlt adja a workspace-be (az eredeti vizsga fájlnevet kér be). A nem a 2. sor 21. karaktere (`F` = nő, `M` = férfi). Dátumok ÉÉHHNN formában; érvényesség: MRZ lejárat ≥ aktuális dátum.\n\nMinta (mrz.txt):\nP<HUNNAGY<KOVACS<<GYOENGYVIRAG<MARIA<<<<<<<<\nXT123456<9HUN9805138F3005132<<<<<<<<<<<<<<04\n\nMiért headache a platformon?\n1) Eredeti 1. feladat: fájlnév bekérése (stdin) — itt a fájl fixen mrz.txt.\n2) 3. feladat: külön aktuális dátum stdin — a judge jelenleg nem ad feladat-specifikus stdin-t a sablonból.\n3) 4. feladat: `<<` / `<` névparse + csonkolásdetektálás — elvárt szöveg nem vezethető le a meglévő aggregátorokból.\n4) 5. feladat: `kodok.txt` + súlyozott ellenőrző számjegy (Elljegyszamolo) — külön tábla + literal kimenet; hidden MRZ-eken a minta szerinti HELYES/HIBÁS nem általánosítható builderrel.\n\nAmi működik: 1. feladat (fájl kiírása). A 2. feladat mintaválasza literal a visible MRZ-re (nő); hidden férfi MRZ-en a literal grading szándékosan gyenge — ezért csak 1 hidden fájl van, és a 3–4. feladat csak sample literal.",
   "data_file": "mrz.txt",
+  "constraints": [
+    "Az MRZ 2×44 karakter; megengedett jelek: A–Z, számjegy, `<`.",
+    "A fájl neve a workspace-ben fixen mrz.txt."
+  ],
+  "data_explanation": "A mrz.txt két sora az útlevél gép által olvasható zónája. A nem a 2. sor 21. karaktere (`F` = nő, `M` = férfi). Dátumok ÉÉHHNN formában szerepelnek.",
   "dataset_type": "lines",
   "shared_variable": "mrz",
   "preamble": "mrz = []\nwith open(\"mrz.txt\", encoding=\"utf-8\") as f:\n    for line in f:\n        line = line.strip()\n        if line:\n            mrz.append(line)\n",
@@ -14,6 +22,7 @@
   "tasks": [
     {
       "type": "read",
+      "tags": ["store"],
       "title": "MRZ kiírása",
       "description": "Olvasd be a mrz.txt fájlt, és írd ki a teljes tartalmát a képernyőre (mindkét sort)!",
       "points": 1,
@@ -26,6 +35,7 @@
     },
     {
       "type": "literal",
+      "tags": ["search"],
       "value": "Az okmány tulajdonosa nő.",
       "title": "Nem meghatározása",
       "description": "A `mrz` változó már rendelkezésre áll. A 2. sor 21. karaktere alapján írd ki: `Az okmány tulajdonosa nő.` vagy `Az okmány tulajdonosa férfi.`!\n\nFigyelem: a minta expected literal a visible (női) MRZ-re van kötve; a hidden teszten a fájl férfi — ez mutatja, miért kellene adatkészletből számolt / reference-solution expected.",
@@ -39,6 +49,7 @@
     },
     {
       "type": "literal",
+      "tags": ["search", "validate"],
       "value": "Családi név: NAGY KOVACS\nUtónév: GYOENGYVIRAG MARIA\nA név nem csonkolt.",
       "title": "Név kirakása",
       "description": "A névmező az 1. sorban az országkód után 39 karakter. `<<` választja el a családi és utónevet, `<` a névrészeket. Ha az 1. sor nem `<`-re végződik, csonkolt lehet.\nÍrd ki a minta szerint a családi nevet, utónevet, majd `A név nem csonkolt.` vagy `Lehetséges, hogy csonkolt a név.`\n\nAuto-grade: csak a visible mintára illeszkedő literal — hidden MRZ-en elbukik (szándékos headache jelzés).",
@@ -52,6 +63,7 @@
     },
     {
       "type": "literal",
+      "tags": ["validate"],
       "value": "(checksum / kodok.txt — not auto-gradable yet)",
       "title": "Ellenőrző számjegyek (előnézet)",
       "description": "Eredeti 5. feladat: Elljegyszamolo + kodok.txt súlyozott összeg; okmányszám / születési idő / érvényesség ellenőrző jegye → HELYES vagy HIBÁS a minta szerint.\n\nItt nincs kodok.txt a workspace-ben, és a literal expected szándékosan nem teljesíthető — ez a „major headache” rész: külön tábla, súlyok, több mező, formázott több soros kimenet.",

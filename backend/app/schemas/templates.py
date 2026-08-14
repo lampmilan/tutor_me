@@ -17,6 +17,9 @@ class TaskTemplate(BaseModel):
     uses_preamble: bool = False
     # Monaco scaffold shown for this feladat (comments + stub)
     starter: str = ""
+    tags: list[str] = Field(default_factory=list)
+    stdin: str = ""
+    expected_file: str = ""
 
 
 class ExamTemplate(BaseModel):
@@ -31,6 +34,11 @@ class ExamTemplate(BaseModel):
     # Canonical loader injected before student code when uses_preamble=True
     shared_variable: str = "data"
     preamble: str = ""
+    level: str = "kozep"
+    difficulty: int = 2
+    tags: list[str] = Field(default_factory=list)
+    constraints: list[str] = Field(default_factory=list)
+    data_explanation: str = ""
     tasks: list[TaskTemplate] = Field(default_factory=list)
 
 

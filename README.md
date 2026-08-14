@@ -49,19 +49,27 @@ Schema + exam seed run automatically when the API starts.
 
 ### 2. Cloud Run
 
-Needs the `gcloud` CLI and a billing-enabled GCP project.
+Project id: `project-3809701b-6b98-4468-890` (billing must be enabled).
+
+This org blocks service-account JSON keys (`iam.disableServiceAccountKeyCreation`). Deploy from Cloud Shell as your user — no `GCP_SA_KEY`.
+
+1. Open [Cloud Shell](https://console.cloud.google.com/cloudshell?project=project-3809701b-6b98-4468-890).
+2. If the repo is not already there:
 
 ```bash
-export GCP_PROJECT=your-project-id
-export GCP_REGION=europe-west1          # optional
-export DATABASE_URL='postgresql://...neon.tech/neondb?sslmode=require'
-export CORS_ORIGINS='https://your-app.vercel.app'  # or * while testing
+git clone https://github.com/lampmilan/tutor_me.git
+cd tutor_me
+```
+
+3. Deploy (use the pooled Neon URL — the same value as GitHub secret `NEON_DATABASE_URL`):
+
+```bash
+export DATABASE_URL='postgresql://USER:PASSWORD@...-pooler...neon.tech/neondb?sslmode=require'
+export CORS_ORIGINS='*'
 ./scripts/deploy-cloudrun.sh
 ```
 
-The script prints the service URL (`https://erettsegi-api-….run.app`). Confirm `https://<url>/health`.
-
-GitHub Action: add secrets `GCP_SA_KEY` (JSON key for a deployer service account) and `NEON_DATABASE_URL`, plus variable `GCP_PROJECT`. Then run **Deploy backend to Cloud Run** from the Actions tab.
+The script prints `https://erettsegi-api-….run.app`. Open `/health` to confirm. Do not commit `DATABASE_URL`.
 
 ### 3. Vercel
 

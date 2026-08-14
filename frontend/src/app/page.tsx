@@ -9,6 +9,9 @@ type ExamListItem = {
   title: string;
   description: string;
   created_at: string;
+  level?: string;
+  difficulty?: number;
+  tags?: string[];
 };
 
 async function getExams(): Promise<ExamListItem[]> {
@@ -45,8 +48,8 @@ export default async function HomePage() {
           Practice Hungarian programming exams in a real coding workspace.
         </h1>
         <p className="mt-4 max-w-xl text-base leading-relaxed text-[var(--muted-strong)]">
-          Open an exam, edit Python in Monaco, run code in an isolated container, and get scored
-          against hidden tests.
+          Open an exam, edit Python in Monaco, run code in an isolated container, and check
+          your solution against hidden tests.
         </p>
 
         <section className="mt-12">

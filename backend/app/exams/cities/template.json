@@ -1,8 +1,16 @@
 {
   "id": "cities",
   "title": "Cities",
+  "level": "kozep",
+  "difficulty": 2,
+  "tags": ["list", "loops", "store", "counting", "search"],
   "description": "Értékelje ki a cities.txt fájlban tárolt városok népességadatait!",
-  "story": "Egy statisztikai hivatal a magyar városok népességét tartja nyilván. A hivatal munkatársai a települések adatait szöveges fájlban gyűjtik, majd programokkal értékelik ki. Ebben a feladatban Önnek kell feldolgoznia a cities.txt fájlban tárolt városadatokat!\n\nA cities.txt fájl minden sora egy város adatait tartalmazza. A sorban először a város neve, majd szóközzel elválasztva a lakosságszám (egész szám) szerepel:\n\nVárosnév Lakosságszám\n\nMező          Jelentés\nVárosnév      A település neve (ékezet nélküli írásmód is előfordulhat)\nLakosságszám  A település lakóinak száma főben\n\nAz alábbi példa a cities.txt fájl tartalmát mutatja:\n\nBudapest 1780000\nSzeged 160000\nPecs 140000\n\nEbben a példában három város szerepel. Budapest a legnépesebb település 1 780 000 fővel.\n\nKészítsen programot, amely kiértékeli a cities.txt fájl tartalmát! A megoldást fázisonként, külön Python fájlokban készítse el. Az 1. feladatban olvassa be a fájlt; a további feladatokban a `cities` változó már rendelkezésre áll (a platform betölti).\n\nA képernyőre írást igénylő részfeladatok esetén az ékezetmentes kiírás is elfogadott.",
+  "story": "Egy statisztikai hivatal a magyar városok népességét tartja nyilván. A hivatal munkatársai a települések adatait szöveges fájlban gyűjtik, majd programokkal értékelik ki. Ebben a feladatban Önnek kell feldolgoznia a cities.txt fájlban tárolt városadatokat!",
+  "constraints": [
+    "Minden sor egy várost tartalmaz: név, majd szóközzel elválasztva a lakosságszám.",
+    "A lakosságszám egész szám."
+  ],
+  "data_explanation": "A cities.txt fájl minden sora egy város adatait tartalmazza. A sorban először a város neve, majd szóközzel elválasztva a lakosságszám (egész szám) szerepel. A Mező jelentése: Városnév — a település neve (ékezet nélküli írásmód is előfordulhat); Lakosságszám — a település lakóinak száma főben.",
   "data_file": "cities.txt",
   "dataset_type": "cities",
   "shared_variable": "cities",
@@ -17,6 +25,7 @@
   "tasks": [
     {
       "type": "read",
+      "tags": ["store"],
       "title": "Beolvasás",
       "description": "Olvassa be a cities.txt fájlt, és írja ki a fájl teljes tartalmát a képernyőre! A kiírás legyen soronként azonos a fájl tartalmával (városnév, szóköz, lakosságszám).",
       "points": 1,
@@ -30,6 +39,7 @@
     },
     {
       "type": "count",
+      "tags": ["counting"],
       "title": "Városok száma",
       "description": "A `cities` változó már tartalmazza a fájl adatait. Számítsa ki és jelenítse meg a városok számát (egy egész számot)!",
       "points": 1,
@@ -43,6 +53,7 @@
     },
     {
       "type": "maximum",
+      "tags": ["search"],
       "field": "population",
       "label_field": "name",
       "title": "Legnépesebb város",

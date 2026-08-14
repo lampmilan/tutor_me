@@ -58,6 +58,11 @@ def materialize_loaded_exam(
         template_type=template.id,
         preamble=template.preamble or "",
         shared_variable=template.shared_variable or "data",
+        level=template.level or "kozep",
+        difficulty=int(template.difficulty or 2),
+        tags_json=json.dumps(list(template.tags or []), ensure_ascii=False),
+        constraints_json=json.dumps(list(template.constraints or []), ensure_ascii=False),
+        data_explanation=template.data_explanation or "",
     )
     db.add(exam)
     db.flush()
@@ -82,6 +87,9 @@ def materialize_loaded_exam(
         uses_preamble = bool(spec.get("uses_preamble", False))
         starter = spec.get("starter") or ""
         solution_file = spec.get("solution_file") or f"feladat{idx + 1}.py"
+        stdin = spec.get("stdin") or ""
+        expected_file = spec.get("expected_file") or ""
+        task_tags = list(spec.get("tags") or [])
 
         task = Task(
             exam_id=exam.id,
@@ -93,6 +101,9 @@ def materialize_loaded_exam(
             solution_file=solution_file,
             uses_preamble=uses_preamble,
             starter=starter,
+            tags_json=json.dumps(task_tags, ensure_ascii=False),
+            stdin=stdin,
+            expected_file=expected_file,
         )
         db.add(task)
         db.flush()
@@ -111,6 +122,7 @@ def materialize_loaded_exam(
                 task_id=task.id,
                 name=f"{spec.get('type', 'task')}-sample",
                 input_files="{}",
+                stdin=stdin,
                 expected_output=expected_visible,
                 is_hidden=False,
                 points=points,
@@ -126,6 +138,7 @@ def materialize_loaded_exam(
                     task_id=task.id,
                     name=f"{spec.get('type', 'task')}-hidden-{h_idx:02d}",
                     input_files=json.dumps({data_file: hidden_content}, ensure_ascii=False),
+                    stdin=stdin,
                     expected_output=expected_hidden,
                     is_hidden=True,
                     points=points,

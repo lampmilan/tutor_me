@@ -157,6 +157,10 @@ def judge_workspace(
                 extra = json.loads(tc.input_files or "{}")
             except json.JSONDecodeError:
                 extra = {}
+            if not isinstance(extra, dict):
+                extra = {}
+
+            capture = [task.expected_file] if (task.expected_file or "").strip() else None
 
             if tc.is_hidden:
                 hidden_counter += 1
@@ -168,9 +172,14 @@ def judge_workspace(
                 path,
                 entrypoint=RUN_ENTRYPOINT,
                 stdin=tc.stdin or "",
-                extra_files=extra or None,
+                extra_files=extra,
+                capture_files=capture,
+                isolate=True,
             )
-            actual = _normalize_output(exec_result.output)
+            if capture:
+                actual = _normalize_output(exec_result.files.get(task.expected_file, ""))
+            else:
+                actual = _normalize_output(exec_result.output)
             expected = _normalize_output(tc.expected_output)
             runtime_ok = exec_result.exit_code == 0
             passed = actual == expected and runtime_ok

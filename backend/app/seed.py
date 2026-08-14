@@ -1,10 +1,20 @@
 """Seed all catalog exams from backend/app/exams/*/template.json."""
 
+import json
+
 from sqlalchemy.orm import Session, joinedload
 
 from app.exams.loader import discover_exams
 from app.models import Exam, Task
 from app.services.templates import materialize_loaded_exam
+
+
+def _json_list(raw: str | None) -> list:
+    try:
+        data = json.loads(raw or "[]")
+    except json.JSONDecodeError:
+        return []
+    return data if isinstance(data, list) else []
 
 
 def _needs_rematerialize(exam: Exam, loaded, expected_hidden: int) -> bool:
@@ -22,12 +32,26 @@ def _needs_rematerialize(exam: Exam, loaded, expected_hidden: int) -> bool:
     existing_names = {f.filename for f in exam.files}
     if expected_files and not expected_files.issubset(existing_names):
         return True
+    if (getattr(exam, "level", None) or "kozep") != (loaded.template.level or "kozep"):
+        return True
+    if int(getattr(exam, "difficulty", 0) or 0) != int(loaded.template.difficulty or 0):
+        return True
+    if _json_list(getattr(exam, "tags_json", None)) != list(loaded.template.tags or []):
+        return True
+    if (getattr(exam, "data_explanation", None) or "") != (loaded.template.data_explanation or ""):
+        return True
     by_order = sorted(exam.tasks, key=lambda t: t.order_index)
     for task, tmpl in zip(by_order, loaded.template.tasks):
         want = tmpl.solution_file or None
         if want and getattr(task, "solution_file", None) != want:
             return True
         if bool(getattr(task, "uses_preamble", False)) != bool(tmpl.uses_preamble):
+            return True
+        if _json_list(getattr(task, "tags_json", None)) != list(tmpl.tags or []):
+            return True
+        if (getattr(task, "stdin", None) or "") != (tmpl.stdin or ""):
+            return True
+        if (getattr(task, "expected_file", None) or "") != (tmpl.expected_file or ""):
             return True
     return False
 

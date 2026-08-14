@@ -1,9 +1,20 @@
+import json
 from datetime import datetime
 
 from sqlalchemy import DateTime, Float, ForeignKey, Integer, String, Text, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
+
+
+def _parse_json_list(raw: str | None) -> list[str]:
+    try:
+        data = json.loads(raw or "[]")
+    except json.JSONDecodeError:
+        return []
+    if not isinstance(data, list):
+        return []
+    return [str(x) for x in data]
 
 
 class Exam(Base):
@@ -17,7 +28,20 @@ class Exam(Base):
     # Canonical file-load code injected for tasks with uses_preamble=True
     preamble: Mapped[str] = mapped_column(Text, default="")
     shared_variable: Mapped[str] = mapped_column(String(100), default="data")
+    level: Mapped[str] = mapped_column(String(20), default="kozep")
+    difficulty: Mapped[int] = mapped_column(Integer, default=2)
+    tags_json: Mapped[str] = mapped_column(Text, default="[]")
+    constraints_json: Mapped[str] = mapped_column(Text, default="[]")
+    data_explanation: Mapped[str] = mapped_column(Text, default="")
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+    @property
+    def tags(self) -> list[str]:
+        return _parse_json_list(self.tags_json)
+
+    @property
+    def constraints(self) -> list[str]:
+        return _parse_json_list(self.constraints_json)
 
     files: Mapped[list["ExamFile"]] = relationship(back_populates="exam", cascade="all, delete-orphan")
     tasks: Mapped[list["Task"]] = relationship(back_populates="exam", cascade="all, delete-orphan")
@@ -78,9 +102,16 @@ class Task(Base):
     solution_file: Mapped[str] = mapped_column(String(255), default="main.py")
     uses_preamble: Mapped[bool] = mapped_column(default=False)
     starter: Mapped[str] = mapped_column(Text, default="")
+    tags_json: Mapped[str] = mapped_column(Text, default="[]")
+    stdin: Mapped[str] = mapped_column(Text, default="")
+    expected_file: Mapped[str] = mapped_column(String(255), default="")
 
     exam: Mapped["Exam"] = relationship(back_populates="tasks")
     test_cases: Mapped[list["TestCase"]] = relationship(back_populates="task", cascade="all, delete-orphan")
+
+    @property
+    def tags(self) -> list[str]:
+        return _parse_json_list(self.tags_json)
 
 
 class TestCase(Base):

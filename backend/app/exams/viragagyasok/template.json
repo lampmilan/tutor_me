@@ -1,0 +1,109 @@
+{
+  "id": "viragagyasok",
+  "title": "Virágágyások",
+  "level": "emelt",
+  "difficulty": 4,
+  "tags": ["list", "loops", "input", "counting", "search", "validate", "simulation"],
+  "description": "Ültesse be a lakópark virágágyásait a felajanlas.txt felajánlásai alapján!",
+  "story": "Egy frissen épült óriási lakóparkba költözők elhatározták, hogy a még kopár környezetet megszépítik. A lakóparkot határoló kerítés mellett kijelölték a virágágyások helyét, és sorszámokkal látták el azokat. A sorszámozást, amely eggyel kezdődik, az egyetlen bejárat jobb oldalán lévő ágyással kezdték, és a bejárat bal oldalán lévő ágyással fejezték be. A lakók megadhatták, hogy mely szomszédos ágyásokat szeretnék beültetni. A felajánlásban megadták azt is, hogy milyen színű virággal.",
+  "constraints": [
+    "Ágyások ≤ 3000; felajánlások száma ≤ ágyások száma.",
+    "Körkörös szomszédság: utolsó ↔ első.",
+    "4. feladat tesztjavaslat: ágyás 1 (több felajánló), 269 (senki)."
+  ],
+  "data_explanation": "A fájl további soraiban két szám és egy betű található, egymástól egy-egy szóközzel elválasztva, amely egy lakó felajánlását írja le. (A felajánlások száma nem haladja meg a virágágyások számát.) Az első szám az első, a második az utolsó beültetni kívánt ágyás sorszáma. A betű az angol ábécé nagybetűje, amely a választott színt jelöli. Ha az első szám nagyobb, mint a második, akkor a választott intervallumba a sorszám szerinti utolsó és első ágyás, tehát a bejárat két oldala is beletartozik. Mindenki csak egy felajánlást tehet, de egy ágyás több felajánlásban is szerepelhet, azaz a felajánlásokban szereplő intervallumok átfedhetik egymást. Az ültetést a felajánlások sorrendjében végzik el a lakók.",
+  "data_file": "felajanlas.txt",
+  "dataset_type": "viragagyasok",
+  "shared_variable": "felajanlasok",
+  "preamble": "felajanlasok = []\nagyasok_szama = 0\nwith open(\"felajanlas.txt\", encoding=\"utf-8\") as f:\n    agyasok_szama = int(f.readline().strip())\n    for line in f:\n        line = line.strip()\n        if not line:\n            continue\n        start, end, color = line.split()\n        felajanlasok.append((int(start), int(end), color))\n",
+  "visible": "datasets/visible.txt",
+  "hidden": [
+    "datasets/hidden/01.txt",
+    "datasets/hidden/02.txt",
+    "datasets/hidden/03.txt"
+  ],
+  "tasks": [
+    {
+      "type": "store",
+      "tags": ["store"],
+      "title": "Beolvasás",
+      "description": "Olvassa be és tárolja a `felajanlas.txt` tartalmát!",
+      "points": 1,
+      "solution_file": "beolvasas.py",
+      "uses_preamble": false,
+      "starter": "# 1. feladat: olvassa be a felajanlas.txt tartalmát.\n# Az első sor az ágyások száma, a további sorok: kezdet vég szín.\n# Tárolja a felajánlásokat a `felajanlasok` listában.\n\nagyasok_szama = 0\nfelajanlasok = []\n\n",
+      "hints": [
+        "Read every offer line after the first bed-count line — do not hard-code 465 offers."
+      ]
+    },
+    {
+      "type": "offer_count",
+      "tags": ["count"],
+      "title": "Felajánlások száma",
+      "description": "Írja ki, hány felajánlást tartalmaz az állomány!",
+      "points": 1,
+      "solution_file": "felajanlasok_szama.py",
+      "uses_preamble": true,
+      "starter": "# A felajanlas.txt tartalmát a `felajanlasok` lista és az `agyasok_szama`\n# változó tárolja. Példa elem: (2073, 2107, 'P')\n#\n# 2. feladat: írja ki a felajánlások számát a minta szerint.\n\nprint(f\"A felajánlások száma: \")\n",
+      "hints": [
+        "Count the offer rows — the first line of the file is the number of beds, not offers."
+      ]
+    },
+    {
+      "type": "wrap_offers",
+      "tags": ["search"],
+      "title": "Bejárat két oldala",
+      "description": "Jelenítse meg a képernyőn azon felajánlások sorszámát, amelyek a bejárat bal és jobb oldalán található ágyást is beültetnék! A sorszámokat egy-egy szóközzel válassza el egymástól!",
+      "points": 2,
+      "solution_file": "bejart.py",
+      "uses_preamble": true,
+      "starter": "# 3. feladat: azok a felajánlások, ahol a kezdő sorszám nagyobb, mint a záró\n# (körbeérnek a bejáraton). A sorszámok 1-től indulnak, szóközzel elválasztva.\n\nprint(\"A bejárat mindkét oldalán ültetők:\")\n",
+      "hints": [
+        "An offer covers both sides of the entrance when its start index is greater than its end index."
+      ]
+    },
+    {
+      "type": "bed_query",
+      "tags": ["input", "count", "simulation"],
+      "title": "Egy ágyás",
+      "description": "Kérje be a felhasználótól egy ágyás sorszámát! A tesztelés során használhatja az 1. ágyást, amelyet többen is beültetnének és a 269. ágyást, amelynek beültetésére senki sem vállalkozik.\n\n1. Írja a képernyőre, hogy hány felajánlásban szerepel ez az ágyás!\n2. Adja meg, milyen színű lesz ez az ágyás, ha mindenki a felajánlások sorrendjében végzi el az ültetést, de nem ültet, ha másvalaki előtte már ültetett oda! Ha nem ültetett oda senki, akkor `Ezt az ágyást nem ültetik be.` szöveget jelenítse meg!\n3. Adja meg, milyen színekben pompázna ez az ágyás, ha az eredeti tervvel ellentétesen minden felajánló elültetné virágait! Minden színt csak egyszer tüntessen fel! Az egyes színeket szóközökkel válassza el egymástól! Ha nem ültettek oda virágot, ne jelenítsen meg semmit!",
+      "points": 3,
+      "stdin": "100\n",
+      "solution_file": "egy_agyas.py",
+      "uses_preamble": true,
+      "starter": "# 4. feladat: kérjen be egy ágyás sorszámát, majd válaszoljon a három kérdésre.\n# A platform teszteléskor a 100-as ágyást adja bemenetként.\n\nprint(\"Adja meg az ágyás sorszámát!\")\nagyas = int(input())\n\n",
+      "hints": [
+        "A wrapping offer (start > end) covers the bed if the bed is >= start or <= end.",
+        "Unique colors should appear in the order the offers are listed in the file."
+      ]
+    },
+    {
+      "type": "planting_status",
+      "tags": ["validate"],
+      "title": "Beültetés megoldhatósága",
+      "description": "A felajánlások alapján több eset lehetséges. Határozza meg, melyik teljesül! Az idézőjelek közötti szöveget írja a képernyőre!\n\n• „Minden ágyás beültetésére van jelentkező.”\n• Ha nincs minden ágyásra jelentkező, de a felajánlásokban vállalt ágyások számának összege nagyobb vagy egyenlő, mint az ágyások száma, akkor: „Átszervezéssel megoldható a beültetés.”\n• Ha kevesebb ágyás beültetésére vállalkoztak, mint amennyi van: „A beültetés nem oldható meg.”",
+      "points": 2,
+      "solution_file": "megoldhatosag.py",
+      "uses_preamble": true,
+      "starter": "# 5. feladat: a három hivatalos mondat közül írja ki a megfelelőt.\n\nprint()\n",
+      "hints": [
+        "First check whether the union of all offer intervals covers every bed, then compare the summed interval lengths with the bed count."
+      ]
+    },
+    {
+      "type": "colors_file",
+      "tags": ["simulation", "store"],
+      "title": "szinek.txt",
+      "description": "A beültetést a felajánlások sorrendjében végezték el. Ha egy ágyást valaki már beültetett, akkor más már nem ültetett oda. A munka eredményét tárolja el a `szinek.txt` fájlban! A fájlban soronként az ágyások sorszámának sorrendjében két értéket, az ágyás színét jelző karaktert és az ültetéshez tartozó felajánlás sorszámát írja ki. Amelyik ágyás virág nélkül maradt, színként a `#` karaktert, a felajánlás sorszámának helyére pedig a `0`-t írja!",
+      "points": 3,
+      "expected_file": "szinek.txt",
+      "solution_file": "szinek.py",
+      "uses_preamble": true,
+      "starter": "# 6. feladat: first-come-first-served ültetés, eredmény a szinek.txt-be.\n# Soronként: szín felajánlás_sorszáma   pl. \"K 10\" vagy \"# 0\"\n\nwith open(\"szinek.txt\", \"w\", encoding=\"utf-8\") as f:\n    pass\n",
+      "hints": [
+        "Plant beds in offer order; skip a bed if it already has a color.",
+        "Write one line per bed from 1 to agyasok_szama — unplanted beds are `# 0`."
+      ]
+    }
+  ]
+}

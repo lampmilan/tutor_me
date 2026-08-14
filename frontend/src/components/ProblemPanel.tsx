@@ -10,8 +10,12 @@ export type DataFile = {
 
 type ProblemPanelProps = {
   title: string;
-  description: string;
   story: string;
+  level: string;
+  difficulty: number;
+  tags: string[];
+  constraints: string[];
+  dataExplanation: string;
   tasks: Task[];
   dataFiles: DataFile[];
   activePhase: number | null;
@@ -19,14 +23,27 @@ type ProblemPanelProps = {
   phaseStatus?: Record<number, "idle" | "passed" | "failed">;
 };
 
+const SAMPLE_LINES = 5;
+
 function cleanStory(story: string): string {
   return story.replace(/^\[\[.*?\]\]\s*/m, "").trim();
 }
 
+function levelLabel(level: string): string {
+  const key = (level || "kozep").toLowerCase();
+  if (key === "emelt") return "Emelt";
+  if (key === "kozep" || key === "közép") return "Közép";
+  return level;
+}
+
 export function ProblemPanel({
   title,
-  description,
   story,
+  level,
+  difficulty,
+  tags,
+  constraints,
+  dataExplanation,
   tasks,
   dataFiles,
   activePhase,
@@ -38,7 +55,11 @@ export function ProblemPanel({
     () => tasks.slice().sort((a, b) => a.order_index - b.order_index),
     [tasks],
   );
-  const totalPoints = sorted.reduce((sum, t) => sum + t.points, 0);
+  const primaryFile = dataFiles[0];
+  const samplePreview = useMemo(() => {
+    if (!primaryFile?.content) return "";
+    return primaryFile.content.split("\n").slice(0, SAMPLE_LINES).join("\n").replace(/\n+$/, "");
+  }, [primaryFile]);
   const activeData = dataFiles.find((f) => f.filename === tab);
 
   return (
@@ -60,15 +81,63 @@ export function ProblemPanel({
 
       {tab === "feladat" ? (
         <div className="flex-1 overflow-auto px-5 py-5">
-          <h1 className="font-[family-name:var(--font-display)] text-2xl font-semibold tracking-tight text-[var(--fg)]">
-            {title}
-          </h1>
-          <p className="mt-2 text-sm leading-relaxed text-[var(--muted-strong)]">{description}</p>
-          <p className="mt-2 text-xs text-[var(--muted)]">{totalPoints} pont</p>
+          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <h1 className="font-[family-name:var(--font-display)] text-2xl font-semibold tracking-tight text-[var(--fg)]">
+              {title}
+            </h1>
+            <span className="text-sm text-[var(--muted-strong)]">
+              {levelLabel(level)}{" "}
+              <DifficultyDots value={difficulty} />
+            </span>
+          </div>
 
-          <div className="mt-6">
+          {tags.length > 0 ? (
+            <p className="mt-2 text-sm italic text-[var(--muted)]">
+              {tags.join(" | ")}
+            </p>
+          ) : null}
+
+          <div className="mt-5">
             <StoryBody story={cleanStory(story)} />
           </div>
+
+          {primaryFile ? (
+            <section className="mt-8">
+              <h2 className="mb-3 border-b border-[var(--border)] pb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
+                Bejövő adat
+              </h2>
+              <p className="font-mono text-sm text-[var(--fg)]">{primaryFile.filename}</p>
+              {samplePreview ? (
+                <pre className="mt-2 overflow-x-auto rounded border border-[var(--border)] bg-[var(--editor)] px-3 py-2 font-mono text-[12px] leading-relaxed text-[var(--fg)]">
+                  {samplePreview}
+                </pre>
+              ) : null}
+
+              {constraints.length > 0 ? (
+                <div className="mt-5">
+                  <h3 className="mb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
+                    Megkötések
+                  </h3>
+                  <ul className="list-disc space-y-1 pl-5 text-sm leading-relaxed text-[var(--muted-strong)]">
+                    {constraints.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
+
+              {dataExplanation.trim() ? (
+                <div className="mt-5">
+                  <h3 className="mb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
+                    Bejövő fájl magyarázat
+                  </h3>
+                  <p className="text-sm leading-relaxed text-[var(--muted-strong)]">
+                    {dataExplanation}
+                  </p>
+                </div>
+              ) : null}
+            </section>
+          ) : null}
 
           <section className="mt-8">
             <h2 className="mb-4 border-b border-[var(--border)] pb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
@@ -81,6 +150,9 @@ export function ProblemPanel({
                 const samples = (task.test_cases ?? []).filter(
                   (tc) => !tc.is_hidden && tc.expected_output != null,
                 );
+                const sampleInput = (task.test_cases ?? []).find(
+                  (tc) => !tc.is_hidden && (tc.stdin || "").trim(),
+                )?.stdin;
                 return (
                   <li key={task.id}>
                     <button
@@ -109,24 +181,46 @@ export function ProblemPanel({
                             <h3 className="text-sm font-semibold text-[var(--fg)]">
                               {index + 1}. feladat — {task.title}
                             </h3>
-                            <span className="text-[11px] text-[var(--muted)]">
-                              {task.points} pont · {task.solution_file}
+                            <span className="font-mono text-[11px] text-[var(--muted)]">
+                              {task.solution_file}
                             </span>
                           </div>
-                          <p className="mt-2 text-sm leading-relaxed text-[var(--muted-strong)]">
+                          {(task.tags ?? []).length > 0 ? (
+                            <div className="mt-1.5 flex flex-wrap gap-1">
+                              {(task.tags ?? []).map((tag) => (
+                                <span
+                                  key={tag}
+                                  className="rounded border border-[var(--border)] px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-wide text-[var(--muted-strong)]"
+                                >
+                                  {tag}
+                                </span>
+                              ))}
+                            </div>
+                          ) : null}
+                          <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-[var(--muted-strong)]">
                             {task.description}
                           </p>
-                          {samples.length > 0 ? (
+                          {sampleInput ? (
                             <div className="mt-3 space-y-2">
                               <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--muted)]">
-                                Minta kimenet
+                                Minta bemenet
+                              </p>
+                              <pre className="overflow-x-auto rounded border border-[var(--border)] bg-[var(--editor)] px-3 py-2 font-mono text-[12px] leading-relaxed text-[var(--fg)]">
+                                {sampleInput.replace(/\n$/, "")}
+                              </pre>
+                            </div>
+                          ) : null}
+                          {samples.length > 0 && samples.some((s) => (s.expected_output || "").trim()) ? (
+                            <div className="mt-3 space-y-2">
+                              <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--muted)]">
+                                {task.expected_file ? `Minta fájl · ${task.expected_file}` : "Minta kimenet"}
                               </p>
                               {samples.map((sample) => (
                                 <pre
                                   key={sample.id}
                                   className="overflow-x-auto rounded border border-[var(--border)] bg-[var(--editor)] px-3 py-2 font-mono text-[12px] leading-relaxed text-[var(--fg)]"
                                 >
-                                  {sample.expected_output}
+                                  {previewExpected(sample.expected_output || "", Boolean(task.expected_file))}
                                 </pre>
                               ))}
                             </div>
@@ -151,6 +245,23 @@ export function ProblemPanel({
         </div>
       ) : null}
     </aside>
+  );
+}
+
+function previewExpected(text: string, isFile: boolean): string {
+  if (!isFile) return text;
+  const lines = text.split("\n");
+  if (lines.length <= 8) return text;
+  return `${lines.slice(0, 3).join("\n")}\n…\n${lines.slice(-3).join("\n")}`;
+}
+
+function DifficultyDots({ value, max = 5 }: { value: number; max?: number }) {
+  const n = Math.min(max, Math.max(0, Math.round(value || 0)));
+  return (
+    <span className="font-mono tracking-tight text-[var(--accent)]" aria-label={`Nehézség ${n} / ${max}`}>
+      {"⬤".repeat(n)}
+      <span className="text-[var(--muted)]">{"○".repeat(max - n)}</span>
+    </span>
   );
 }
 

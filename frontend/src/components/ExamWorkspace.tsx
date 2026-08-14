@@ -245,7 +245,7 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
         await saveAllDirty();
       }
       const code = files[activeTask.solution_file]?.content ?? current.content;
-      const result = await api.execute(workspace.id, code, "", activeTask.id);
+      const result = await api.execute(workspace.id, code, activeTask.stdin || "", activeTask.id);
       setOutput(result.output);
       setError(result.error);
       setRuntime(result.runtime);
@@ -378,8 +378,12 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
         <div className="flex min-h-0 min-w-0 flex-col" style={{ width: `${leftPct}%` }}>
           <ProblemPanel
             title={exam.title}
-            description={exam.description}
             story={exam.story}
+            level={exam.level ?? "kozep"}
+            difficulty={exam.difficulty ?? 2}
+            tags={exam.tags ?? []}
+            constraints={exam.constraints ?? []}
+            dataExplanation={exam.data_explanation ?? ""}
             tasks={exam.tasks}
             dataFiles={dataFiles}
             activePhase={activePhaseId}

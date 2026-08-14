@@ -1,8 +1,15 @@
 {
   "id": "temperatures",
   "title": "Temperatures",
+  "level": "kozep",
+  "difficulty": 2,
+  "tags": ["list", "loops", "store", "counting", "search"],
   "description": "Olvasd be a temps.txt fájlt, és oldd meg a feladatokat!",
-  "story": "Egy meteorológiai állomás napi középhőmérsékleteket rögzít. A temps.txt fájl: dátum és Celsius-fok. Az 1. feladatban olvasd be a fájlt; a továbbiakban a `temps` változó már rendelkezésre áll.",
+  "story": "Egy meteorológiai állomás napi középhőmérsékleteket rögzít.",
+  "constraints": [
+    "Minden sor: dátum és Celsius-fok."
+  ],
+  "data_explanation": "A temps.txt fájl minden sora egy nap dátumát és a napi középhőmérsékletet (egész Celsius-fok) tartalmazza, szóközzel elválasztva.",
   "data_file": "temps.txt",
   "dataset_type": "temperatures",
   "shared_variable": "temps",
@@ -17,6 +24,7 @@
   "tasks": [
     {
       "type": "minimum",
+      "tags": ["store", "search"],
       "field": "celsius",
       "title": "Legalacsonyabb hőmérséklet",
       "description": "Olvasd be a temps.txt fájlt a `temps` listába, majd írd ki a legalacsonyabb hőmérsékletet!",
@@ -31,6 +39,7 @@
     },
     {
       "type": "maximum",
+      "tags": ["search"],
       "field": "celsius",
       "title": "Legmagasabb hőmérséklet",
       "description": "A `temps` változó már rendelkezésre áll. Írd ki a legmagasabb hőmérsékletet!",
@@ -44,6 +53,7 @@
     },
     {
       "type": "average",
+      "tags": ["counting"],
       "field": "celsius",
       "title": "Átlaghőmérséklet",
       "description": "A `temps` változó már rendelkezésre áll. Írd ki az átlagot egész számra csonkolva!",

@@ -14,8 +14,8 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
-    database_url: str = "sqlite:////workspace/data/erettsegi.db"
-    workspaces_root: str = "/workspace/data/workspaces"
+    database_url: str = "sqlite:///./data/erettsegi.db"
+    workspaces_root: str = "/tmp/erettsegi-workspaces"
     executor_image: str = "erettsegi-executor:latest"
     execution_timeout_seconds: int = 5
     execution_memory_limit: str = "128m"
@@ -24,6 +24,14 @@ class Settings(BaseSettings):
     openai_api_key: str = ""
     openai_model: str = "gpt-4o-mini"
     ai_generation_enabled: bool = False
+    # Comma-separated origins, or * for any (Vercel preview URLs vary).
+    cors_origins: str = "*"
+
+    def cors_origin_list(self) -> list[str]:
+        raw = (self.cors_origins or "*").strip()
+        if raw == "*":
+            return ["*"]
+        return [part.strip() for part in raw.split(",") if part.strip()]
 
 
 @lru_cache

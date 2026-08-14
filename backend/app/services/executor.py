@@ -6,6 +6,7 @@ Fallback: subprocess (for local Compose when Docker CLI is unavailable).
 
 from __future__ import annotations
 
+import resource
 import shutil
 import subprocess
 import sys
@@ -141,6 +142,34 @@ def _python_bin() -> str:
     return sys.executable or "/usr/local/bin/python3"
 
 
+def _memory_limit_bytes() -> int:
+    raw = (settings.execution_memory_limit or "128m").strip().lower()
+    try:
+        if raw.endswith("g"):
+            return int(float(raw[:-1]) * 1024 * 1024 * 1024)
+        if raw.endswith("m"):
+            return int(float(raw[:-1]) * 1024 * 1024)
+        if raw.endswith("k"):
+            return int(float(raw[:-1]) * 1024)
+        return int(raw)
+    except ValueError:
+        return 128 * 1024 * 1024
+
+
+def _limit_child_resources() -> None:
+    """Apply CPU/address-space caps in the forked student process (Cloud Run)."""
+    cpu = max(1, int(settings.execution_timeout_seconds) + 1)
+    mem = _memory_limit_bytes()
+    try:
+        resource.setrlimit(resource.RLIMIT_CPU, (cpu, cpu))
+    except (ValueError, resource.error):
+        pass
+    try:
+        resource.setrlimit(resource.RLIMIT_AS, (mem, mem))
+    except (ValueError, resource.error):
+        pass
+
+
 def _run_subprocess(
     workspace_path: Path,
     *,
@@ -148,7 +177,7 @@ def _run_subprocess(
     stdin: str,
     timeout: int,
 ) -> ExecutionResult:
-    """Run student code via subprocess (Compose-friendly fallback)."""
+    """Run student code via subprocess (Compose / Cloud Run)."""
     started = time.perf_counter()
     python_bin = _python_bin()
     script = entrypoint or "main.py"
@@ -160,6 +189,8 @@ def _run_subprocess(
             capture_output=True,
             text=True,
             timeout=timeout,
+            start_new_session=True,
+            preexec_fn=_limit_child_resources,
             env={
                 "PATH": "/usr/local/bin:/usr/bin:/bin",
                 "HOME": "/tmp",

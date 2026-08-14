@@ -6,11 +6,11 @@ Online coding practice platform for the Hungarian programming **érettségi**.
 
 | Layer | Tech |
 |-------|------|
-| Frontend | Next.js + TypeScript + Monaco Editor |
-| Backend | FastAPI + Python |
-| Database | PostgreSQL |
-| Execution | Isolated Docker containers |
-| Runtime | Docker Compose only |
+| Frontend | Next.js on **Vercel** |
+| Backend | FastAPI on **Google Cloud Run** |
+| Database | **Neon** Postgres |
+| Execution | Subprocess on Cloud Run (Docker isolation locally) |
+| Local runtime | Docker Compose |
 
 ## Quick start
 
@@ -32,6 +32,49 @@ docker compose up --build
 
 The frontend talks to the backend over the Compose network (`backend:8000`).
 Browser calls go to `/api/*` on port 3000 and Next.js rewrites them to the backend.
+
+## Deploy (Vercel + Cloud Run + Neon)
+
+Order matters: **Neon → Cloud Run → Vercel**, so the frontend can rewrite `/api/*` to the API URL.
+
+### 1. Neon
+
+Create a project at [neon.tech](https://neon.tech) (or claim a temporary DB from [neon.new](https://neon.new)). Copy the **pooled** connection string:
+
+```text
+postgresql://USER:PASSWORD@ep-xxx-pooler.REGION.aws.neon.tech/neondb?sslmode=require
+```
+
+Schema + exam seed run automatically when the API starts.
+
+### 2. Cloud Run
+
+Needs the `gcloud` CLI and a billing-enabled GCP project.
+
+```bash
+export GCP_PROJECT=your-project-id
+export GCP_REGION=europe-west1          # optional
+export DATABASE_URL='postgresql://...neon.tech/neondb?sslmode=require'
+export CORS_ORIGINS='https://your-app.vercel.app'  # or * while testing
+./scripts/deploy-cloudrun.sh
+```
+
+The script prints the service URL (`https://erettsegi-api-….run.app`). Confirm `https://<url>/health`.
+
+GitHub Action: add secrets `GCP_SA_KEY` (JSON key for a deployer service account) and `NEON_DATABASE_URL`, plus variable `GCP_PROJECT`. Then run **Deploy backend to Cloud Run** from the Actions tab.
+
+### 3. Vercel
+
+1. [Import the GitHub repo](https://vercel.com/new) (`lampmilan/tutor_me`).
+2. Set **Root Directory** to `frontend`.
+3. Environment variables (Production + Preview):
+   - `API_URL` = Cloud Run URL (no trailing slash)
+   - `BACKEND_URL` = same Cloud Run URL
+4. Deploy.
+
+Browser traffic stays same-origin (`/api/*`); Vercel rewrites it to Cloud Run, so Run/Submit is not limited by Vercel function timeouts.
+
+After the first Vercel URL is known, redeploy Cloud Run with `CORS_ORIGINS` set to that origin if the browser will call the API directly.
 
 ## Core workflow
 

@@ -1,7 +1,8 @@
 import { ExamCard } from "@/components/ExamCard";
 
-// Server-side: call the backend service directly on the Compose network.
-const API_URL = process.env.API_URL || "http://backend:8000";
+// Server-side: Cloud Run URL in prod, Compose service locally.
+const API_URL =
+  process.env.API_URL || process.env.BACKEND_URL || "http://localhost:8000";
 
 type ExamListItem = {
   id: number;

@@ -1,0 +1,98 @@
+
+gyakorlati vizsga 0921 10 / 12 2010. október 22.
+Informatika — emelt szint Azonosító
+jel:
+
+4. Anagramma
+Az anagramma a szójátékok egy fajtája, melyben értelmes szavak vagy mondatok bet űinek
+sorrendjét úgy változtatjuk me g, hogy az eredmény szintén értelmes szó vagy mondat lesz.
+Sok anagramma esetén az eredeti szó és a végeredmény között humoros vagy egyéb kapcsolat
+van, ez növeli az anagramma érdekességét, értékét. Például a satu szó anagrammái: utas, tusa,
+suta.
+A szotar.txt ASCII kódolású állomány legfeljebb 300 különböz ő szót tartalmaz.
+A szavak legalább 2, legfeljebb 30 karakter hosszúságúak, és csak az angol ábécé kisbet űit
+tartalmazzák. Az állományban az egyes szavak külön sorokban szerepelnek, és minden szó
+csak egyszer fordulhat elő.
+Például:
+szotar.txt
+eszesen
+kereszt
+keretes
+keretez
+nyertesek
+hadartam
+maradhat
+…
+Készítsen programot, amely az alábbi kérd ésekre válaszol! A program forráskódját
+anagram néven mentse! Ügyeljen arra, hogy programjának minden helyes tartalmú bemeneti
+állomány esetén működnie kell!
+Minden részfeladat megoldása el őtt írja a képerny őre a feladat sorszámát! Ha a felhaszná-
+lótól kér be adatot, jelenítse meg a képerny őn, hogy milyen értéket vár (például az 1. feladat
+esetén: „Adja meg a szöveget: ”)! A képerny őn megjelenített üzenetek esetén az ékezet-
+mentes kiírás is elfogadott.
+1. Kérjen be a felhasználót ól egy szöveget, majd ha tározza meg, hogy hány különböz ő
+karakter található a szövegben! A darabszámot és a karaktereket írja ki a képernyőre!
+2. Olvassa be a szotar.txt állományból a szavakat, és a következ ő feladatok megoldása
+során ezekkel dolgozzon! Amennyiben nem t udja beolvasni az állományból a szavakat,
+akkor az első 10 szóval dolgozzon!
+3. Az állományból beolvasott szavakat alak ítsa át úgy, hogy minden szó karaktereit
+egyenként tegye ábécérendbe! Az így létrehozott szavakat írja ki az abc.txt állományba
+az eredeti állománnyal egyező sorrendben!
+Például:
+Eredeti Ábécé sorrendben lév ő
+tervez
+nyugalom
+eertvz
+aglmnouy
+4. Kérjen be a felhasználótól két szót, és döntse el, hogy a két szó anagramma-e! Ha azok
+voltak, írja ki a képerny őre az „ Anagramma” szót, ha nem, akkor pedig a „ Nem
+anagramma” szöveget!
+5. Kérjen be a felhasználótól egy szót! A szotar.txt állomány szavaiból keresse meg
+a szó anagrammáit (a szót önmagát is annak te kintve)! Ha van találat, azokat egymás alá
+írja ki a képerny őre, ha nem volt találat,  akkor írja ki a „ Nincs a szótárban
+anagramma” szöveget!
+
+gyakorlati vizsga 0921 11 / 12 2010. október 22.
+Informatika — emelt szint Azonosító
+jel:
+
+6. Határozza meg, hogy a szotar.txt állományban melyik a leghosszabb szó! Ha több,
+ugyanannyi karakterb ől álló leghosszabb szó volt, akkor  az ugyanazokat a karaktereket
+tartalmazó szavakat (amelyek egymás anagrammái) közvetlenül egymás alá írja ki!
+A feltételnek megfelelő összes szó pontosan egyszer szerepeljen a kiírásban!
+7. Rendezze a
+szotar.txt állományban lévő szavakat a karakterek száma szerint növekv ő
+sorrendbe! Az egyforma hosszús ágú és ugyanazokat a karakter eket tartalmazó szavak
+(amelyek egymás anagrammái) szóközzel elválasztva ugyanabba a sorba kerüljenek!
+Az egyforma hosszúságú, de nem ugyanazokat a karaktereket tartalmazó szavak külön
+sorba kerüljenek! A különböz ő hosszúságú szavakat egy üres sorral különítse el egymás-
+tól! Az így rendezett szavakat írja ki a
+rendezve.txt állományba!
+Például:
+Eredeti Rendezett
+halat
+rakat
+ajak
+papi
+rakta
+ajka
+takar
+kaja
+satu
+vallat
+tarka
+pipa
+paplan
+ajak ajka kaja
+papi pipa
+satu suta tusa utas
+
+halat
+rakat rakta takar tarka
+
+vallat
+paplan
+
+
+
+45 pont 

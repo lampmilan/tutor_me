@@ -1,0 +1,66 @@
+
+gyakorlati vizsga 1121 10 / 12 2013. október 18.
+Informatika — emelt szint Azonosító
+jel:
+
+4. Közúti ellenőrzés
+Bizonyára mindenki látott már rend őrjárőrt, aki szolgálata során egy út menti ellen őrző
+pontról a forgalmat figyelte. A jár őr feladata lehet a szabálytalankodók kisz űrése mellett
+az elhaladó járm űvek szúrópróbaszer ű vagy módszeres ellen őrzése. Bizonyos esetekben egy
+műszaki ellen őrző állomás is kitelepül, amely alkalmas a kiválasztott járm űvek m űszaki
+állapotának felmérésére.
+Egy olyan nap adatait kell feldolgoznia, amelyen a rend őri mellett m űszaki ellen őrzés is
+zajlott egy egyirányú út mentén. Az úton haladó legalább 50, de legfeljebb 1000 jármű adatait
+a jarmu.txt állományban tárolta el a rend őrautó forgalomrögzít ő kamerájához
+csatlakoztatott gép. Az állomány sorai azonos szerkezet űek, az id őt és a rendszámot
+tartalmazzák az elhaladás sorrendjében. A rendszám mindig 7 karakter hosszú, az angol ábécé
+nagybetűit, köt őjelet és számjegyeket tartalmaz e bben a sorrendben. A példában szerepl őtől
+eltérő felépítésű rendszámok is lehetségesek.
+Például:
+11 12 05 TI-2342
+11 12 09 BU-5523
+11 12 41 AAAA-99
+11 13 12 DM-5632
+…
+A 2. sor mutatja, hogy a BU-5523 járm ű 11 óra 12 perc 9 másodperckor haladt át
+az ellenőrző ponton.
+Készítsen programot, amely az alábbi kérdés ekre válaszol! A program forráskódját mentse
+jaror néven! (A program megírásakor a felhas ználó által megadott adatok helyességét,
+érvényességét nem kell ellenőriznie.)
+A képerny őre írást igényl ő részfeladatok eredményének megjelenítése el őtt írja
+a képernyőre a feladat sorszámát (például: 3. feladat:)! Ha a felhasználótól kér be adatot,
+jelenítse meg a képernyőn, hogy milyen értéket vár! Az ékezetmentes kiírás is elfogadott.
+1. Olvassa be a jarmu.txt állományban talált adatokat, s annak felhasználásával oldja meg
+a következő feladatokat!
+2. Határozza meg, hogy aznap legalább hány óra hosszat dolgoztak az ellen őrzést végzők, ha
+munkaidejük egész órakor kezd ődik, és pontosan egész órakor végz ődik! (Minden óra 0
+perc 0 másodperckor kezd ődik, és 59 perc 59 másodperccel végz ődik.) Az eredményt
+jelenítse meg a képernyőn!
+3. Műszaki ellenőrzésre minden órában egy járm űvet választanak ki. Azt, amelyik abban az
+órában először halad arra. Az ellenőrzés óráját és az ellenőrzött jármű rendszámát jelenítse
+meg a képerny őn a következ ő formában: 9 óra: AB-1234 ! Minden óra adata külön
+sorba kerüljön! Csak azon órák adatai jelenjenek meg, amikor volt ellenőrizhető jármű!
+4. A rendszám els ő karaktere külön jelentéssel bír. Az egyes bet űk közül a „ B” autóbuszt,
+a „K” kamiont, az „ M” motort jelöl, a többi rendszámhoz személygépkocsi tartozik.
+Jelenítse meg a képernyőn, hogy az egyes kategóriákból hány járm ű haladt el az ellenőrző
+pont előtt!
+5. Mettől meddig tartott a leghosszabb forgalommentes id őszak? A választ jelenítse meg
+a képernyőn a következő formában: 9:9:13 - 9:15:3!
+
+gyakorlati vizsga 1121 11 / 12 2013. október 18.
+Informatika — emelt szint Azonosító
+jel:
+
+6. A rend őrök egy baleset közelében látott járm űvet keresnek rendszám alapján.
+A szemtanúk csak a rendszám bizonyos kara ktereire emlékeztek, így a rendszám
+ismeretlen karaktereit a * karakterrel helyette sítve keresik a nyilvántartásban. Kérjen be
+a felhasználótól egy ilyen rendszámot, majd jelenítse meg a képerny őn az arra illeszthet ő
+rendszámokat!
+7. Egy közúti ellen őrzés pontosan 5 percig tart. Amíg az ellen őrzés folyik, a járm űvek
+szabadon elhaladhatnak, a következ ő megállítására csak az ellen őrzés befejezése után
+kerül sor. Ha a rend őrök a legels ő járm űvet ellen őrizték, akkor mely járm űveket tudták
+ellenőrizni a szolgálat végéig? Írja az ellen őrzött járművek áthaladási idejét és rendszámát
+a vizsgalt.txt állományba az áthaladás sorrendjében, a bemenettel egyez ő formában!
+Ügyeljen arra, hogy az időadatokhoz tartozó számok a bevezető nullákat tartalmazzák!
+
+45 pont 

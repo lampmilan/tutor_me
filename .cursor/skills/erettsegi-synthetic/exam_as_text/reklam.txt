@@ -1,0 +1,110 @@
+Digitális kultúra
+emelt szint
+2214 gyakorlati vizsga 14 / 20 2023. október 25.
+Azonosító
+jel:
+
+3. Reklám
+Egy termék hirdetésének hatékonyságát vizsgálták három, egymásh oz hasonló lélekszámú
+városban. Egy 30 napos időszak középső tíz napján zajlott reklámkampány a három város közül
+kettőben. Az egyik városban a helyi televízióban reklámozták a terméket, a másik városban
+utcai plakáton hirdették, mindkét városban az időszak 11-edik n apjától a 20-adik napjáig.
+A harmadik városban nem volt reklámkampány, illetve az előbbi k ét városban sem volt
+az időszak első 10 és az utolsó 10 napján.
+A kampány sikerességét a 30 nap során a három városból leadott rendelések alapján mérték.
+Ezek az adatok megtalálhatók a rendel.txt szöveges állományban, melynek néhány sora
+a következő:
+13 PL 2
+13 PL 1
+13 TV 1
+13 NR 1
+13 TV 3
+A rendelések időrendben vannak, minden sorban egy-egy rendelés szerepel. Egy soron belül
+az első szám a rendelés napja, a következő két betű azt a várost jelöli, ahol a rendelést leadták,
+míg a harmadik elem a termékből rendelt darabszám. Az adatokat a soron belül szóközök
+választják el egymástól. A fenti példában látható rendelések mind a 13. napon történtek. Az első
+két rendelést abban a városban adták le, ahol plakáton hirdette k (PL). A harmadik és ötödik
+rendelést abban a városban adták le, ahol a helyi televízióban hirdettek (TV). A negyedik
+rendelést abban a városban adták le, ahol nem volt reklámkampán y (NR). Az első példában
+látható rendeléssel 2 terméket, az utolsó rendeléssel 3-at, míg  a középső három rendelés
+mindegyikével 1–1  terméket rendeltek.
+Egy-egy napon általában több re ndelés érkezett, és tudjuk, hogy  minden nap rendeltek
+valamelyik városból, de nem feltétlenül rendeltek minden nap mindhárom városból. Az összes
+rendelések száma 1000-nél kevesebb, és minden rendelésben a darabszám 10-nél kisebb.
+Készítsen programot, amely a három városból származó rendelések  a d a t a i t  f e l h a s z n á l v a
+az alábbi feladatokat oldja meg! A program forráskódját mentse reklam néven! A program
+megírásakor a bemeneti állományban található, vagy a felhasznál ó által megadott adatok
+helyességét, érvényességét nem kell ellenőriznie, feltételezhet i, hogy azok a leírtaknak
+megfelelnek.
+A képernyőre írást igénylő részfeladatok eredményének megjelenítése előtt írja a képernyőre
+a feladat sorszámát (például: 2. feladat ) és utaljon a megjelenítendő tartalomra! Ha
+a felhasználótól kér be adatot, jelenítse meg a képernyőn, hogy  milyen értéket vár!
+Az ékezetmentes kiírás is elfogadott a képernyőn történő megjel enítés és a szöveges
+állományba való írás során.
+1. Olvassa be és tárolja el a további feldolgozáshoz a rendel.txt állomány tartalmát!
+2. Állapítsa meg, hogy hány rendelés történt a teljes időszakban, és írja a képernyőre
+a rendelések számát!
+3. Kérje be a felhasználótól egy nap számát, és adja meg, hogy hán y rendelés történt az adott
+napon!
+4. Számolja meg, hogy hány nap nem volt rendelés a reklámban nem é rintett városból, és írja
+ki a napok számát! Ha egy ilyen nap sem volt, akkor írja ki „Minden nap volt rendelés
+a reklámban nem érintett városból” szöveget!
+Digitális kultúra
+emelt szint
+2214 gyakorlati vizsga 15 / 20 2023. október 25.
+Azonosító
+jel:
+
+5. Állapítsa meg, hogy mennyi volt az egy rendelésben szereplő leg nagyobb darabszám, és
+melyik volt az a nap, amikor az első ilyen számú rendelést lead ták! Az eredményt a lenti
+minta szerint írja ki!
+6. Készítsen függvényt osszes néven, amely megadja, hogy mennyi volt egy adott városból
+egy adott napon a rendelt termékek száma! A függvény bemenete a  három város egyikére
+utaló kétbetűs szöveg és a nap sorszáma legyen. Amennyiben szük séges, akkor további
+paramétert is felvehet a rendelé sek adatainak elérése érdekében . A függvény visszaadott
+értéke a rendelt darabszámok összege legyen! A függvényt példáu l a következő módon
+lehessen meghívni: osszes("PL", 7). A függvényt a későbbiekben felhasználhatja
+a további feladatok megoldásakor.
+7. Számítsa ki, hogy a kampány utáni első napon, azaz a 21-edik na pon melyik városból
+mennyit rendeltek a termékből! Az eredményt a lenti mintának megfelelő formában írja ki!
+8. Összesítse városonként, hogy hány rendelés érkezett az első 10, a 11-20-adik valamint a záró
+10 napon! Az eredményt (a fejlécet is beleértve) táblázatos for mában, tabulátorokkal
+tagoltan jelenítse meg a képernyő n, illetve írja azonos formátu mban a kampany.txt
+szöveges állományba!
+Minta a felhasználóval történő kommunikációhoz:
+2. feladat:
+A rendelések száma: 971
+3. feladat:
+Kérem, adjon meg egy napot: 9
+A rendelések száma az adott napon: 27
+4. feladat:
+3 nap nem volt a reklámban nem érintett városból rendelés
+5. feladat:
+A legnagyobb darabszám: 9, a rendelés napja: 22
+7. feladat:
+A rendelt termékek darabszáma a 21. napon PL: 43 TV: 36 NR: 18
+8. feladat:
+Napok 1..10 11..20 21..30
+PL 98 159 106
+TV 97 143 100
+NR 91 86 91
+A feladat a következő oldalon folytatódik.
+
+Digitális kultúra
+emelt szint
+2214 gyakorlati vizsga 16 / 20 2023. október 25.
+Azonosító
+jel:
+
+9. Készítsen táblázatkezelő alkalm azás segítségével halmozott oszl opdiagramot az előző
+feladatban kiszámított adatok felhasználásával! Töltse be a kampany.txt szöveges
+állományból az adatokat, vagy ha nem tudta megoldani az előző feladatot, akkor gépelje be
+a mintában szereplő értékeket! A városok sorrendje a mintától eltérő is lehet!
+10. A diagram címét, jelmagyarázatát  és tengelyfeliratait a minta s zerint alakítsa ki!
+A munkafüzetet mentse kampany néven a táblázatkezelő p rogram alapértelmezett
+formátumában!
+Minta a diagramról:
+
+
+
+50 pont 

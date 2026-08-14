@@ -1,0 +1,108 @@
+
+Digitális kultúra 10 / 12 emelt szintű gyakorlati vizsga
+E2411  2024. május 21.
+Azonosító
+jel:
+
+3. Beléptető rendszer
+Egy iskolában minden diáknak van egy tanulói kártyája, amelyet nemcsak a be- és kilépéskor
+használnak, hanem ez helyettesíti a könyvtári olvasójegyet és a menzán az ebédjegyet is.
+A rendszer adatbázisából statisztikai elemzés céljából lekérték  az október 12-én rögzített
+adatokat. A bedat.txt állomány a tanuló kódját, az esemény időpontját, valamint az esemény
+kódját tartalmazza szóközzel elválasztva. Az esemény kódja a következő lehet:
+1 belépés a főkapun át
+2 kilépés a főkapun át
+3 az ebéd kiadása a menzán
+4 kölcsönzés a könyvtárban
+Például:
+…
+KYPG 14:04 1
+CIVX 14:04 2
+XHTR 14:04 2
+RYUI 14:04 3
+SBUG 14:04 4
+…
+A fenti példában a 14:04-kor a KYPG kódú tanuló belépett az isk olába, ugyanabban
+a percben a CIVX és az XHTR kódú t anuló éppen távozott, az RYUI kódú tanuló megkapta a
+menzán az ebédet, míg az SBUG kódú tanuló könyvet kölcsönzött a  könyvtárban. A tanulók
+kódja négybetűs, az időpontok formátuma óó:pp.
+Az iskolában a tanulók 07:00-tól 19:00-ig tartózkodhatnak. A tanulók napközben a főkapun
+át többször be- vagy kiléphetn ek, a könyvtárban többször kölcsö nözhetnek, de a menzán
+legfeljebb egyszer ebédelhetnek. A feladatok megoldása során kihasználhatja, hogy az adatok
+időrendi sorrendben szerepelnek abban az esetben is, amikor azokat egy időponttal rögzítették.
+A fájlban az első esemény egy belépés, az utolsó egy kilépés a főkapun.
+Készítsen programot, amely az állomány adatait felhasználva az alábbi kérdésekre válaszol!
+A program forráskódját mentse belepteto néven! A program megírásakor a felhasználó által
+megadott adatok helyességét, érvényességét nem kell ellenőrizni e, és feltételezheti, hogy
+a rendelkezésre álló adatok a leírtaknak megfelelnek.
+A képernyőre írást igénylő részfe ladatok esetén – a mintához ta rtalmában hasonlóan – írja
+ki a képernyőre a feladat sorszámát (például: 2. feladat ), és utaljon a kiírt tartalomra is!
+Ha a felhasználótól kér be adatot, jelenítse meg a képernyőn, hogy milyen értéket vár! Mindkét
+esetben az ékezetmentes kiírás is elfogadott.
+1. Olvassa be a bedat.txt állomány tartalmát, tárolja el az abban szereplő adatokat, és annak
+felhasználásával oldja meg a következő feladatokat! Feltételezh eti, hogy az állomány
+legfeljebb 2000 adatsort tartalmaz.
+2. Határozza meg, hogy mikor lépett be az épületbe az első tanuló, és mikor távozott az utolsó!
+Az időpontokat a mintához hasonlóan jelenítse meg a képernyőn!
+3. Készítsen listát a kesok.txt nevű állományba, amely megadja, hogy mely tanulók léptek
+be a nagykapun 07:50 után, de legkésőbb 08:15-kor! A fájlban a belépések a mintának
+megfelelően külön sorban szerep eljenek, az időpontot egy szóköz  válassza el a tanuló
+azonosítójától! Ha egy tanuló ezalatt többször is belépett, min den belépése jelenjen meg a
+fájlban!
+
+Digitális kultúra 11 / 12 emelt szintű gyakorlati vizsga
+E2411  2024. május 21.
+Azonosító
+jel:
+
+4. Határozza meg, hány tanuló ebédelt aznap a menzán! Írassa ki az  eredményt a képernyőre
+a mintának megfelelően!
+5. Szeretnénk tudni, hogy a könyvtári kölcsönzés vagy a menza a népszerűbb-e ezen a napon.
+1. Határozza meg, hány tanuló kölcsönzött aznap a könyvtárban! Ha egy tanuló
+többször is kölcsönzött, akkor azt csak egyszer vegye figyelemb e! Írassa ki az
+eredményt a képernyőre a mintának megfelelően!
+2. A könyvtárosok szerint több tanuló kölcsönöz egy nap a könyvtár ban, mint
+ahányan a menzán ebédelnek. Így volt-e ez ezen a napon is? A választ („Többen
+voltak, mint a menzán.” vagy „Nem voltak többen, mint a menzán.”) a mintának
+megfelelő formában írassa ki a képernyőre!
+6. A portás reggel elfelejtette a hátsó kaput bezárni, ezért a 10: 45-kor kezdődő szünetben
+néhány tanuló kiment a hátsó kijáraton át a szemközti pékségbe tízórait venni. A portás csak
+10:50-kor zárta be a hátsó kaput, így 10:50 után a korábban a h átsó kapun át távozott
+tanulóknak a főbejáraton át kellett visszajönniük. Írassa ki a képernyőre egy-egy szóközzel
+elválasztva ezeknek a tanulóknak az azonosítóját! (A szünet 11: 00-ig tartott, és
+feltételezheti, hogy azt megelőzőe n valamennyi érintett tanuló visszaért.) Vegye
+figyelembe, hogy a tanulók egy része aznap csak 11:00-ra jött iskolába, illetve szabályosan
+lépett ki!
+7. Kérje be egy tanuló azonosítóját, és írassa ki a minta szerinti  formátumban, hogy mennyi
+idő telt el az iskolába való első belépése és utolsó távozása k özött! Feltételezheti, hogy
+19:00-ig minden tanuló elhagyta az iskolát. Ha aznap az adott a zonosítójú tanuló nem járt
+az iskolában, akkor írassa ki az Ilyen azonosítójú tanuló aznap nem volt az
+iskolában. üzenetet!
+Példa a szöveges kimenetek kialakításához:
+2. feladat
+Az első tanuló 07:00-kor lépett be a főkapun.
+Az utolsó tanuló 18:54-kor lépett ki a főkapun.
+4. feladat
+A menzán aznap 82 tanuló ebédelt.
+5. feladat
+Aznap 76 tanuló kölcsönzött a könyvtárban.
+Nem voltak többen, mint a menzán.
+6. feladat
+Az érintett tanulók:
+EQBL VVDW HJVC ZXCK ZMFL CYEE MCBC IEAA HFWL
+7. feladat
+Egy tanuló azonosítója=ZOOM
+A tanuló érkezése és távozása között 7 óra 4 perc telt el.
+Példa a kesok.txt szöveges állomány tartalmára:
+07:51 QMQM
+07:51 WSVM
+07:51 WQTU
+07:52 DNHC
+07:53 ZPTZ
+…
+
+
+
+
+
+50 pont 

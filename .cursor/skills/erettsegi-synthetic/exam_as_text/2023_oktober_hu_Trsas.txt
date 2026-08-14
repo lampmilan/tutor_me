@@ -1,0 +1,111 @@
+Informatika
+emelt szint
+2313 gyakorlati vizsga 10 / 12 2023. október 25.
+Azonosító
+jel:
+
+4. Társas
+Mi sem izgalmasabb a gyerekeknek, mint a nagyszülők szekrényeiben való kutakodás. Egy ilyen
+alkalommal az öt unoka egy régi dobozra bukkant. A doboz egy társasjáték kellékeit rejtette: a játék
+tábláját, egy dobókockát és hat különböző színű, lúd formájú bábut. A táblán több ösvényen lehet
+eljuttatni a ludat az itatóhoz. A játékosok a kezdés előtt kiválasztják a közös ösvényt, amelyen
+haladni fognak.
+A ludak annyi mezőt ugorhatnak előre, amennyit a játékosok dobnak a kockával.
+Az ösvényen lehetnek különleges mezők, amelyekre érkezve:
+ a lúd előreugorhat még egyszer annyit, mint amennyit dobott a játékos,
+ vissza kell térnie arra a mezőre, amelyről indította az ugrást.
+Az
+osvenyek.txt fájl soronként egy ösvény adatait tartalmazza. Az ösvények sorszámozása
+1-től kezdődik. Az állomány legfeljebb 50 sorból, soronként legfeljebb 250 karakterből áll. Minden
+sorban egy-egy karaktersorozat van. A karakterek az M, E, V nag ybetűk. Az M karakter egy
+mindenféle különleges tulajdonságtól mentes mezőt jelent. Ha valaki az E karakterű mezőre lép,
+előreugorhat még ugyanannyit, mint amennyivel ide jutott. Ha a V karakterű mezőre lép, a bábunak
+vissza kell térnie oda, ahonnan ide ugrott. Két egymást követő különleges karakter között mindig
+legalább 6 darab M karakter van.
+A játék akkor ér véget, ha mindenki ugyanannyiszor dobott, és legalább egy játékos elérte az utolsó
+mezőt, vagy túllépett rajta. Azok a nyertesek, akik elérték az utolsó mezőt vagy túlléptek rajta.
+A dobasok.txt fájl egyetlen, szóközökkel tagolt sorból áll, amely a kockával egymást követően
+dobott értékeket tartalmazza. A fájlban 1 és 6 közötti számokból legfeljebb 2000 található. Tudjuk,
+hogy ennyi dobás biztosan elegendő a játék befejezéséhez. Azt nem rögzítettük, hogy melyik értéket
+melyik játékos dobta.
+Részlet a dobasok.txt állomány első sorából:
+2 4 6 5 6 1 …
+Ha két játékos játszik, akkor dobásaik értékei felváltva szerepelnek a dobasok.txt állományban.
+Tehát az első játékos először 2-t dob, majd a második játékos 4-et, utána az első játékos 6-ot, a
+második játékos 5-öt, és így tovább.
+Részlet az osvenyek.txt állomány első néhány sorából:
+MMMMMMMMMMM…M
+MEMMMMMMEMMMMMMMMMMM…
+…
+Ha a második ösvényen játszanak (az MEMM kezdetűn), akkor az első játékos 2-es dobásával
+a második mezőre lép. Ez E típusú mező, ezért azonnal, dobás nélkül még két mezővel előrelép,
+így jut az első dobásával először a kettes, majd a négyes mezőre. Ezt követően a második játékos a
+4-es dobásával a negyedik mezőre lép. Ez M típusú, azaz mindenféle különleges tulajdonságtól
+mentes, így játékosunk a következő dobásig itt marad. Ismét az első játékos jön. Ő a 6-os dobásával
+a tizedik mezőre léphet tovább. Ez M típusú, ezért nem lép innen el, a második játékos jön. Ő az
+5-ös dobásával a negyedik mezőről a kilencedik mezőre lép. Ez E típusú, tehát rögtön előreléphet
+a dobásának megfelelően újabb öt mezőt. A következő ábra ezeket a lépéseket szemlélteti:
+
+Készítsen programot, amely az állományok adatait felhasználva megoldja az alábbi feladatokat!
+A program forráskódját mentse lud néven! A program megírásakor a felhasználó által megadott
+adatok helyességét, érvényességét nem kell ellenőriznie, és fel tételezheti, hogy a beolvasandó
+adatok a leírtaknak megfelelnek.
+
+Informatika
+emelt szint
+2313 gyakorlati vizsga 11 / 12 2023. október 25.
+Azonosító
+jel:
+
+A képernyőre írást igénylő részfeladatok esetén – a mintához tartalmában hasonlóan – írja ki a
+képernyőre a feladat sorszámát (például: 5. feladat ), és utaljon a kiírt t a r t a l o m r a  i s !  H a  a
+felhasználótól kér be adatot, jelenítse meg a képernyőn, hogy milyen értéket vár! Mindkét esetben
+elfogadott az ékezetmentes kiírás is.
+1. Olvassa be és tárolja el az osvenyek.txt és a dobasok.txt állományok tartalmát!
+2. Jelenítse meg a képernyőn, hogy hány ösvény adatait tartalmazza  az osvenyek.txt fájl,
+és mennyi dobás szerepel a dobasok.txt fájlban!
+3. Határozza meg, hogy melyik ösvény áll a legtöbb mezőből, és jel enítse meg az ösvény
+sorszámát és a mezők számát! Ha több ilyen is van, elegendő egyet megjelenítenie.
+4. Olvassa be és tárolja el egy ösvény sorszámát és a játékot játs zók számát (legalább 2,
+legfeljebb 5)! A későbbiekben ezekkel az adatokkal dolgozzon!
+5. Készítsen statisztikát a megadott sorszámú ösvény mezőiből! Jelenítse meg, hogy ez milyen
+típusú mezőből mennyit tartalmaz! Ha egy adott típusú mező nem szerepel, akkor azt ne
+jelenítse meg! (Megoldása teszteléséhez használja az első három  ösvényt is, ezek ugyanis
+nem tartalmaznak minden karaktert!)
+6. Írja a kulonleges.txt fájlba, hogy a választott ös vény mely mezői különlegesek!
+Soronként egy mezőt adjon meg a mező sorszámával és a mező típusát megadó karakterrel!
+A két értéket egy tabulátor karakterrel válassza el egymástól!
+7. Határozza meg, hogy melyik játékos jutna a legmesszebb, ha a választott ösvényen minden
+mező M típusú lenne! Jelenítse meg a legtávolabb jutó(k) sorszámát és azt, hogy a dobások
+hányadik körében alakult ki a végeredmény! Ha több ilyen játékos van, elegendő csak egyet
+megjelenítenie.
+8. Határozza meg, ki nyer, ha figyelembe veszi a mezők típusát is! Jelenítse meg a nyertes(ek)
+sorszámát és azt, hogy a többi bábu milyen sorszámú mezőn áll az utolsó teljes kör végén!
+
+Példa a szöveges kommunikáció kialakításához:
+2. feladat
+A dobások száma: 1956
+Az ösvények száma: 43
+
+3. feladat
+Az egyik leghosszabb a(z) 11. ösvény, hossza: 206
+
+4. feladat
+Adja meg egy ösvény sorszámát! 9
+Adja meg a játékosok számát! 5
+
+5. feladat
+M: 185 darab
+V: 8 darab
+E: 8 darab
+
+7. feladat
+A játék a(z) 54. körben fejeződött be. A legtávolabb jutó(k) sorszáma: 5
+
+8. feladat
+Nyertes(ek): 4 5
+A többiek pozíciója:
+1. játékos, 153. mező
+2. játékos, 185. mező
+3. játékos, 183. mező
+45 pont 

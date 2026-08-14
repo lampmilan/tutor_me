@@ -1,0 +1,86 @@
+
+gyakorlati vizsga 0803 10 / 12 2009. május 15.
+Informatika — emelt szint Azonosító
+jel:
+
+4. Automata
+A Csokibolt Kft. a város több pontján üzemeltet csokoládé-automatát. Az automatákból
+sokféle csokoládét lehet vásá rolni pénzérmék bedobásával. A vásárláshoz az 1, 2, 5, 10, 20,
+50 és 100 fabatkás érmék használhatók. Egyszerre  csak egyfajta csokoládé vásárolható. A
+vásárlás során el őször ki kell választani a csokoládét, ma jd be kell állítani a kívánt darabszá-
+mot, végül be kell dobni a pénzt. Ha a szüks égesnél több pénzt dobnak be, a gép a csokoládé
+mellett kiadja a visszajárót is. Amennyiben az automatában már nincs a kívánt darabszámú
+csokoládé, vagy a bedobott összeg nem elegendő, a vásárlás meghiúsul.
+Az egyik automatában árult csokoládék lényeges adatait a csoki.txt állomány tartal-
+mazza. Els ő sorában az automata rekeszeinek száma (legfeljebb 100) található. A második
+sortól kezdve soronként három szám, egy- egy rekesz adatsora olvasható. Az els ő szám a re-
+kesz sorszáma, a második a rekeszben találhat ó csokoládé darabszáma, a harmadik pedig az
+egységára. Egy-egy rekeszben legfeljebb 100 szelet fér el, egy szelet ára legfeljebb 300 fabat-
+ka. A rekeszek sorszámozása 1-től kezdődik és folyamatos.
+A vásárlások adatai a vasarlas.txt állományban olvashatók. Az els ő sorban a vásárlá-
+sok száma, legfeljebb 100 olvasható. A tovább iakban soronként 9 szám szerepel, ami egy
+vásárlás adatait jelenti az alábbiak szerint: az első szám a választott rekesz sorszáma, a máso-
+dik a kívánt darabszám, utána pedig az következik, hogy az egyes címletekb ől hány darabot
+dobtak a gépbe. Az els ő az 1 fabatkás, a többi növekv ően szerepel mögötte, így az utolsó a
+100 fabatkás. Az állományban egyetlen szám sem nagyobb 100-nál.
+Például:
+csoki.txt
+23
+1 23 76
+2 8 111
+3 0 0
+…
+Az 3. sor megmutatja, hogy a 2. rekeszben 8 csokoládé van, amelynek darabja 111 fabatka.
+vasarlas.txt
+19
+2 3 1 1 0 1 1 0 3
+2 6 0 0 0 0 0 0 7
+1 2 2 0 0 0 0 0 2
+…
+A 3. sor megmutatja, hogy a második vásárló a 2. rekeszb ől 6 csokoládét választott,
+7 darab 100 fabatkás érmét dobott az automatába és más címletű pénzt nem.
+Készítsen programot, amely az alábbi kérd ésekre válaszol! A program forráskódját auto-
+mata néven mentse!
+Minden részfeladat megoldása el őtt írja a képerny őre a feladat sorszámát! Ha a felhaszná-
+lótól kér be adatot, jelenítse meg a képerny őn, hogy milyen értéket vár (például a 4. feladat
+esetén: „4. feladat Kérem a pénzösszeget!”)! Az ékezetmentes kiírás is elfogadott.
+1. Olvassa be a csoki.txt és a vasarlas.txt állományban talált adatokat, s azok fel-
+használásával oldja meg a következ ő feladatokat! Ha az állományokat nem tudja beolvas-
+ni, az állományok első 8 sorának adatait jegyezze be a programba és dolgozzon azzal!
+
+gyakorlati vizsga 0803 11 / 12 2009. május 15.
+Informatika — emelt szint Azonosító
+jel:
+
+2. Milyen értékben van csokoládé az automatában? Írja képerny őre a választ a következőhöz
+hasonló formában: „Az automatában 24817 fabatka értékű csokoládé van.”!
+3. Írja a képerny őre, hogy mely rekeszekb ől próbáltak csokoládét vá sárolni! Minden rekesz
+sorszámát csak egyszer jelenítse meg! A számokat egymástól szóközzel elválasztva tün-
+tesse fel!
+4. Anna magának és barátainak összesen 7 egyfor ma csokoládét szeretne vásárolni. Kérje be
+a csokoládéra szánt pénzösszeget! Írja a képerny őre azon rekeszek sorszámát, amelyek
+közül választhat! A rekeszek sorszámát szóközökkel válassza el egymástól!
+5. Okos Péter szeret mindenütt pontosan annyi pénzt átadni, amennyi a fizetend ő összeg.
+Ezen túl szeret úgy fizetni, hogy a lehet ő legkevesebb pénzérmét, bankjegyet kelljen átad-
+nia. Kérje be egy rekesz sorszámát és a da rabszámot, majd írja ki, hogy a felhasznált
+pénzérmékből címletenként hány darabot kell bedobnia Péternek! Csak a felhasznált cím-
+leteket adja meg! Egy sorb a egy címlet kerüljön; el őször a címlet értéke, majd mögötte a
+darabszám jelenjen meg! Nem kell vizsgálnia , hogy van-e elég csokoládé a rekeszben! A
+megoldás során segítségként a következ ő algoritmust használhatja: Keresse meg a legna-
+gyobb címletet, amely nem haladja meg a fizetend ő összeget! Ebből a címletből kell egyet
+használnia! A fizetendőt csökkentse a címlet értékével, majd kezdje elölr ől az algoritmust,
+ha az nem nulla! Ez az algoritmus a feladatban szerepl ő címletek esetén m űködik, de lé-
+tezhet olyan címletlista, amelynél nem alkalmazható.
+6. Írja a rekesz7.txt állományba, hogy hányas sorszámú vásárlások során hány darabot
+vettek a 7-es rekeszből! Vegye figyelembe, hogy minden sikeres vásárlással csökken a re-
+keszben lévő csokoládék száma! Soronként egy vásárlási próbálkozást tüntessen fel! A sor
+elején a vásárlási próbálkozás  sorszáma jelenjen meg, t őle tabulátorral (ASCII kódja a
+9-es) elválasztva pedig a vásá rlás eredménye legyen olvashat ó! Az eredmény sikeres vá-
+sárlás esetén a darabszám. Ha nem volt megadott mennyiségnek megfelel ő csokoládé, ak-
+kor a sorszám mögé a „ kevés a csoki ” üzenet kerüljön! Ha a vásárló által bedobott
+pénzösszeg kevés, akkor a „nem volt elég pénz ” szöveget írja a fájlba! Amennyiben a
+vásárlás több okból is meghiúsulhat, elegendő csak az egyik okot megjeleníteni.
+
+
+
+45 pont 

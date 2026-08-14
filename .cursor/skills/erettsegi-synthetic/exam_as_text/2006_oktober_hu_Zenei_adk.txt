@@ -1,0 +1,66 @@
+
+gyakorlati vizsga 0622 10 / 12 2006. november 3.
+Informatika — emelt szint Azonosító
+jel:
+
+4. Zenei adók
+A rádióhallgatás ma már egyre inkább zene va gy hírek hallgatására korlátozódik. Ez a fel-
+adat három, folyamatosan zenét sugá rzó adóról szól, azok egyetlen napi műsorát feldolgozva.
+A reklám elkerülése érdekében az adókat nevük helyett egyetlen számmal azonosítottuk.
+A musor.txt állomány els ő sorában az olvasható, hogy há ny zeneszám (z<=1000) szólt
+aznap a rádiókban, majd ezt z darab sor követi . Minden sor négy, egymástól egyetlen szóköz-
+zel elválasztott adatot tartalmaz: a rádió so rszámát, amit a szám hossza követ két egész szám
+(perc és másodperc) formában, majd a játszo tt szám azonosítója szerepel, ami a szám el őadó-
+jából és címéb ől áll. A rádió sorszáma az 1, 2, 3 számok egyike. Az adás minden adón 0 óra
+0 perckor kezdődik. Egyik szám sem hosszabb 30 percnél,  tehát a perc értéke legfeljebb 30, a
+másodperc pedig legfeljebb 59 lehet. A szám azonosítója legfeljebb 50 karakter hosszú, benne
+legfeljebb egy kett őspont szerepel, ami az el őadó és a cím között talá lható. A számok az el-
+hangzás sorrendjében szerepelnek az állományban, tehát a kés őbb kezdődő szám későbbi sor-
+ban található. Az állományban minden zeneszám legfeljebb egyszer szerepel.
+Például:
+677
+1 5 3 Deep Purple:Bad Attitude
+2 3 36 Eric Clapton:Terraplane Blues
+3 2 46 Eric Clapton:Crazy Country Hop
+3 3 25 Omega:Ablakok
+…
+Készítsen programot zene néven, amely az alábbi kérdésekre válaszol! Ügyeljen arra,
+hogy a program forráskódját a megadott helyre mentse!
+A képerny őre írást igényl ő részfeladatok eredményének megjelenítése el őtt írja a képer-
+nyőre a feladat sorszámát (példáu l: 3. feladat:). Ha a billenty űzetről olvas be adatot, jelenítse
+meg a képernyőn, hogy milyen értéket vár.
+Az adatszerkezet készítése során vegye figye lembe az Ön által használt programozási kör-
+nyezetben az adatok tárfoglalási igényét!
+1. Olvassa be a musor.txt állományban talált adatokat, s annak felhasználásával oldja meg
+a következő feladatokat! Ha az állományt nem tudja beolvasni, akkor a forrás els ő 10 so-
+rának adatait jegyezze be a programba, s úgy oldja meg a következő feladatokat!
+2. Írja a képernyőre, hogy melyik csatornán hány számot lehetett meghallgatni!
+3. Adja meg, mennyi id ő telt el az els ő Eric Clapton szám kezdete és az utolsó Eric Clapton
+szám vége között az 1. adón! Az eredményt óra:perc:másodperc formában írja a képer-
+nyőre!
+4. Amikor az „Omega:Legenda” cím ű száma elkezd ődött, Eszter rögtön csatornát váltott.
+Írja a képerny őre, hogy a szám melyik adón volt hall ható, és azt, hogy a másik két adón
+milyen számok szóltak ekkor. Mivel a számok a kezdés id őpontja szerint növekv ő sor-
+rendben vannak, így a másik két adón már elkezd ődött a számok lejátszása. Feltételezheti,
+hogy a másik két adón volt még adás.
+
+gyakorlati vizsga 0622 11 / 12 2006. november 3.
+Informatika — emelt szint Azonosító
+jel:
+
+5. Az egyik rádióm űsorban sms-ben, telefonon, de akár képeslapon is kérhet ő szám. Ám a
+sokszor csak odafirkált kéréseket olykor nehéz kibet űzni. Előfordul, hogy csak ennyi ol-
+vasható: „gaoaf”, tehát ezek a bet űk biztosan szerepelnek, mégpedig pontosan ebben a
+sorrendben. Annyi biztos, hogy el őször a szerz ő neve szerepel, majd utána a szám címe.
+Olvassa be a billenty űzetről a felismert karaktereket, majd írja a keres.txt állományba
+azokat a számokat, amelyek ennek a feltételnek megfelelnek. Az állomány els ő sorába a
+beolvasott karaktersorozat, majd utána so ronként egy zeneszám az onosítója kerüljön! A
+feladat megoldása során ne különböztesse meg a kis- és a nagybetűket!
+6. Az 1. adón változik a m űsor szerkezete: minden számot egy rövid, egyperces bevezet ő
+előz majd meg, és m űsorkezdéstől minden egész órakor 3 perces híreket mondanak. Ter-
+mészetesen minden szám egy részletben hangz ik el továbbra is, közvetlenül a bevezet ő
+perc után. Így ha egy szám nem fejez ődne be a hírekig, el sem kezdik, az üres id őt a mű-
+sorvezető tölti ki. Írja a képernyőre óra:perc:másodperc formában, hogy mikor lenne vége
+az adásnak az új műsorszerkezetben!
+
+45 pont 

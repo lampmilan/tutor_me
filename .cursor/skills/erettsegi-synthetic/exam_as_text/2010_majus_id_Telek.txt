@@ -1,0 +1,77 @@
+
+gyakorlati vizsga 0911 10 / 12 2010. május 11.
+Informatika — emelt szint Azonosító
+jel:
+
+4. Telek
+Patakfalván a faluszélen levő beépítetlen területet szeli ketté a Dirib patak. Az önkormány-
+zat elhatározta, hogy építési telkek kialakításával létrehozza a Szép jövő lakótelepet. A beépí-
+tés után egy téglalap alakú területen két utca jö n létre: Gazdagsor és Jó létsor. A két sor lakói
+„lábszomszédok”, de telkeiket elválasztja egymástól a Dirib patak. A két utca párhuzamos, az
+utcafrontokat 80 méter választja el egymástól. Mindkét soron azonos számú téglalap alakú
+telket jelöltek ki, soronként legfeljebb 30-at. Gazdagsoron csak páratlan, Jólétsoron csak pá-
+ros házszámokat adnak ki (1-től, illetve 2-től indulva kihagyásmentesen számozva). Egy telek
+szélessége maximum 40 méter. Az utcák végén egy-egy híd köti össze a patak két partját. A
+telkek kijelölésénél figyelembe vették a patak medrének nyomvonalát.
+
+
+A kijelölt telkekr ől kimutatás készült, amit a telkek.txt fájl tartalmaz. Ennek a fájlnak
+az els ő sora tartalmazza a kiosztandó telkek számát, majd az ezt követ ő sorokban az egyes
+telkek adatai találhatók. Az első adat a házszám, a második a telek szélessége, míg a harmadik
+az erre mer őlegesen mért hosszúsága. Gazdagsor esetén  az összes adat rendelkezésre áll, Jó-
+létsor esetében viszont a hosszúság adatok helyén 0 áll. Az adatok között pontosan egy szóköz
+található.
+Készítsen programot telek néven, amely az alábbi kérdésekre válaszol!
+A képerny őre írást igényl ő részfeladatok eredményének megjelenítése el őtt írja a képer-
+nyőre a feladat sorszámát! (Például 3. feladat:)
+1. Olvassa be a telkek.txt állományban található adatokat, s annak felhasználásával oldja
+meg a következő feladatokat! Ha az állományt nem tudja beolvasni, akkor a benne találha-
+tó adatok közül Gazdagsor 1., 3., 5., 7. és 9. s zámú, valamint Jólétsor 2., 4., 6., 8. és 10.
+számú telkének adatait jegyezze be a programba, s úgy oldja meg a feladatokat!
+
+gyakorlati vizsga 0911 11 / 12 2010. május 11.
+Informatika — emelt szint Azonosító
+jel:
+
+2. Hány métert kell annak gyalogol nia, aki körbe akarja járni a két utcát? A kiszámított tá-
+volságot írassa ki a képernyőre!
+3. Az önkormányzat el őírásai szerint a 20 m széles vagy annál keskenyebb telkek esetén
+teljes utcafront beépítést kell alkalmazni. Határozza meg és a képerny őre írassa ki, hogy
+ez hány telekre vonatkozik a Jólétsoron!
+4. Hány háznyira van egymástól a legnagyobb és a legkisebb terület ű telek Gazdagsoron? A
+két telek között elhelyezked ő telkek számát, valamint a legnagyobb és legkisebb telek
+házszámát, illetve területét írassa ki a képernyőre!
+5. Az önkormányzat telekadót fog kivetni. Az adót Fabatkában számolják. A 700 négyzet-
+méteres és annál kisebb telkek esetén ez 51 Fabatka négyzetméterenként, az ennél na-
+gyobb telkeknél az els ő 700 négyzetméterre vonatkozóan szintén 51 Fabatka, 700 négy-
+zetméter felett egészen 1000 négyzetméterig 39 Fabatka a négyzetméterenkénti adó. Az
+1000 négyzetméter feletti részért négyzetméter árat nem, csak 200 Fabatka egyösszeg ű ál-
+talányt kell fizetni. A 15 m vagy annál kesk enyebb, illetve a 25 m vagy annál rövidebb
+telkek tulajdonosai 20% adókedvezményben ré szesülnek. Az adó me ghatározásánál 100
+Fabatkás kerekítést kell használni (pl.  6238 esetén 6200, 6586 es etén 6600). Határozza
+meg, mekkora adóbevételre számíthat Gazdagsor után az önkormányzat!
+6. Melyik a 3 utolsó telek a Jólétsoron? A h ázszámokat és a telkeknek a Jólétsor elejét ől
+mért távolságát írja ki a képernyőre a házszámok szerint csökkenő sorrendben!
+7. Határozza meg Jólétsor telkeinek hosszúság át! Vegye figyelembe, hogy a szemben fekv ő
+telkek patak fel őli határvonalait az utcafrontra mer őleges irányban legalább 10 méternek
+kell elválasztania egymástól! Szemben fekv őnek számítanak a telkek akkor is, ha csak a
+telkek valamelyik széle van egymással szemben. (Például a 10-es számú telekkel csak a 9-
+es és 11-es számú telek van szemben.)  A számításnál a feltételnek megfelel ő legnagyobb
+telkeket kell kialakítani! Jólétsor adatait írja ki a joletsor.csv fájlba! Az egyes sorok-
+ban a házszám, a szélesség és a hosszúság szerepeljen! Az adatokat pontosan egy pontos-
+vessző válassza el egymástól!
+
+Forrás:
+1. Amerikai foci
+A képek forrása:
+thestartingfive.wordpress.com/2007/11/09/
+http://www.profootballhof.com/hof/member.jsp?player_id=126
+nfl.com
+http://en.wikipedia.org/wiki/Comparison_of_American_football_and_rugby_league
+A szövegek forrása:
+http://hu.wikipedia.org/wiki/Amerikai_futball
+http://hu.wikipedia.org/wiki/NFL
+http://www.nfl.hu/
+http://www.sportmedia.hu/amerikaifoci/szabalyok1.php
+
+45 pont 

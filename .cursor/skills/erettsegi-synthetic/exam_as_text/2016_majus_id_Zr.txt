@@ -1,0 +1,95 @@
+
+gyakorlati vizsga 1521 10 / 12 2016. május 10.
+Informatika — emelt szint Azonosító
+jel:
+
+4. Zár
+Egy ajtót elektronikus zárral láttak el. A zárat egy ismétl ődő
+pontokat nem tartalmazó, megfelel ő irányban rajzolt, törött
+vonalból álló mintával lehet nyitni. A minta megadását egy
+szabályos tízszög segíti, amelynek csúcsait 0-tól 9-ig sorszá-
+mozták, így a leghosszabb használható minta 10 számjegyet
+tartalmazhat. Az ajtót nyitó kódszám megadásánál csupán
+az alakzat és annak iránya érdekes, ezért a 135 mintával nyit-
+ható zárat a 802 is nyitja (vagy akár a 024 kódszám is), de
+a 208 nem. Tehát ebben a mintában a zár csak az óramutató
+járásával megegyező irányban nyílik. A nyitás az egyes számok
+egymást követő megérintésével történik.
+Az
+ajto.txt fájl soronként egy-egy nyitási próbál kozás adatait tartalmazza. A fájlban
+legfeljebb 500 sor, soronként legalább 3, legfeljebb 10 karakter lehet.
+Készítsen programot, amely az ajto.txt állomány adatait felhasználva az alábbi kérdé-
+sekre válaszol! A progra m forráskódját mentse zar néven! (A program megírásakor
+a felhasználó által megadott adatok hely ességét, érvényességét nem kell ellen őriznie, feltéte-
+lezheti, hogy a rendelkezésre álló adatok a leírtaknak megfelelnek.)
+A képerny őre írást igényl ő részfeladatok eredményének megjelenítése el őtt írja a képer-
+nyőre a feladat sorszámát (például: 3. feladat:)! Ha a felhasználótól kér be adatot, jelenítse
+meg a képernyőn, hogy milyen értéket vár! Az ékezetmentes kiírás is elfogadott.
+1. Olvassa be és tárolja el az ajto.txt fájl tartalmát!
+2. Kérjen be a felhasználótól egy szám jegysorozatot, amely a zár kódszáma lesz!
+(Feltételezheti, hogy a felhasználó ismétl ődés nélküli jelsorozatot ad meg.) A teszteléshez
+használhatja a 239451 sorozatot is.
+3. Jelenítse meg a képerny őn, hogy mely kísérleteknél használták a nyitáshoz pontosan
+az előző feladatban beolvasott kódszámot! A sorok számát egymástól pontosan egy
+szóközzel válassza el! (A sorok számozását 1-től kezdje!)
+4. Adja meg, hogy melyik az els ő olyan próbálkozás, amely ismétl ődő karaktert tartalmaz!
+Ha nem volt ilyen, írja ki a „nem volt ismétlődő számjegy” üzenetet! (A sorok számozását
+1-től kezdje!)
+5. Állítson el ő egy, a második feladatban beolvasottal egyez ő hosszúságú, véletlenszer ű,
+ismétlődés nélküli jelsorozatot, majd a mintának megfelel ően jelenítse meg a hosszát és
+az előállított kódszámot!
+6. Készítsen függvényt nyit néven az alábbi algoritmus al apján, amely a neki átadott két
+kódszámról megállapítja, hogy ugyanazt a zárat nyitják-e! (A 239451 és a 017239 ugyan-
+azt a zárat nyitja.) A függvény két, legfeljebb 10 számjegyb ől álló karaktersorozathoz egy
+logikai értéket rendel. A függvény elkészítésekor az algoritmusban megadott változóneve-
+ket használja! Az elkészített függvényt a következő feladat megoldásánál felhasználhatja.
+
+gyakorlati vizsga 1521 11 / 12 2016. május 10.
+Informatika — emelt szint Azonosító
+jel:
+
+
+ Függvény nyit(jo, proba:karaktersorozat): logikai érték
+ egyezik:=(hossz(jo)=hossz(proba))
+ Ha egyezik akkor
+  elteres=ascii(jo[1])-ascii(proba[1])
+  Ciklus i:=2-t ől hossz(jo)
+   Ha ( elteres - (ascii(jo[i])-ascii(proba[i])) ) mod 10 <> 0
+   akkor egyezik:=hamis
+  Ciklus vége
+ Elágazás vége
+ nyit:=egyezik
+ Függvény vége
+A mondatszerű leírásban:
+- az a mod b művelet eredménye az a szám b számmal történő osztásának maradéka;
+- az ascii() függvény egy karakterhez annak karakterkódját rendeli.
+Az ascii() függvény megvalósításához használhatja a következőket az egyes programozási
+nyelveken:
+C, C++, C#, Java: (int)karakter; (char)asciikod
+Pascal, Python, Perl: ord(karakter); chr(asciikod)
+Visual Basic: Asc(karakter); Chr(asciikod)
+7. Állítsa el ő a siker.txt fáljt, amelynek soraiban a nyitási próbálkozás kódszáma után
+– attól egy szóközzel elválasztva – annak értékelése olvasható.
+• „hibás hossz”, ha a felhasználótól a 2. feladatban bekért kódszám és a sorbeli
+kódszám hossza eltér;
+• „hibás kódszám”, ha a felhasználótól a 2. feladatban bekért kódszám és
+a sorbeli kódszám hossza egyezik, de nem összetartozók;
+• „sikeres”, ha a két kódszám egyenértékű.
+Minta a szöveges kimenetek kialakításához:
+2. feladat
+Adja meg, mi nyitja a zárat! 239451
+3. feladat
+A nyitó kódszámok sorai: 1 4 5 8 10…
+4. feladat
+Az első ismétlődést tartalmazó próbálkozás sorszáma: 9
+5. feladat
+Egy 6 hosszú kódszám: 078695
+Részlet a siker.txt fájlból:
+239451 sikeres
+154932 hibás kódszám
+340562 sikeres
+…
+
+
+
+45 pont 

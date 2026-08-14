@@ -1,0 +1,66 @@
+
+gyakorlati vizsga 1421 12 / 16 2015. október 16.
+Informatika — emelt szint Azonosító
+jel:
+
+4. Fej vagy írás
+Ha egy szabályos pénzérmét feldobunk, ugyanannyi a valószín űsége annak, hogy leesés
+után az érme értéke lesz felü l (írás, I), mint annak, hogy a cí mert tartalmazó másik oldala
+(fej, F). Ezért gyakran „pénzfeldobással” sorsolnak, például így döntik el, hogy melyik csapat
+kezdhet el egy futballmeccset.
+Feladata a pénzfeldobás szimulálása, illetv e pénzfeldobással kapott sorozatok elemzése
+lesz. A feladatok során az írást az I, a fejet az F nagybet ű jelzi. Például egy 5 feldobásból álló
+sorozat esetén:
+I
+I
+F
+I
+F
+Készítsen programot fejvagyiras néven a következő feladatok megoldására! A program
+futása során a képerny őre való kiíráskor, i lletve az adatok billenty űzetről való beolvasásakor
+utaljon a feladat sorszámára és a kiírandó, illetve bekérend ő adatra! Az ékezetmentes kiírás is
+elfogadott.
+1. Szimuláljon egy pénzfeldobást, ahol azonos esélye van a fejnek és az írásnak is!
+Az eredményt írassa ki a képernyőre a mintának megfelelően!
+2. Kérjen be a felhasználótól egy tippet, ma jd szimuláljon egy pénzfeldobást! Írassa ki
+a képernyőre a felhasználó tippjét és a dobá s eredményét is, majd tájékoztassa
+a felhasználót az eredményr ől következ ő formában: „Ön eltalálta. ” vagy „Ön nem
+találta el.”!
+A kiserlet.txt állományban egy pénzfeldobás-soro zat eredményét találja. Mivel
+a sorozat hossza tetsz őleges lehet, ezért az összes adat memóriában történ ő egyidej ű
+eltárolása nélkül oldja meg a következ ő feladatokat! Feltételezheti, hogy egymilliónál több
+adata nem lesz.
+3. Állapítsa meg, hány dobásból állt a kísé rlet, és a választ a mintának megfelel ően írassa ki
+a képernyőre!
+4. Milyen relatív gyakorisággal dobtunk a kísérlet  során fejet? (A fej relatív gyakorisága
+a fejet eredményez ő dobások és az összes dobás hányadosa.) A relatív gyakoriságot
+a mintának megfelel ően két tizedesjegy pontossággal, százalék formátumban írassa ki
+a képernyőre!
+5. Hányszor fordult el ő ebben a kísérletben, hogy egymás után pontosan két fejet dobtunk?
+A  választ a mintának megfelel ően írassa ki a képerny őre! (Feltételezheti, hogy a kísérlet
+legalább 3 dobásból állt.)
+Például az IFFFFIIFFIFFFIFF sorozatban kétszer fordult el ő, hogy egymás után
+pontosan két fejet dobtunk.
+6. Milyen hosszú volt a leghosszabb, csak fejekb ől álló részsorozat? Írassa ki a választ
+a képernyőre a mintának megfelel ően, és adja meg egy ilyen részsorozat els ő tagjának
+helyét is! (A minta tagjainak számozását eggyel kezdjük.)
+
+gyakorlati vizsga 1421 13 / 16 2015. október 16.
+Informatika — emelt szint Azonosító
+jel:
+
+Sokan azt hiszik, hogy ha már elég  sok fejet dobtunk, akkor a következ ő dobás nagyobb
+valószínűséggel lesz írás, mint fej. Ennek ellenőrzésére vonatkozik a következő feladat.
+7. Állítson el ő és tároljon a memóriában 1000 db négy dobásból álló sorozatot! Számolja
+meg, hogy hány esetben követett egy háromtagú „t isztafej” sorozatot fej, illetve hány
+esetben írás! Az eredményt írassa ki a dobasok.txt állományba úgy, hogy az els ő sorba
+kerüljön az eredmény, a második sorban pedig egy-egy szóközzel elválasztva, egyetlen
+sorban szerepeljenek a dobássorozatok!
+Például:
+FFFF: 12, FFFI: 14
+FIFI IIIF IFIF IIII FFII FFFF IIFI FFII FFFI …
+
+Minta (a forrásállomány alapján készült, valós adatokat tartalmaz):
+
+
+45 pont 

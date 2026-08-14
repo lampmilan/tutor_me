@@ -1,0 +1,149 @@
+
+Digitális kultúra 12 / 16 emelt szintű gyakorlati vizsga
+E2611  2026. május 18.
+Azonosító
+jel:
+
+3. Városi autózás
+Egy városban – különösen, ha nem működnek a forgalomirányító je lzőlámpák – gyakran
+nagyon sok időbe kerül az úti cél elérése. A feladatban egy városban közlekedő autó mozgását
+követjük nyomon, amely álló helyzetből indul. Az autó általában állandó sebességgel halad, de
+a forgalmi helyzet miatt változtathatja a sebességét.
+Rendelkezésére áll néhány adatfájl (aa123.txt, mx234.txt) , amelyek egy-egy autó
+sebességváltozásait írják le i dőbeli sorrendben, legfeljebb 100 0 alkalommal. A fájlok minden
+sorában három egész szám található, egymástól tabulátorral elvá lasztva. Az első szám a
+sebességváltozás kezdetének, a második a végének idejét jelenti , a harmadik szám pedig
+megadja, hogy mekkora a sebesség a sebességváltozás végén. Az i dőt másodpercben, a
+sebességet m/s-ban adjuk meg. Az adatfájl neve X.txt, ahol az X az autót azonosító, legfeljebb
+10 hosszúságú karaktersorozat.
+A feladat megoldásához szükséges fizikai ismeretek:
+Ha egy autó sebessége 𝑣ଵ-ről 𝑣ଶ-re változik 𝑡ଵ és 𝑡ଶ időpontok között, akkor a gyorsulása
+௩మି௩భ
+௧మି௧భ , ez idő alatt pedig
+௩భା௩మ
+ଶ ሺ𝑡ଶ െ𝑡 ଵሻ  utat tesz meg. Sebessége a 𝑡ଵ és 𝑡ଶ időpontok közötti
+𝑡 időpontban 𝑣ଵ ൅
+௩మି௩భ
+௧మି௧భ ሺ𝑡 െ 𝑡ଵሻ. Ha az autó állandó 𝑣 sebességgel halad a 𝑡ଵ és 𝑡ଶ időpontok
+között, akkor a megtett út 𝑣ሺ𝑡ଶ െ𝑡 ଵሻ.
+A bemeneti fájl első néhány sora
+6  9 3
+30 35 7
+49 54 11
+…
+ A bemeneti fájl első sora alapján azt mondhatjuk, hogy az autó 6 másodperc elteltével indult
+el és 0 m/s-ról 3 m/s sebességre gyorsult a 9. másodperc végére. Ez idő alatt a gyorsulása
+ଷି଴
+ଽି଺  , azaz 1 m/s2 és
+଴ାଷ
+ଶ ∙ (9 െ 6), azaz 4,5 méter utat tett meg. 
+ Az első és a második sor vizsgálatából kiderül, hogy az autó a 9. és a 30. másodperc
+között 3 m/s sebességgel haladt, ezért ሺ30 െ  9ሻ ∙ 3, azaz 63 méter utat tett meg. 
+ A második sor leírja, hogy az autó a 30. és a 35. másodperc köz ött 3 m/s sebességről
+7 m/s-ra gyorsult, ezért gyorsulása
+଻ିଷ
+ଷହିଷ଴ , tehát 0,8 m/s 2 volt, a megtett út pedig
+
+ଷା଻
+ଶ ∙ (35 െ 30), tehát 25 méter. 
+A program forráskódját mentse varos néven! A program megírásakor a bemeneti
+állományban található, vagy a felhasználó által megadott adatok  helyességét, érvényességét
+nem kell ellenőriznie, feltételezheti, hogy azok a leírtaknak megfelelnek.
+A képernyőre írást igénylő részfeladatok eredményének megjelenítése előtt írja a képernyőre
+a feladat sorszámát (például: 2. feladat )! Ha a felhasználótól kér be adatot, jelenítse meg
+a képernyőn, hogy milyen értéket vár! Az ékezetmentes kiírás is elfogadott.
+1. Kérje be a felhasználótól egy autó azonosítóját, majd olvassa be és tárolja el a hozzá tartozó
+állományban található adatokat!
+2. Jelenítse meg azt az időpontot, amikor az autó elindult, és azt a  s e b e s s é g e t ,  a m e l l y e l  a z  a u t ó
+a végén halad!
+3. Településen belül általában 14 m/s a sebességhatár. Határozza m eg és írassa ki, hogy az
+autó átlépte-e ezt a sebességértéket bármikor az útja során!
+
+Digitális kultúra 13 / 16 emelt szintű gyakorlati vizsga
+E2611  2026. május 18.
+Azonosító
+jel:
+
+4. Határozza meg, hogy a megfigyelés kezdetétől, tehát a 0. másodp erctől, hány másodperc
+volt az a leghosszabb időszak, amíg állt a jármű! Jelenítse meg  a leghosszabb intervallum
+kezdetét és végét! Ha több ilyen is volt, elegendő egyet megjelenítenie! Feltételezheti, hogy
+a jármű legalább 1 másodpercet állt.
+5. Kérjen be a felhasználótól egy időpontot, és adja meg, hogy abb an az időpontban milyen
+sebességgel haladt az autó! Feltételezheti, hogy a megadott időpont korábbi, mint az utolsó
+adatsorban szereplő érték.
+6. Határozza meg, hogy mennyi utat tett meg összesen a jármű! Az eredményt ne kerekítse!
+7. Egy jármű mozgásának sebesség-id ő grafikonját kell a 8. feladat ban elkészítenie. Ehhez
+programja állítsa elő a vX.txt nevű állományt (ahol az X az első feladatban bekért, autót
+azonosító karaktersorozat)! Az állományba soronként 2 számérték  kerüljön tabulátorral
+elválasztva! Az első egy másodpercben kifejezett időpont, a második az abban a pillanatban
+érvényes sebesség legyen! Minden sebességváltozás kezdő és záró időpontjához tartozzon
+egy-egy sor! A sor első eleme a sebességváltozás kezdete vagy v ége másodpercben,
+a második elem pedig az abban a pillanatban mérhető sebesség értéke.
+8. Táblázatkezelő prog rammal készítsen egy ellenorzes nevű fájlt a program
+alapértelmezett formátumában! (Az E1-es cellában kapott értéket összevetheti
+a 6. feladatban meghatározott úthosszal, a diagramról pedig le tudja olvasni az 5. feladatban
+beolvasott időponthoz tartozó pilla natnyi sebességet.) A felada t megoldásához használja
+az előző feladatban készített fájlt! Ha nem tudja felhasználni az említett fájlt, vigye be
+az mx234.txt fájl első 10 sorából a megfelelő adatokat!
+ A munkafüzet egyik munkalapjára az A2-es cellától kezdődően másolja be
+az egyik, előző feladatban elkészített fájl (vX.txt) tartalmát!  A munkalap neve
+a választott autó azonosítója legyen!
+ Az A1:D1 tartomány celláiba írja be a mintán látható szövegeket!
+ A C2-es cellába írja a 0 értéket, majd alatta határozza meg, hogy a z adott
+időpontban záruló időszakban mennyi utat tett meg a jármű! Figyeljen arra, hogy
+a sorok felváltva tartoznak az állandó és a változó sebességű szakaszok közé!
+ Az E1-es cellában határozza meg a teljes megtett út hosszát!
+ Az egyes oszlopokban állítsa be a megfelelő számformátumot (s, m/s, m);
+a megtett utat egy tizedes pontossággal jelenítse meg!
+ Készítsen sebesség-idő grafikont a minta alapján, amelyben az e lső
+200-300 másodperchez tartozó értékeket ábrázolja!
+Minta a szöveges kimenetek kialakításához:
+1. feladat
+Kérem adja meg az autó azonosítóját! mx234
+2. feladat
+Az autó a 6. másodpercben indult el.
+Az autó a megfigyelés végén 6 m/s sebességgel haladt.
+3. feladat
+Az autó átlépte a sebességhatárt.
+4. feladat
+A leghosszabb állásidő 852 és 948 másodperc között volt.
+5. feladat
+Mikor vizsgáljuk az autó sebességét? 500
+Az autó sebessége a(z) 500. másodpercben 13.4 m/s volt.
+6. feladat
+A megtett út: 25813.0 méter.
+A táblázathoz és a diagramhoz tartozó minta a következő lapon található.
+50 pont
+
+Digitális kultúra 14 / 16 emelt szintű gyakorlati vizsga
+E2611  2026. május 18.
+Azonosító
+jel:
+
+
+
+Digitális kultúra 15 / 16 emelt szintű gyakorlati vizsga
+E2611  2026. május 18.
+Azonosító
+jel:
+
+Minta a táblázathoz és a diagramhoz:
+
+Források
+A feladatlap bázisszövegei az eredeti forrásszövegek módosításával (rövidítésével, nyelvtani egyszerűsítésével), adatainak felhasználásával,
+de az eredeti szöveg, adatok integritásának megtartása mellett jöttek létre. Az eredeti szövegek, adatok, képek forrása:
+1A. Visszhang
+https://www.mimicsoda.hu/cikk.php?id=1078, Utolsó letöltés: 2025.08.05.
+https://hu.wikipedia.org/wiki/Hang, Utolsó letöltés: 2025.08.05.
+https://hu.wikipedia.org/wiki/Hangsebesség, Utolsó letöltés: 2025.08.05.
+https://hu.wikipedia.org/wiki/Tihanyi_visszhang, Utolsó letöltés: 2025.08.05.
+https://en.wikipedia.org/wiki/File:Emoji_u1f5e3.svg, Utolsó letöltés: 2025.08.05.
+https://csodalatosbalaton.hu/wp-content/uploads/2020/07/tihany-bences-apatsag-templom-balaton1-csodalatosbalaton.jpg, Utolsó letöltés:
+2025.08.05.
+https://pacificsciencecenter.org/wp-content/uploads/2022/05/cah-blue-soundwaves.jpg, Utolsó letöltés: 2025.08.05.
+https://carradio.ie/parking-sensors-installation/, Utolsó letöltés: 2025.08.05.
+https://en.wikipedia.org/wiki/Echo_sounding#/media/File:Fis01334_(27555144884).jpg, Utolsó letöltés: 2025.08.05.
+https://1.bp.blogspot.com/-ovCHWN99eQY/Ub8EK_cpGYI/AAAAAAAAALs/Cik5fCsHZtw/s1600/echolocation.png
+https://m.blog.hu/el/elektroguru/image/magzat.jpg, Utolsó letöltés: 2025.08.05.
+1B. Útvonaltervezés
+https://www.kaposbusz.hu/static/files/Menetrend térképek/kaposvar(1).zip Utolsó letöltés: 2025. augusztus 12.

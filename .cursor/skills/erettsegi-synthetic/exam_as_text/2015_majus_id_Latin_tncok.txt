@@ -1,0 +1,72 @@
+
+gyakorlati vizsga 1311 10 / 12 2015. május 12.
+Informatika — emelt szint Azonosító
+jel:
+
+4. Latin táncok
+A Latin Tánciskola tanulói latin táncokat tanulnak, ezek a következ ők: cha-cha, salsa,
+rumba, samba, jive, tango, bachata.
+A tanulók a tanév végén bemutatót tartottak. A bemutatón minden táncot csupán egyszer
+mutattak be, azonban az egyes táncok bemutatóján t öbb pár is szerepelt. Az év végi bemutató
+táncrendjét a tancrend.txt fájl tartalmazza. A fájlban a táncok a bemutató tényleges
+sorrendjében szerepelnek. Tánconként minden párhoz három sor tartozik, ezek rendre
+a bemutatott táncot, majd a pár lány, végül a pár fiú tagjának utónevét tartalmazzák:
+cha-cha
+Katalin
+Bertalan
+cha-cha
+Adrienn
+Lajos
+salsa
+Katalin
+Bertalan
+A fenti példa szerint a cha-chát két pár, Kata lin és Bertalan, valamint Adrienn és Lajos
+mutatták be, a cha-cha után pedig a salsa következett. Egy személy a különböz ő táncokat
+eltérő partnerekkel is bemutathatja, de feltétel ezheti, hogy a táncosok között nincs két azonos
+nevű.
+A fájl legfeljebb 140 tánc és táncospár nevét tartalmazza, továbbá tudjuk, hogy legfeljebb
+20 fiú, és legfeljebb 20 lány vett részt a bemutatón. Készítsen programot, amely
+a tancrend.txt állomány adatait felhasználva az alábbi kérdésekre válaszol! A program
+forráskódját mentse tanciskola néven! (A program megírásakor a felhasználó által
+megadott adatok helyességét, érvényességét nem kell ellen őriznie, feltéte lezheti, hogy
+a rendelkezésre álló adatok a leírtaknak megfelelnek.)
+A képerny őre írást igényl ő részfeladatok eredményének megjelenítése el őtt írja
+a képernyőre a feladat sorszámát (például: 3. feladat:)! Ha a felhasználótól kér be adatot,
+jelenítse meg a képernyőn, hogy milyen értéket vár! Az ékezetmentes kiírás is elfogadott.
+1. Olvassa be a tancrend.txt állományban talált adatokat, s annak felhasználásával oldja
+meg a következő feladatokat!
+2. Írassa ki a képerny őre, hogy melyik volt az els őként és melyik az utolsóként bemutatott
+tánc neve!
+3. Hány pár mutatta be a sambát? A választ jelenítse meg a képernyőn!
+4. Írassa ki a képernyőre, hogy Vilma mely táncokban szerepelt!
+5. Kérje be egy tánc nevét, majd írassa ki a képerny őre, hogy az adott tá ncot Vilma kivel
+mutatta be! Például ha a bekért tánc a sa mba, és Vilma párja Bertalan volt, akkor
+„A samba bemutatóján Vilma párja Bertalan volt. ” szöveg jelenjen meg!
+Ha Vilma az adott tánc bemutatóján nem s zerepelt, akkor azt írja ki a képerny őre, hogy
+„Vilma nem táncolt samba-t.”.
+
+gyakorlati vizsga 1311 11 / 12 2015. május 12.
+Informatika — emelt szint Azonosító
+jel:
+
+6. Készítsen listát a bemutatón részt vett fiúkról és lányokról! A listát a szereplok.txt
+nevű szöveges állományba mentse el a következ ő formátumban: a neveket vessz ők
+válasszák el egymástól, de az utolsó név után már ne szerepeljen írásjel. Például:
+Lányok: Lujza, Katalin, Andrea, Emma
+Fiúk: Ferenc, Ambrus, Andor, Kelemen, Bertalan
+7. Írja ki a képerny őre, hogy melyik fiú szerepelt a legtöbbs zör a fiúk közül, és melyik lány
+a lányok közül! Ha több fiú, vagy több lány is me gfelel a feltételeknek, akkor valamennyi
+fiú, illetve valamennyi lány nevét írja ki!
+
+Forrás:
+1. Széchenyi fürdő
+http://www.széchenyifürdő.hu/
+3. Méterben mért olimpia
+http://www.olympic.org/olympic-results
+http://www.sports-reference.com/olympics/athletes/
+http://en.wikipedia.org/wiki/List_of_Olympic_medalists_in_athletics_%28men%29
+http://en.wikipedia.org/wiki/List_of_Olympic_medalists_in_athletics_%28women%29
+A névhasználat alapja a www.olimpic.org lap, a születési és a halálozási adatok többségében az egyes versenyzők angol nyelvű wikipedia
+oldaláról származnak.
+
+45 pont 

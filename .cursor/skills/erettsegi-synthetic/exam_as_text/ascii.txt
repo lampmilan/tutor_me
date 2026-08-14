@@ -1,0 +1,134 @@
+
+Digitális kultúra 13 / 16 emelt szintű gyakorlati vizsga
+E2213  2025. május 19.
+Azonosító
+jel:
+
+3. ASCII-rajzok
+Karakteres képernyőn is megjeleníthetünk összetett ábrákat, raj zokat az ASCII-karakterek
+segítségével. Az ASCII-kód jelkés zlete az angol abc betűiből, s zámokból, írásjelekből és
+vezérlő kódokból áll.
+Készítsen programot, amely képes kétféle módon (tömörítetlen, t ömörített) tárolt,
+ASCII-karakterekből álló ábrákat megjeleníteni a képernyőn, statisztikát készíteni az ábrákról,
+illetve az ábrák tömörített formáit tömörítetlen formára alakít ani. A tömörítetlen ábrák mérete
+a 100×100 karakternél nem nagyobbak.
+A program forráskódját mentse ascii néven! A program megírásakor a bemeneti
+állományban található, vagy a felhasználó által megadott adatok  helyességét, érvényességét
+nem kell ellenőriznie, feltételezheti, hogy azok a leírtaknak megfelelnek.
+A képernyőre írást igénylő részfeladatok eredményének megjelenítése előtt írja a képernyőre
+a feladat sorszámát (például: 2. feladat )! Ha a felhasználótól kér be adatot, jelenítse meg
+a képernyőn, hogy milyen értéket vár! Az ékezetmentes kiírás is elfogadott.
+1. A konyv.txt szöveges állomány egy könyvet ábrázoló ASCII-ábrát tartalmaz. Olvassa be
+ezt az állományt, és jelenítse meg a tartalmát a képernyőn!
+2. Jelenítse meg többször egymás mellett a konyv.txt állományban található ábrát! Kérje be
+a felhasználótól az ábra ismétlődéseinek számát! Az ábrák után elválasztásként a „ | ”
+karakterláncot jelenítse meg! Ügyeljen arra, hogy az egyes sorok különböző hosszúságúak
+is lehetnek. Azt nem kell ellenőriznie, hogy az ábra az adott ismétlésszámmal valóban elfér-
+e egymás mellett a képernyőn.
+Az ASCII-karaktereket tartalmazó állományokat tömöríthetjük is,  ha az egymást követő
+ismétlődő karaktereket rövidebb kóddal helyettesítjük. Az alább i mintán látható, hogy
+a könyvet ábrázoló ASCII-képet hogyan tároltuk el tömörítettlen, illetve tömörített formában.
+
+Az ábrák tömörített változatai az alábbiak szerint állnak elő a tömörítetlen változatból:
+ A tömörített állomány ugyanannyi sorból áll, mint a tömörítetlen.
+ A tömörített állomány blokkok formájában tárolja el az ábrát. E gy blokk két
+karakter hosszú. A blokk első karaktere mindig egy 1 és 9 közti egész szám lehet.
+Ez jelzi, hogy a blokk második karaktere hányszor fordul elő kö zvetlenül
+egymás után az ábra adott sorában. A „2/” blokk tehát azt jelenti, hogy egymás
+után kétszer kell a / karaktert kirajzolni. A „4 ” blokk jelentése, hogy a szóköz
+karaktert négyszer kell kirajzolni egymás után.
+ Ha egy karakter 9-nél többször ismétlődik, akkor több blokkot k ell elhelyezni
+egymás után. Ha például 12 alkalommal kell kirajzolni a „ $” karaktert, akkor
+a tömörített állomány a '9$3$' blokkokat tartalmazná.
+ A blokkokat soronként tároljuk el a fájlban.
+A feladat a következő oldalon folytatódik.
+
+
+Digitális kultúra 14 / 16 emelt szintű gyakorlati vizsga
+E2213  2025. május 19.
+Azonosító
+jel:
+
+3. Készítsen függvényt atalakit néven, amely egy tömörített ábra egy sorát tömörítetlen
+formára alakítja! (Egy tömörített sor legfeljebb 200 karakterből állhat.)
+4. Az szg_t.txt állomány tömörített formában ta rtalmaz egy rajzot. Alakítsa a tömörített
+ábrát tömörítetlen formába az atalakit függvény használatával, és szg.txt n é v e n
+mentse el az eredményt, valamint jelenítse meg azt a képernyőn!
+5. Izgalmas kérdés, hogy egy-egy ábrát milyen mértékben sikerült t ömöríteni a fenti
+módszerrel. Kérje be a felhasznál ótól a tömörített, valamint tö mörítetlen adatokat
+tartalmazó fájl neveit majd írja ki, hogy az egyes állományok hány karaktert tartalmaznak!
+A sorvégjel karaktereket (\r\n) ne vegye figyelembe! A következő sorban jelenítse meg
+a tömörítési arányt két tizedesjegyre kerekítve! A tömörítési a rány a tömörített ábra
+karakterszáma osztva a tömörítetlen ábra karaktereinek számával.
+6. Készítsen statisztikát a konyv_t.txt állományban található ábráról! A képernyőn jelenjen
+meg, hogy az ábra hány sorból áll, hány blokkot tartalmaz, valamint hogy mekkora az ábra
+szélessége karakterekben. Utóbbi adat a leghosszabb sor karakterszámát jelenti.
+
+50 pont
+
+Digitális kultúra 15 / 16 emelt szintű gyakorlati vizsga
+E2213  2025. május 19.
+Azonosító
+jel:
+
+Minta a szöveges kimenetek kialakításához:
+1. feladat
+    _______
+   /      /,
+  /      //
+ /______//
+(______(/
+2. feladat
+Kérem adja meg az ismétlések számát: 3
+    _______  |     _______  |     _______  |
+   /      /, |    /      /, |    /      /, |
+  /      //  |   /      //  |   /      //  |
+ /______//   |  /______//   |  /______//   |
+(______(/    | (______(/    | (______(/    |
+4. feladat
+                          _______
+                         | ___  o|
+                         |[_-_]_ |
+      ______________     |[_____]|
+     |.------------.|    |[_____]|
+     ||            ||    |[====o]|
+     ||            ||    |[_.--_]|
+     ||            ||    |[_____]|
+     ||            ||    |      :|
+     ||____________||    |      :|
+ .==.|""  ......    |.==.|      :|
+ |::| '-.________.-' |::||      :|
+ |''|  (__________)-.|''||______:|
+ `""`_.............._\""`______
+    /:::::::::::'':::\`;'-.-.  `\
+   /::=========.:.-::"\ \ \--\   \
+   \`""""""""""""""""`/  \ \__)   \
+    `""""""""""""""""`    '========
+5. feladat
+Kérem adja meg a tömörített ábra fájlnevét: konyv_t.txt
+Kérem adja meg a tömörítetlen ábra fájlnevét: konyv.txt
+A karakterek száma a tömörített állományban: 38
+A karakterek száma a tömörítetlen állományban: 53
+A tömörítési arány: 0.72
+6. feladat
+Az ábra magassága sorokban: 5
+Az ábra szélessége karakterekben: 12
+A blokkok száma: 19
+Források:
+A feladatlap bázisszövegei az eredeti forrásszövegek módosításá val (rövidítésével, nyelvtani egyszerűsítésével),
+adatainak felhasználásával, de az eredeti szövegek, adatok integritásának megtartása mellett jöttek létre. Az eredeti
+szövegek, adatok, képek forrása:
+SCI-FI klub
+https://pixabay.com/hu/illustrations/robot-technológia-futurisztikus-gép-3829930/
+https://pixabay.com/hu/vectors/filmszalag-mozi-szalag-film-videó-1174228/
+Utolsó letöltés: 2021.11.04.
+Naptár
+https://www.turistamagazin.hu/hir/a-2021-es-ev-honap-fotoi Utolsó letöltés: 2021.12.29.
+https://www.turistamagazin.hu/galeria-1/csillogo-jeg-naplemente-es-feher-oz-a-nap-kepei-2021-ben/2131237
+Utolsó letöltés: 2021.12.29.
+Színházi bemutatók
+https://port.hu/lista/szinhaz-bemutatok
+Utolsó letöltés: 2021. december 29.
+ASCII-rajzok
+https://www.asciiart.eu
+Utolsó letöltés: 2021.12.29. 

@@ -1,0 +1,98 @@
+
+gyakorlati vizsga 0805A 10 / 12 2009. május 15.
+Informatika — emelt szint Azonosító
+jel:
+
+4. Lift
+A Madárház Kft. toronyházak építésével f oglalkozik. Jelenleg a Csúcs Rt. 100 szintes
+szerkezetkész épületén kezdték meg a bels ő szerelési m űveleteket. Az egyes szerel őcsapatok
+naponta többször változtatják helyüket. Ha az új munkaterület egy másik emeleten van, akkor
+– a biztonsági el őírások miatt – lifttel kell menni ük. A házban egyetlen lift m űködik, amely-
+nek igénybevételét az egyes csapatok a célszint megadásával jelezhetik. A lift az igényeket a
+jelzés sorrendjében szolgálja ki, és egyszerre csak egy csapatot szállít. A csapatok mozgását a
+9 és 14 óra közötti intervallumban k övetjük nyomon. Ez az in tervallum a munkaid őnek csak
+egy része, tehát a csapatok már dolgoznak valamely ik szinten, de 9 órakor teljesítetlen kérés
+nincs és a lift szabad.
+A lifthasználati igényeket az
+igeny.txt állomány tartalmazza. Els ő sorában a szintek
+száma (legfeljebb 100), a második sorban a cs apatok száma (legfeljebb  50), a harmadik sor-
+ban pedig az igények száma (legfeljebb 100) ol vasható. A negyedik sort ól kezdve soronként
+egy-egy igény szerepel a je lzés sorrendjében. Egy igény hat számból áll: az els ő három szám
+az id őt adja meg (óra, perc, másodpercszám sorre ndben), a negyedik a csapat sorszáma, az
+ötödik az induló-, a hatodik a célszint sors záma. Az egyes számokat pontosan egy szóköz
+választja el egymástól.
+Például:
+igeny.txt
+100
+10
+55
+9 7 11 7 6 22
+9 10 30 8 18 2
+9 11 0 5 12 20
+…
+A 4. sor megmutatja, hogy 9 óra 7 perc 11 máso dperckor a 7. csapat igényelt liftet, hogy a
+6. szintről a 22. szintre eljusson.
+Készítsen programot, amely az alábbi kérd ésekre válaszol! A program forráskódját lift
+néven mentse! Ügyeljen arra, hogy programjának minden helyes tartalmú bemeneti állomány
+esetén működnie kell!
+Minden részfeladat megoldása el őtt írja a képerny őre a feladat sorszámát! Ha a felhaszná-
+lótól kér be adatot, jelenítse meg a képerny őn, hogy milyen értéket vár (például a 2. feladat
+esetén: „2. feladat Kérem a lift indulási helyét! ”)! A képernyőn megjelenített üze-
+netek esetén az ékezetmentes kiírás is elfogadott.
+1. Olvassa be az igeny.txt állományban talált adatokat, s azok felhasználásával oldja meg
+a következő feladatokat! Ha az állományt nem tudja beolvasni, az els ő 8 igényhez tartozó
+adatokat jegyezze be a programba és dolgozzon azzal!
+2. Tudjuk, hogy a megfigyelés kezdetén a lift éppe n áll. Kérje be a felhasználótól, hogy me-
+lyik szinten áll a lift, és a további részfela datok megoldásánál ezt vegye figyelembe! Ha a
+beolvasást nem tudja elvégezni, használja az igény.txt fájlban az els ő igény induló
+szintjét!
+3. Határozza meg, hogy melyik szinten áll majd a lift az utolsó kérés teljesítését követ ően!
+Írja képerny őre a választ a következ őhöz hasonló formában: „ A lift a 33. szinten
+áll az utolsó igény teljesítése után.” !
+
+gyakorlati vizsga 0805A 11 / 12 2009. május 15.
+Informatika — emelt szint Azonosító
+jel:
+
+4. Írja a képernyőre, hogy a megfigyelés kezdete és az utol só igény teljesítése között melyik
+volt a legalacsonyabb és melyik a legmagasabb sorszámú szint, amelyet a lift érintett!
+5. Határozza meg, hogy hányszor kelle tt a liftnek felfelé indulnia  utassal és hányszor utas
+nélkül! Az eredményt jelenítse meg a képernyőn!
+6. Határozza meg, hogy mely szerel őcsapatok nem vették igénybe a liftet a vizsgált interval-
+lumban! A szerelőcsapatok sorszámát egymástól egy-egy szóközzel elválasztva írja a kép-
+ernyőre!
+7. Előfordul, hogy egyik vagy másik szerel őcsapat áthágja a szabályokat, és egyik szintr ől
+gyalog megy a másikra. (Ezt onnan tudhatjuk,  hogy más emeleten igényli a liftet, mint
+ahova korábban érkezett.) Generáljon véletlenszer űen egy létez ő csapatsorszámot! (Ha
+nem jár sikerrel, dolgozzon a 3. csapattal!) Határozza meg, hogy a vizsgált id őszak igé-
+nyei alapján lehet-e egyértelm űen bizonyítani, hogy ez a csapat  vétett a szabályok ellen!
+Ha igen, akkor adja meg, hogy melyik két szin t közötti utat tették meg gyalog, ellenkez ő
+esetben írja ki a Nem bizonyítható szabálytalanság szöveget!
+8. A munkák elvégzésének adminisztrálásához minden csapatnak egy blokkoló kártyát kell
+használnia. A kártyára a liftben elhely ezett blokkolóóra rögzíti az emeletet, az id őpontot.
+Ennek a készüléknek a segítségével kell me gadni a munka kódszámát és az adott munka-
+folyamat sikerességét. A munka kódja 1 és 99 közötti egész szám lehet. A sikerességet a
+„befejezett” és a „befejezetlen” szavakkal lehet jelezni.
+Egy műszaki hiba folytán az el őző feladatban vizsgált csap at kártyájára az általunk nyo-
+mon követett id őszakban nem került bejegyzés. Ezért a csapatf őnöknek a m űszak végén
+pótolnia kell a hiányzó adatokat. Az igeny.txt állomány adatait felhasználva írja a kép-
+ernyőre időrendben, hogy a vizsgált id őszakban milyen kérdéseket tett fel az óra, és kérje
+be az adott válaszokat a felhasználótól! A pótlólag feljegyzett adatokat írja a blok-
+kol.txt állományba! A blokkol.txt állomány tartalmát az alábbi sorok mintájára
+alakítsa ki:
+Befejezés ideje: 9:23:11
+Sikeresség: befejezett
+-----
+Indulási emelet: 9
+Célemelet: 11
+Feladatkód: 23
+Befejezés ideje: 10:43:22
+Sikeresség: befejezetlen
+-----
+Indulási emelet: 11
+Célemelet: 6
+Feladatkód: 6
+…
+
+
+45 pont 

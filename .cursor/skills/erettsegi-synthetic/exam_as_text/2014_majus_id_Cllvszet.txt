@@ -1,0 +1,101 @@
+
+gyakorlati vizsga 1312 10 / 12 2014. május 13.
+Informatika — emelt szint Azonosító
+jel:
+
+4. Céllövészet
+A Sor Lövészegylet rendszeresen rendez versenyt az alábbi, igen egyszerű szabályokkal:
+• A lövések leadására korlátozott id ő áll rendelkezésre, ezért a versenyz ők eltér ő
+számú lövést adhatnak le.
+• A lövéseket sorszámozott korongokra kell leadni.
+• Találatnak számít, ha a korongot bárhol érinti a lövedék.
+• A lövésekhez pontértéket rendelnek: amíg nem hibázik valaki, minden találata
+20 pontot ér; de rontás esetén minden hiba  1 ponttal csökkenti – egészen nulláig –
+a későbbi lövésekkel szerezhető pontszámot. A lövés pontértéke nem lehet negatív.
+• Az végez el őrébb a versenyben, aki több pontot s zerez. A holtversenyt nem döntik
+el, mindegyik versenyz ő ugyanolyan helyezéssel végez,  tehát mindenki helyezése
+megegyezik a nála több pontot szerzett versenyz ők számánál eggyel nagyobb
+számmal.
+A verseny.txt állományban versenyz őnként feljegyeztük a lövé sek eredményét. A fájl
+első sorában a versenyz ők száma ( 2≤v≤100) szerepel. A következ ő v sorban legfeljebb
+l (4≤l≤40) karakter található, egy versenyz ő lövéseinek sorozata. Egy lövést egy karakter ír
+le, a – karakter a sikertelen, a + karakter a sikeres lövést rögzíti.
+Például:
+5
++--+
+-+-+++-
+-+--+--
+++---
+-++--
+A példában a 4. sor azt mutatja , hogy a 3-as rajtszámú löv őnek a 2. és az 5. lövése talált,
+tehát a versenyző csak két korongot talált el. Mivel elsőre hibázott, az első találat 19 pontot ér,
+aztán a két újabb hiba miatt már csak 17 pontot je lentett a második találat. Tehát összesen 36
+pontot szerzett. Az 5. sorban szerepl ő, 4-es rajtszámú versenyz ő ugyancsak 2 találattal 40
+pontot szerzett.
+Készítsen programot, amely a verseny.txt állomány adatait felhasználva az alábbi
+kérdésekre válaszol! A pr ogram forráskódját mentse loves néven! (A program megírásakor
+a felhasználó által megadott adatok hely ességét, érvényességét nem kell ellen őriznie,
+feltételezheti, hogy a rendelkezésre álló adatok a leírtaknak megfelelnek.)
+A képerny őre írást igényl ő részfeladatok eredményének megjelenítése el őtt írja
+a képernyőre a feladat sorszámát (például: 3. feladat: ), az 5. feladat esetén pedig
+a részfeladat betűjelét is! Ha a felhasználótól kér be adatot, jelenítse meg a képerny őn, hogy
+milyen értéket vár! Az ékezetmentes kiírás is elfogadott.
+1. Olvassa be a verseny.txt állományban található adatokat , és annak felhasználásával
+oldja meg a következő feladatokat!
+2. Írja a képernyőre azon versenyzők rajtszámát, akiknek egymás után két (vagy több) lövése
+is talált! A versenyzők rajtszámát egy-egy szóközzel válassza el egymástól!
+3. Írja a képerny őre, hogy melyik versenyz ő adta le a legtöbb l övést! Ha többen is
+ugyanannyi lövést adtak le, elegendő egyikük rajtszámát kiírni.
+
+gyakorlati vizsga 1312 11 / 12 2014. május 13.
+Informatika — emelt szint Azonosító
+jel:
+
+4. Készítsen függvényt loertek néven az alábbi algoritmus alapján! A függvény egy + és –
+jeleket tartalmazó, legfeljebb 40 hosszúságú ka raktersorozathoz hozzárendeli a feladatban
+képviselt pontértékét. A függvény elké szítésekor az algoritmusban megadott
+változóneveket használja! Az elkészített f üggvényt a további fe ladatok megoldásánál
+használja fel! A függvény bemen ő paramétere az egy játékos lövéseit leíró
+karaktersorozat, értéke pedig az ahhoz rendelt pontszám.
+Függvény loertek(sor:karaktersorozat):egész szám
+ aktpont:=20
+ ertek:=0
+ Ciklus i:=1-t ől hossz(sor)-ig
+  Ha aktpont>0 és sor[i]=”-” akkor
+   aktpont:=aktpont-1
+  Különben
+   ertek:=ertek+aktpont
+  Elágazás vége
+ Ciklus vége
+ loertek:=ertek
+Függvény vége
+5. Kérje be a felhasználótól egy versenyző sorszámát, majd írja ki, hogy:
+a. hányadik lövései találtak (az értékeket egymástól szóközzel válassza el!)
+b. hány korongot talált el összesen
+c. milyen hosszú volt a leghosszabb hibátlan lövéssorozata
+d. hány pontot ért el!
+Az eredmény megjelenítése előtt írja képernyőre a részfeladat betűjelét is!
+6. Állítsa elő a sorrend.txt állományban a verseny végeredményét! A fájlban soronként
+tüntesse fel a versenyz ő helyezését, rajtszámát és pont számát! A helyezés megadásakor
+a holtversenyt a bevezet őben megfogalmazott szabályok al apján az alábbi mintához
+hasonlóan kezelje! Az adatokat egy-egy ta bulátorral (ASCII kódja a 9-es) válassza el
+egymástól! A lista legyen pontszám szerint csökkenő!
+Például a feladat elején olvasható példa bemenet esetén a fájl tartalma:
+1 2 73
+2 4 40
+3 1 38
+3 5 38
+5 3 36
+Példa a szöveges kimenetek kialakításához:
+2. feladat:
+Az egymast kovetoen tobbszor talalo versenyzok: 2 4 5
+3. feladat:
+A legtobb lovest leado versenyzo rajtszama: 2
+5. feladat:
+Adjon meg egy rajtszamot! 2
+5a. feladat: Celt ero lovesek: 2 4 5 6
+5b. feladat: Az eltalalt korongok szama: 4
+5c. feladat: A leghosszabb hibatlan sorozat hossza: 3
+5d. feladat: A versenyzo pontszama: 73
+
+45 pont 

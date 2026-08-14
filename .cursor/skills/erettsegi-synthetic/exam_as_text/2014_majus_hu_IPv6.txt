@@ -1,0 +1,97 @@
+
+gyakorlati vizsga 1411 10 / 12 2014. május 13.
+Informatika — emelt szint Azonosító
+jel:
+
+4. IPv6
+A számítógépes hálózatok üzemeltetésében az IP v4-es címeket lassan leváltja az IPv6-os
+címzési rendszer, amely az eddigi 32 bit hosszúságú címek helyett 128 bit hosszúságú
+címeket használ.
+Az IPv6-os címeket hexadecimális alakba n ábrázoljuk, nyolc darab négyes csoportba
+osztva. Az egyes számjegyek a tízes számre ndszerben is használt számjegyek, valamint
+az a, b, c, d, e, f bet űk lehetnek. Az egyes csoportokat kett ősponttal választjuk el. Ezek
+alapján formailag megfelelő IPv6-os cím a következő:
+2001:0db8:03cd:0000:0000:ef45:0006:0123
+Egy nagyvállalatnál készítettek egy program ot, ami a cég szerve rén tárolt összes
+dokumentumból kigyűjtötte az IPv6-címeket. Az így keletkezett gy űjteményt az ip.txt fájl
+tárolja. Minden IP-címet csak az els ő el őfordulásakor rögzítettek. Az állomány legalább 20,
+de legfeljebb 500 adatsort , soronként egy IP-cím et tartalmaz a következ ő példának
+megfelelően:
+2001:0db8:03cd:0000:0000:ef45:0006:0123
+2001:0e10:0000:aabc:0000:01ac:0000:0001
+fdf8:f53b:82e4:0000:0000:0000:0000:0053
+fc00:0000:0000:ad65:0124:33ab:0100:6543
+…
+A vállalatnál háromféle IP-cím fordul el ő. A feladat megoldásában csak ezekkel
+a címekkel kell foglalkozni:
+- A 2001:0db8 kezdetű címek a dokumentációs címek, eszközöknek nincsenek
+kiosztva.
+- A 2001:0e kezdet ű címek az informatikai eszközöknek kiosztott globális egyedi
+címek.
+- Az fc, valamint az fd kezdetű címek az eszközöknek kiosztott helyi egyedi címek.
+Több szabály vonatkozik a címek rövidebb leírásának lehetőségére:
+- Az egyes csoportokban a bevezet ő nullák elhagyhatók. Péld ául így leírva a fenti
+cím: 2001:db8:3cd:0:0:ef45:6:123
+- Kettő vagy több csak nullá kból álló csoportot le lehet egyszerűsíteni két kettőspont
+közötti üres csoportra. Ezzel a szabállyal tovább egyszer űsítve az el őző címet:
+2001:db8:3cd::ef45:6:123
+- Ha egy címben több helyen is vannak cs ak nullákból álló csoportok, akkor is csak
+egyszer lehet ez utóbbi módszerrel rövidíté st végrehajtani. Ilyen esetben mindig
+a több nullás csoportot kell rövidíteni. Ha  azonos számú nullás csoport található
+a címen belül több helyen is, akkor balról az elsőt kell rövidíteni.
+Például: 2001:0000:0000:00f5:0000:0000:0000:0123
+Rövidítve: 2001:0:0:f5::123
+Készítsen programot, amely az ip.txt állomány adatait felhasználva az alábbi kérdésekre
+válaszol! A program forráskódját mentse cimek néven! (A program megírásakor a megadott
+adatok helyességét, érvényességét nem kell ellen őriznie, feltételezheti, hogy a rendelkezésre
+álló adatok a leírtaknak megfelelnek.)
+
+gyakorlati vizsga 1411 11 / 12 2014. május 13.
+Informatika — emelt szint Azonosító
+jel:
+
+A képerny őre írást igényl ő részfeladatok eredményének megjelenítése el őtt írja
+a képernyőre a feladat sorszámát (például: 3. feladat:)! Ha a felhasználótól kér be adatot,
+jelenítse meg a képerny őn, hogy milyen értéket vár! Az ékezet mentes kiírás is elfogadott.
+A képernyőre írást igényl ő feladatok eredményét a felada tok utáni mintának megfelel ően
+jelenítse meg!
+1. Olvassa be az ip.txt állományban talált adatokat, s a nnak felhasználásával oldja meg
+a következő feladatokat!
+2. Határozza meg és írja a képernyőre, hogy hány adatsor van az állományban!
+3. Írja a képerny őre az állományban található legal acsonyabb IP-címet! A megoldásában
+felhasználhatja, hogy a bet űk ASCII-kódjai a számok ASC II-kódjai után találhatók
+a kódtáblában.
+4. Határozza meg, hogy az állományban hány darab IP-cím van az egyes fajtákból!
+Az eredményt jelenítse meg a képernyőn a mintának megfelelően!
+5. Gyűjtse ki a sok.txt állományba azokat az IP-címek et, melyek legalább 18 nullát
+tartalmaznak! A fájlban minden sor elején szerepeljen az ered eti állományból a cím
+sorszáma! Ezt kövesse egy szóközzel elválasztva a cím az ip.txt állományban szereplő
+alakjával!
+6. Kérjen be a felhasználótól egy sorszám ot! Az állományban a megadott sorszámon
+található IP-címet rövidítse a csoportokon belüli bevezet ő nullák elhagyásával!
+Az állományban található alakot és a rövidített változatot írja a képernyőre egymás alá!
+7. Az el őző feladatban használt IP-címet rövidítse tovább az egymást követ ő nullás
+csoportok rövidítésére vonatkozó szabályoknak megfelelően! Az eredményt jelenítse meg
+a képernyőn! Amennyiben nem rövidíthető, írja ki: „Nem rövidíthető tovább.”!
+Minta a szöveges kimenetek kialakításához:
+2. feladat:
+Az állományban 372 darab adatsor van.
+
+3. feladat:
+A legalacsonyabb tárolt IP-cím:
+2001:0db8:0000:00b9:0800:0f00:e02a:71ac
+
+4. feladat:
+Dokumentációs cím: 106 darab
+Globális egyedi cím: 120 darab
+Helyi egyedi cím: 146 darab
+
+6. feladat:
+Kérek egy sorszámot: 10
+fcef:b0e7:7d20:0000:0000:0000:3b95:0565
+fcef:b0e7:7d20:0:0:0:3b95:565
+
+7. feladat:
+fcef:b0e7:7d20::3b95:565
+
+45 pont 

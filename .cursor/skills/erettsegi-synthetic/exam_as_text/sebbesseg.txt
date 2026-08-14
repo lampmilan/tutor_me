@@ -1,0 +1,107 @@
+
+Digitális kultúra 12 / 16 emelt szintű gyakorlati vizsga
+E2513  2025. október 21.
+Azonosító
+jel:
+
+3. Sebesség
+Ha közúti járművel utazunk, figyelemmel kísérhetjük a sofőr tev ékenységét, aki az
+útviszonyoknak megfelelően és a KRESZ szabályait követve hol lassítja, hol gyorsítja az autót.
+Személygépjármű esetén a KRESZ szabályai a következők: lakott t elepülésen 50 km/h, azon
+kívül 90 km/h a megengedett seb esség. Ezt az általános szabályt  felülírhatják a közúti
+jelzőtáblák, így egy veszélyes kanyarnál alacsonyabb sebességet is előírhatnak, lakott területen
+belül pedig akár magasabb sebességet is engedélyezhetnek. A jel zőtábla által megadott
+maximális sebességet egy másik jelzőtábla, de egy útkereszteződ és is törli, visszaállítva ezzel
+az alapértelmezett sebességhatárt.
+
+105601  
+999  70  
+1242  # 
+1803  # 
+2520  Varos301  
+2900  60  
+3100  40  
+3300  % 
+5830  ] 
+5900  30  
+6110  # 
+6921  Varos702  
+7120  ] 
+13505  Varos403  
+… 
+Az ut.txt fájl egy autóutat és autópályát nem tartalmazó útszakasz sebes séghatárt
+megszabó adatait tartalmazza. A fájl első sora azt a méterben k ifejezett távolságot adja meg,
+amilyen hosszát figyeltük az útnak. A további, legfeljebb 2000 sor mindegyike két értéket
+tartalmaz. Az első a megfigyelés kezdetétől mért, méterben kife jezett távolság, az attól
+szóközzel elválasztott második pedig többféle lehet:
+ számérték: sebességkorlátozó táblát jelöl, megadja, hogy attól a ponttól ennyi
+a sebességhatár (értéke 10 és 90 közötti egész lehet);
+ legalább négy-, legfeljebb harminckarakteres szöveg: azon a pon ton a megadott
+nevű település kezdődik;
+ záró szögletes zárójel (]) karakter: a település végét jelzi;
+ kettőskereszt (#): bekötőutat vagy útkereszteződést jelöl;
+ százalékjel (%): a sebességkorlátozás feloldását jelzi.
+Az adatok a távolság szerint növekvő sorrendben rendezettek.
+Egymást követően több sebességkorlátozó tábla is előfordulhat f eloldó tábla nélkül. Feloldó
+tábla előtt közvetlenül biztosan sebességkorlátozó tábla van.
+Tudjuk, hogy a megfigyelés kezdete és vége az út településen kí vüli pontja, valamint az út
+minden települést csak egyszer érint.
+Készítsen programot, ami az alábbi kérdésekre válaszol! A progr am forráskódját mentse
+sebesseg néven! A program megírásakor a felhasználó által megadott adat ok helyességét,
+érvényességét nem kell ellenőriznie. Ha nem egész számot kell beolvasnia vagy megjelenítenie,
+a tizedespont és a tizedesvessző használata egyaránt elfogadott.
+
+Digitális kultúra 13 / 16 emelt szintű gyakorlati vizsga
+E2513  2025. október 21.
+Azonosító
+jel:
+
+A képernyőre írást igénylő részfeladatok eredményének megjelenítése előtt írja a képernyőre
+a feladat sorszámát (például: 2. feladat )! Ha a felhasználótól kér be adatot, jelenítse meg
+a képernyőn, hogy milyen értéket vár! Az ékezetmentes kiírás is elfogadott.
+1. Olvassa be és tárolja el az ut.txt állományban lévő adatokat!
+2. Írja ki az úton található települések nevét! Minden település neve új sorban jelenjen meg!
+3. Kérjen be a felhasználótól egy valós számot, amely megadja, hog y az út első hány km-es
+szakaszát vizsgáljuk! Adja meg, hogy mi volt ezen a szakaszon a  legalacsonyabb
+sebességhatár! Figyeljen arra, hog y sebességhatárt nem csak seb ességkorlátozó tábla
+szabhat meg! Megoldását az 1, 2, …, 5 km-t megadva is tesztelje!
+4. Adja meg, hogy a bemeneti fájlban rögzített út hány százaléka vezet településen belül! Az út
+teljes hossza a bemeneti fájl első sorában található. Az eredmé nyt kéttizedes pontossággal
+írja a képernyőre!
+5. Olvassa be egy település nevét, és adja meg, hogy a településen belül…
+ … hány sebességkorlátozó tábla van;
+ … milyen hosszan vezet az út!
+6. Adja meg a beolvasott településhez legközelebb eső település ne vét! (Két település
+távolsága alatt az úton korábbi település végének és a későbbi település kezdetének
+különbségét értjük.) Ha a két szomszédos település távolsága egyezik, akkor a megfigyelés
+kezdőpontjához közelebbit adja meg! Ügyeljen arra, hogy az első és az utolsó településnek
+csak egy szomszédja van! Feltételezheti, hogy az út bemeneti fá jl által leírt része legalább
+két településen áthalad.
+Minta a szöveges kimenetek kialakításához:
+2. feladat
+A települések neve:
+Varos301
+Varos702
+Varos403
+…
+Varos513
+Varos214
+Varos115
+
+3. feladat
+Adja meg a vizsgált szakasz hosszát km-ben! 1.8
+Az első 1.8 km-en 70 km/h volt a legalacsonyabb megengedett sebesség.
+
+4. feladat
+Az út 22.38 százaléka vezet településen belül.
+
+5. feladat
+Adja meg egy település nevét! Varos010
+A sebességkorlátozó táblák száma: 4
+Az út hossza a településen belül 2000 méter.
+
+6. feladat
+A legközelebbi település: Varos609
+
+
+50 pont 

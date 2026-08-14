@@ -1,0 +1,95 @@
+Informatika
+emelt szint
+1812 gyakorlati vizsga 12 / 16 2018. május 14.
+Azonosító
+jel:
+
+4. Fogadóóra
+Egy iskolában a tanárok fogadóóráira egy webes felületen foglal hatnak időpontot a szülők.
+Ebben a feladatban az egyik fogadónap adataival kell dolgoznia.  A fogadónap 16:00-tól
+18:00-ig tart, a lehetséges le foglalható időpontok: 16:00, 16:1 0, 16:20 … 17:50. Egy-egy
+megbeszélés 10 percig tart. Időpontütközést a foglalást felügyelő program nem enged meg.
+A fogado.txt fájl a tanárok foglaltsági adatait tartalmazza. Egy sorban a következő adatok
+találhatók szóközzel elválasztva: a tanár vezetékneve; utóneve;  a lefoglalt időpont; a foglalás
+rögzítésének dátuma és időpontja. A tanár neve pontosan egy vez etéknévből és pontosan egy
+utónévből áll. Az óra, perc, hónap és nap adatok mindegyikét pontosan két számjeggyel tárolva
+találhatja meg a fájlban. A fájlban biztosan 500-nál kevesebb s or fordul elő, és az adatok
+sorrendje véletlenszerű.
+Például:
+…
+Nagy Marcell 16:30 2017.10.29-20:32
+Fodor Zsuzsanna 17:10 2017.10.28-23:12
+Lakatos Levente 16:00 2017.10.30-08:24
+…
+A példa első sora szerint Nagy Ma rcell tanár úrnál a 16:30-as i dőpontot lefoglalták,
+mégpedig 2017. 10. 29-én 20:32-kor.
+Készítsen programot, amely a fogado.txt állomány adatait felhasználva az alábbi
+kérdésekre válaszol! A program forráskódját mentse fogado néven! (A program megírásakor
+a felhasználó által megadott adatok helyességét, érvényességét nem kell ellenőriznie,
+feltételezheti, hogy a rendelkezésre álló adatok a leírtaknak megfelelnek.)
+A képernyőre írást igénylő részfeladatok eredményének megjelenítése előtt írja a képernyőre
+a feladat sorszámát (például 2. feladat: )! Ha a felhasználótól kér be adatot, jelenítse meg
+a képernyőn, hogy milyen értéket vár! Az ékezetmentes kiírás is elfogadott.
+1. Olvassa be és tárolja el a fogado.txt fájl tartalmát!
+2. Írja a képernyőre, hogy hány foglalás adatait tartalmazza a fájl!
+3. Kérje be a felhasználótól egy tanár nevét, majd jelenítse meg a  mintának megfelelően
+a képernyőn, hogy a megadott tanárnak hány időpontfoglalása van! Ha a megadott tanárhoz
+– ilyen például Farkas Attila – még nem történt foglalás, akkor  „A megadott néven nincs
+időpontfoglalás.” üzenetet jelenítse meg!
+4. Kérjen be a felhasználótól egy érvényes időpontot a forrásfájlb an található formátumban
+(pl. 17:40)! A program írja a képernyőre a megadott időpontban foglalt tanárok névsorát!
+Egy sorban egy név szerepeljen! A névsor ábécé szerint rendezet t legyen! A rendezett
+névsort írja ki fájlba is, és ott  is soronként egy név szerepel jen! Az időpontnak megfelelő
+fájlnevet használjon, például 17:40 esetén a 1740.txt fájlban tárolja el az adatokat!
+Ügyeljen arra, hogy a fájlnév a kettőspont karaktert ne tartalm azza! (Amennyiben ezen
+a néven nem tudja a fájlt létrehozni, használja az adatok.txt állománynevet!)
+5. Határozza meg, majd írja ki a képernyőre a legkorábban lefoglal t időpont minden adatát!
+Az adatok megjelenítésénél pontosan kövesse a feladat végén szereplő mintát!
+
+Informatika
+emelt szint
+1812 gyakorlati vizsga 13 / 16 2018. május 14.
+Azonosító
+jel:
+
+6. Írja ki a képernyőre „Barna Eszter” tanárnő szabad időpontjait! Tudjuk, hogy a tanárnőnek
+legalább egy foglalt és több s zabad időpontja is van. A tanárnő  a legutolsó szülő fogadása
+után távozhat az iskolából. Mikor távozhat legkorábban? Az időp ontot azonosíthatóan írja
+ki a képernyőre!
+
+Minta a szöveges kimenetek kialakításához:
+2. feladat
+Foglalások száma: 161
+
+3. feladat
+Adjon meg egy nevet: Nagy Ferenc
+Nagy Ferenc néven 6 időpontfoglalás van.
+
+4. feladat
+Adjon meg egy érvényes időpontot (pl. 17:10): 17:40
+Beke Bianka
+Csorba Ede
+Fodor Zsuzsanna
+Hantos Hedvig
+Keller Katalin
+Magos Magdolna
+Nagy Marcell
+Olasz Ferenc
+Papp Lili
+Szalai Levente
+Veres Gergely
+
+5. feladat
+Tanár neve: Csorba Ede
+Foglalt időpont: 16:30
+Foglalás ideje: 2017.10.28-18:48
+
+6. feladat
+16:00
+16:10
+17:00
+17:40
+17:50
+Barna Eszter legkorábban távozhat: 17:40
+
+45 pont 

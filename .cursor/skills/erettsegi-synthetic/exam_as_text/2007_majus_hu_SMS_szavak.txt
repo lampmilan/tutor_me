@@ -1,0 +1,57 @@
+
+gyakorlati vizsga 0624 10 / 12 2007. május 16.
+Informatika — emelt szint Azonosító
+jel:
+
+4. SMS szavak
+Napjainkban a kommunikáció egy elterjedt fo rmája az SMS-küldés. Az SMS-küldésre al-
+kalmas telefonok prediktív szöve gbevitellel segítik az üzenetek megírását. Ennek használata-
+kor a szavakat úgy tudjuk beírni, hogy a telefon számbillenty űjén található betűknek megfele-
+lő számokat kell beírnunk. A számok és betűk megfeleltetését az alábbi táblázat mutatja:
+
+Ha meg szeretnénk jeleníteni az „ablak” szót, akkor a 22525 kódot kell beírnunk. A telefon
+a tárolt szótára alapján a kódhoz kikeresi a megfelel ő szót. Ha több szóhoz is azonos kód tar-
+tozik, akkor a kódhoz tartozó összes szót felkínálja választásra. Egy ilyen szógy űjteményt
+talál a szavak.txt fájlban. A fájlról a következőket tudjuk:
+• Legfeljebb 600 szó található benne.
+• Minden szó külön sorban található.
+• A szavak hossza maximum 15 karakter.
+• A szavak mindegyike csak az angol ábécé kisbetűit tartalmazza.
+• Minden szó legfeljebb egyszer szerepel.
+Írjon sms néven programot, ami a szógy űjtemény felhasználásával megoldja az alábbi fel-
+adatokat!
+1. Kérjen be a felhasználótól egy betűt, és adja meg, hogy milyen kód (szám) tartozik hozzá!
+Az eredményt írassa a képernyőre!
+2. Kérjen be a felhasználótól egy szót, és határozza meg, hogy milyen számsorral lehet ezt a
+telefonba bevinni! Az eredményt írassa a képernyőre!
+3. Olvassa be a szavak.txt fájlból a szavakat, és a tová bbiakban azokkal dolgozzon! Ha
+nem tudja az állományból beolvasni az adatoka t, akkor az állományban található „b” kez-
+dőbetűs szavakat gépelje be a programba, és azokkal oldja meg a feladatokat!
+4. Határozza meg és írassa a képernyőre, hogy melyik a leghosszabb tárolt szó! Amennyiben
+több azonos hosszúságú van, elegend ő csak az egyiket megjeleníteni. Adja meg ennek a
+szónak a hosszát is!
+5. Határozza meg és írassa a képernyőre, hogy hány rövid szó található a fájlban! Rövid szó-
+nak tekintjük a legfeljebb 5 karakterből álló szavakat.
+6. Írassa a kodok.txt állományba a szavak.txt fájlban található szavaknak megfelel ő
+számkódokat! Minden szónak feleljen meg egy számkód, és minden számkód külön sorba
+kerüljön!
+
+gyakorlati vizsga 0624 11 / 12 2007. május 16.
+Informatika — emelt szint Azonosító
+jel:
+
+7. Kérjen be a felhasználótól egy számsort , és határozza meg, hogy melyik szó tartozhat
+hozzá! Amennyiben több szó is megfelel ő, akkor mindegyiket írassa ki! (Teszteléshez
+használhatja például a 225 számsort, mivel ehhez egynél több szó tartozik a szógy űjte-
+ményben.)
+8. Határozza meg, hogy a szógy űjteményben mely kódokhoz tartozik több szó is! Írassa ki a
+képernyőre ezeket a szavakat a kódjukkal együtt e gymás mellé az alábbi mintának megfe-
+lelően (a szavak sorrendje ettől eltérhet):
+baj : 225; bal : 225; arc : 272; apa : 272; eb : 32; fa : 32; dal : 325; fal : 3
+25; eltesz : 358379; elvesz : 358379; fojt : 3658; folt : 3658; ...
+9. Határozza meg, hogy melyik kódnak megfelel ő szóból van a legtöbb! Írassa ki a képer-
+nyőre a kódot, és a kódhoz tartozó összes tárolt szót! Ha több kódhoz is azonos számú szó
+tartozik, akkor elegendő ezen kódok közül csak az egyikkel foglalkozni.
+
+
+45 pont 

@@ -1,0 +1,113 @@
+
+gyakorlati vizsga 1512 10 / 16 2015. május 12.
+Informatika — emelt szint Azonosító
+jel:
+
+4. Expedíció
+Valamikor a távközlés h őskorában egy ritka farkasfaj tudományos megfigyelésére
+expedíciót szerveztek a sar kkörön túlra. A magukkal vitt rádió csak napi egy adásra volt
+alkalmas, arra is csak 90 id őegységig, id őegységenként egy karaktert továbbítva.
+Az expedíció rádiósának üzeneteit több rádióamat őr is igyekezett lejegyezni. A feladatban
+a rádióamatőrök által lejegyzett üzeneteket kell feldolgoznia.
+A veetel.txt fájl tartalmazza a rádióamat őrök által feljegyzett üzeneteket. Minden
+sorpár egy-egy feljegyzést tartalmaz.
+• A sorpár els ő sorában két szám áll, az els ő a nap sorszáma, a második pedig
+– az előzőtől egy szóközzel elválasztva – a rádióamatőré.
+• A sorpár második sorában a feljegyzéshez tartozó pontosan 90 kara kter áll. A vett
+karakter az angol ábécé kisbet űje, számjegy, / jel vagy szóköz lehet. Ha az adott
+időegységben nem volt egyértelm űen azonosítható a vett je l, akkor # karakter
+szerepel. Ha a tényleges üzenet befejez ődött, az adó a fennmaradó id őegységekben
+$ jelet küld.
+• A napok sorszáma 1 és 11, a rádióamat őrök sorszáma 1 és 20 közötti egész szám
+lehet.
+• Ha a megfigyelés során láttak farkasokat, akkor az üzenet két, / jellel elválasztott
+egész számmal, a látott kifejlett és kölyök egyedek számával kezd ődik, amelyet
+szóköz követ. Más esetben nem szám az első karakter.
+Például:
+2 15
+1/0 #gy#domb##l fig###tu# f#i#s ho#a##dalyoz$$...
+A fenti sorpár első sora mutatja, hogy az üzenet a 2. napon érkezett és a 15-ös rádióamat őr
+rögzítette. 1 felnőtt és 0 kölyök farkast figyeltek meg. Mi vel a második sorban a 45. karakter
+$ jel, és előtte nem # jel szerepel, ezért az üzenet biztosan 44 karakter hosszú.
+Készítsen programot, amely a veetel.txt állomány adatait felhasználva az alábbi
+kérdésekre válaszol! A pr ogram forráskódját mentse radio néven! (A program megírásakor
+a felhasználó által megadott adatok hely ességét, érvényességét nem kell ellen őriznie,
+feltételezheti, hogy a rendelkezésre álló adatok a leírtaknak megfelelnek.)
+A képerny őre írást igényl ő részfeladatok eredményének megjelenítése el őtt írja
+a képernyőre a feladat sorszámát (például: 3. feladat:)! Ha a felhasználótól kér be adatot,
+jelenítse meg a képernyőn, hogy milyen értéket vár! Az ékezetmentes kiírás is elfogadott.
+1. Olvassa be és tárolja a veetel.txt fájl tartalmát!
+2. Írja a képerny őre, hogy melyik rádióamat őr rögzítette az á llományban szerepl ő els ő és
+melyik az utolsó üzenetet!
+3. Adja meg az összes olyan felje gyzés napját és a rádióamat őr sorszámát, amelynek
+szövegében a „farkas” karaktersorozat szerepel!
+4. Készítsen statisztikát, amely megadj a, hogy melyik napon hány rádióamat őr készített
+feljegyzést. Azok a napok 0 ér tékkel szerepeljenek, amikor nem született feljegyzés!
+Az eredmény a képerny őn jelenjen meg a napok sorszáma szerint növekv ően!
+A megjelenítést a feladat végén látható minta szerint alakítsa ki!
+
+gyakorlati vizsga 1512 11 / 16 2015. május 12.
+Informatika — emelt szint Azonosító
+jel:
+
+5. A rögzített üzenetek alapján kísérelje meg helyreállítani az expedíció által küldött
+üzenetet! Készítse el az adaas.txt fájlt, amely napok szerinti sorrendben tartalmazza
+a küldött üzeneteket! Ha egy id őpontban senkinél nem volt vétel, akkor azon a ponton a #
+jel szerepeljen! (Feltételezheti, hogy az az onos üzenethez tartozó feljegyzések között
+nincs ellentmondás.)
+Az alábbi minta az első napról tartalmaz három üzenetet:
+1 13
+#abor# #e#tun###agy#szel#2# #o##h#d#g ##rkasn#o#oka# #a#tunk
+ e####a#akn##$#$#$##$$$$$$####
+1 19
+ta###t##ertunk ##gy #zel#####ok hide##f#r##sn#omo#at ##ttu##
+ e#y patak#al$#$$$$$###$$$$$$$
+1 9
+ta#o#t#v##tu#k nag# #zel#20 fok#hi##g fa#k#snyo#okat la#tun#
+#e#y#pat##na#$$###$$#$#$$$$$$$
+A helyreállított üzenet:
+tabort vertunk nagy szel#20 fok hideg farkasnyomokat lattunk
+ e#y pataknal$$$$$$$$$$$$$$$$$
+6. Készítsen függvényt szame néven az alábbi algoritmus  alapján! A függvény egy
+karaktersorozathoz hozzárendeli az igaz vagy a hamis értéket. A függvény elkészítésekor
+az algoritmusban megadott változóneveke t használja! Az elkészített függvényt
+a következő feladat megoldásánál felhasználhatja.
+Függvény szame(szo:karaktersorozat): logikai
+ valasz:=igaz
+ Ciklus i:=1-t ől hossz(szo)-ig
+  ha szo[i]<'0' vagy szo[i]>'9' akkor valasz:=hamis
+ Ciklus vége
+ szame:=valasz
+Függvény vége
+7. Olvassa be egy nap és egy rádióamat őr sorszámát, majd írja a képerny őre a megfigyelt
+egyedek számát (a kifejlett és kölyök egye dek számának összegét)! Ha nem volt ilyen
+feljegyzés, a „Nincs ilyen feljegyzés” szövege t jelenítse meg! Ha nem volt megfigyelt
+egyed vagy számuk nem állapítható meg, a „Nin cs információ” szöveget jelenítse meg!
+Amennyiben egy számot közvetlenül # jel követ, akkor a számot tekintse nem
+megállapíthatónak!
+A feladathoz tartozó minta a következő oldalon található.
+
+45 pont
+
+gyakorlati vizsga 1512 12 / 16 2015. május 12.
+Informatika — emelt szint Azonosító
+jel:
+
+Minta a szöveges kimenetek kialakításához:
+2. feladat:
+Az első üzenet rögzítője: 13
+Az utolsó üzenet rögzítője: 18
+
+3. feladat:
+10. nap 16. rádióamatőr
+…
+
+4. feladat:
+1. nap: 13 rádióamatőr
+2. nap: 14 rádióamatőr
+…
+
+7. feladat:
+Adja meg a nap sorszámát! 2
+Adja meg a rádióamatőr sorszámát! 15
+A megfigyelt egyedek száma: 1 

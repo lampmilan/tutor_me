@@ -1,0 +1,80 @@
+
+gyakorlati vizsga 0721 10 / 12 2007. november 6.
+Informatika — emelt szint Azonosító
+jel:
+
+4. Foci
+Perec város sportéletében fontos szerepet játszanak a fiatalok nagypályás labdarúgó mér-
+kőzései. Tavasszal minden csapat minden csapattal pontosan egy mérk őzést játszott. A folya-
+matosan vezetett eredménylista azonban elt űnt, így csak a mérk őzések jegyzőkönyvei álltak
+rendelkezésre. A jegyz őkönyveket ismételten feldolgozták, ehhez els ő lépésként a
+meccs.txt állományba bejegyeztek néhány adatot. Önnek ezzel az állománnyal kell dolgoz-
+nia.
+A meccs.txt állomány els ő sorában az állományban tárolt mérk őzések száma található.
+Alatta minden sorban egy-egy mérk őzés adatai olvashatók. Egy mérk őzést 7 adat ír le. Az
+első megadja, hogy a mérkőzést melyik fordulóban játszották le. A második a hazai, a harma-
+dik a vendégcsapat góljainak száma a mérk őzés végén, a negyedik és ötödik a félid őben elért
+gólokat jelöli. A hatodik szöveg a hazai csapat neve, a hetedik a vendégcsapat neve. Az egyes
+adatokat egyetlen szóköz választja  el egymástól. A sor végén nincs szóköz. A csapatok és a
+fordulók száma nem haladja meg a 20, a mérk őzések száma pedig a 400 értéket. Egy csapat
+sem rúgott meccsenként 9 gólnál többet. A cs apatok neve legfeljebb 20 karakter hosszú, a
+névben nincs szóköz.
+Például:
+112
+14 1 2 0 2 Agarak Ovatosak
+5 4 0 1 0 Erosek Agarak
+4 0 2 0 2 Ijedtek Hevesek
+8 1 1 0 0 Ijedtek Nyulak
+8 3 2 3 1 Lelkesek Bogarak
+13 0 1 0 1 Fineszesek Csikosak
+2 1 0 0 0 Pechesek Csikosak
+1 4 0 2 0 Csikosak Kedvesek
+9 2 0 0 0 Nyulak Lelkesek
+6 0 2 0 0 Ovatosak Nyulak
+Az 2. sor mutatja, hogy a 14. fordulóban az ot thon játszó Agarakat az Óvatosak 2-1-re
+megverték úgy, hogy a félidőben már vezettek 2-0-ra.
+Készítsen programot, amely az alábbi kérdés ekre válaszol! A program forráskódját mentse
+foci néven! (A program megírásakor a felhaszn áló által megadott adatok helyességét, érvé-
+nyességét nem kell ellenőriznie.)
+A képerny őre írást igényl ő részfeladatok eredményének megjelenítése el őtt írja a képer-
+nyőre a feladat sorszámát (például : 3. feladat:). Ha a felhasznál ótól kér be adatot, jelenítse
+meg a képernyőn, hogy milyen értéket vár!
+1. Olvassa be a meccs.txt állományban talált adatokat, s annak felhasználásával oldja meg
+a következő feladatokat! Ha az állományt nem tudja beolvasni, az első 10 mérkőzés adata-
+it jegyezze be a programba és dolgozzon azzal!
+
+gyakorlati vizsga 0721 11 / 12 2007. november 6.
+Informatika — emelt szint Azonosító
+jel:
+
+2. Kérje be a felhasználótól egy ford uló számát, majd írja a képerny őre a bekért forduló
+mérkőzéseinek adatait a következ ő formában: Edes-Savanyu: 2-0 (1-0) ! Soronként
+egy mérkőzést tüntessen fel! A különböz ő sorokban a csapatnevek ugyanazon a pozíción
+kezdődjenek!
+Például:
+Edes-Savanyu: 2-0 (1-0)
+Ijedtek-Hevesek: 0-2 (0-2)
+...
+3. Határozza meg, hogy a bajnokság során mely csapatoknak sikerült me gfordítaniuk az ál-
+lást a második félid őben! Ez azt jelenti, hogy a csapat az els ő félid őben vesztésre állt
+ugyan, de sikerült a mérk őzést megnyernie. A képerny őn soronként tüntesse fel a forduló
+sorszámát és a győztes csapat nevét!
+4. Kérje be a felhasználótól egy csapat nevét, és tárolja el! A következő két feladat megoldá-
+sához ezt a csapatnevet használja! Ha nem tudta beolvasni, használja a Lelkesek csapatne-
+vet!
+5. Határozza meg, majd írja ki, hogy az adott csapat összesen hány gólt l őtt és hány gólt ka-
+pott! Például: lőtt: 23 kapott: 12
+6. Határozza meg, hogy az adott csapat otthon melyik fordulóban kapott ki el őször és melyik
+csapattól! Ha egyszer sem kapott ki (ily en csapat például a Bogarak), akkor „ A csapat
+otthon veretlen maradt.” szöveget írja a képernyőre!
+7. Készítsen statisztikát, amely megadja, hogy az egyes végeredmények hány alkalommal
+fordultak el ő! Tekintse egyez őnek a fordított eredményeket (p éldául 4-2 és 2-4)! A na-
+gyobb számot mindig előre írja! Az elkészült listát a stat.txt állományban helyezze el!
+Például:
+2-1: 18 darab
+4-0: 2 darab
+2-0: 19 darab
+...
+
+
+45 pont 

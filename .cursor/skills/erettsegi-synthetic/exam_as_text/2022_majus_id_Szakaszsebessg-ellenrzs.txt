@@ -1,0 +1,107 @@
+Informatika
+emelt szint
+2112 gyakorlati vizsga 10 / 12 2022. május 16.
+Azonosító
+jel:
+
+4. Szakaszsebesség-ellenőrzés
+A szakaszsebesség-ellenőrzést már több országban is alkalmazzák a közlekedés ellenőrzésére.
+Ennek lényege, hogy a járművek elhaladnak két egymástól több kilométerre lévő ellenőrzőkapunál.
+Mindkét ponton rögzítik a jármű r endszámát és az elhaladás időpo n t j á t .  M a j d  a  k é t  i d ő é r t é k
+segítségével kiszámítják az átlagsebességet. Ha ez meghaladja a z útszakaszon megengedett
+legnagyobb sebességet, akkor a jármű vezetője szabálysértést követ el. Rendelkezésünkre állnak
+egy 10 km-es kétszer egysávos főútvonal egyik sávjában rögzítet t szakaszsebesség mérésének
+adatai. Az adott szakasz zárt, azaz nincs felhajtási és lehajtási lehetőség.
+A meresek.txt szövegállomány egy adott nap reggel 8 órától végzett 1 órányi mérés adatait
+tartalmazza. Minden egyes jármű csak egyszer szerepel a mérési adatok között. Egy jármű mérési
+adatai egy sorban szerepelnek egymástól szóközzel elválasztva. Egy sorban 9 adat szerepel, a jármű
+rendszáma (6 karakteren), a szakasz kezdeti- és végpontján rögzített időpont óra, perc, másodperc,
+ezredmásodperc formában. (A fájl olyan járművek adatait nem tartalmazza, amelyeknek a szakasz
+kezdeti- vagy végpontján nem volt mérési értéke.)
+A sorok száma legfeljebb 1000. Az adatok a belépési ponton mért idő szerint rendezettek.
+Például:
+OXZ648 8 4 44 861 8 11 53 432
+QUT385 8 4 53 376 8 9 28 185
+QTS988 8 5 0 854 8 12 19 879
+OTP604 8 5 2 263 8 12 21 288
+A példában látható, hogy az QTS988 rendszámú jármű 8:5:0,854-ko r haladt el a szakasz
+kezdetén lévő mérőnél és 8:12: 19,879-kor a szakasz végén lévő m érőnél. Az átlagsebessége
+82 km/h, ami a megtett út (10 km) és a megtételhez szükséges idő (0,1219 óra) hányadosa.
+Készítsen programot, amely a meresek.txt állomány adatait felhasználva az alábbi
+kérdésekre válaszol! A program forráskódját mentse ellenorzes néven! (A program
+megírásakor a felhasználó által megadott adatok helyességét, ér vényességét nem kell
+ellenőriznie, feltételezheti, hogy a rendelkezésre álló adatok a leírtaknak megfelelnek.)
+A képernyőre írást igénylő részfeladatok eredményének megjelenítése előtt írja a képernyőre
+a feladat sorszámát (például: 3. feladat )! Ha a felhasználótól kér be adatot, jelenítse meg
+a képernyőn, hogy milyen értéket vár! Az ékezetmentes kiírás is  elfogadott. A tizedesszámok
+megjelenítésekor a használt programozási nyelvben alapértelmeze tt megjelenítési módot
+használja!
+Az eredmény megjelenítését és a felhasználóval való kommunikáci ót a feladatot követő
+minta alapján valósítsa meg!
+1. Olvassa be és tárolja el a meresek.txt állomány adatait!
+2. Írja ki a képernyőre, hogy hány jármű adatait rögzítették a mérés során!
+3. Határozza meg a rendelkezésre álló adatok segítségével, hogy 9 óra előtt hány jármű haladt
+át a szakasz végpontján! A kapott értéket írja ki a képernyőre!
+4. Kérjen be a felhasználótól egy óra, perc értéket!
+a. Határozza meg, hogy abban a percben hány jármű haladt el a kezd ő
+méréspontnál! Ha az adott percben nem haladt el jármű a méréspontnál, akkor a
+0 értéket jelenítse meg!
+b. Számítsa ki a forgalomsűrűséget, amely a megadott időpontban ke zdődő
+percben (pl.: ha a megadott óra perc 08:09 volt, akkor 08:09:00 ,000-
+08:09:59,999 között) az útszakaszon lévő járművek száma és az ú tszakasz
+hosszának hányadosa. Az értéket tizedes tört alakban jelenítse meg.
+Informatika
+emelt szint
+2112 gyakorlati vizsga 11 / 12 2022. május 16.
+Azonosító
+jel:
+
+5. Mekkora volt a legnagyobb átlagsebességgel haladó járműnek a se bessége, és hány
+járművet hagyott le a mért szakas z végére? Amennyiben több legn agyobb átlagsebesség
+érték van, akkor elég az egyiket kiírnia. Az autó rendszámát, a z átlagsebességet egész
+számként és a lehagyott járművek számát jelenítse meg!
+6. Határozza meg, hogy a járművek hány százalékának az átlagsebess ége haladta meg az
+útszakaszon megengedett legnagyobb sebességet (90 km/h)! Az értéket tizedes tört alakban
+jelenítse meg a minta szerint!
+7. Készítsen egy szöveges állományt buntetes.txt néven, amely a gyorshajtók adatait
+tartalmazza! Ebbe a szöveges állományba azon járművek adatai ke rüljenek be, amelyek
+átlagsebessége 104 km/h-nál nagyobb! A fájlban a jármű rendszáma, az átlagsebesség egész
+számként megjelenítve és a büntetés összege szerepeljen mértékegységgel, pontosvesszővel
+vagy tabulátorokkal elválasztottan! A büntetési tételeket a következő táblázat tartalmazza!
+Átlagsebesség Büntetés
+104 km/h felett 121 km/h-ig 30 000 Ft
+121 km/h felett 136 km/h-ig 45 000 Ft
+136 km/h felett 151 km/h-ig 60 000 Ft
+151 km/h felett 200 000 Ft
+
+Minta a szöveges kimenetek kialakításához:
+2. feladat
+A mérés során 687 jármű adatait rögzítették.
+
+3. feladat
+9 óra előtt 603 jármű haladt el a végponti mérőnél.
+
+4. feladat
+Adjon meg egy óra és perc értéket! 8 20
+        a. A kezdeti méréspontnál elhaladt járművek száma: 12
+        b. A forgalomsűrűség: 9,4
+
+5. feladat
+A legnagyobb sebességgel haladó jármű
+        rendszáma: OKL564
+        átlagsebessége: 137 km/h
+        által lehagyott járművek száma: 33
+
+6. feladat
+A járművek 11,94%-a volt gyorshajtó.
+
+A fájl elkészült.
+A buntetes.txt fájl tartalma:
+QZV314 128 km/h 45000 Ft
+OJW811 107 km/h 30000 Ft
+QUT385 131 km/h 45000 Ft
+QRC440 128 km/h 45000 Ft
+QJQ854 109 km/h 30000 Ft
+...
+
+45 pont 

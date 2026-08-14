@@ -1,0 +1,99 @@
+Digitális kultúra
+emelt szint
+2311 gyakorlati vizsga 14 / 16 2023. május 22.
+Azonosító
+jel:
+
+3. Ütemezés
+A diákok hasznos nyári időtöltés ét biztosítják a különböző nyár i táborok. Egy iskolai
+osztályban felmérték, kik melyiken vennének részt szívesen. Ebb en a feladatban az előzetes
+igényfelmérés adatait dolgozzuk fel.
+A taborok.txt tabulátorokkal tagolt fájl soronké nt egy tábor adatait tartalm azza.
+Az állomány legfeljebb 100 sorból áll. Az első két számpár a tá bor első és utolsó napjának
+dátuma. A számpárok első értéke a hónap, a második a nap sorszá ma. Mivel a nyári szünet
+programjairól van szó, csak június 16. és augusztus 31. közötti  dátumok szerepelhetnek. Ezt
+követik azon diákok betűjelei, akik érdeklődnek a tábor iránt, végül a tábor témája olvasható.
+A diákok betűjele az angol ábécé egy nagybetűs karaktere, a táb or témája egyetlen
+ékezetmentes szó.
+Részlet az állomány első néhány sorából:
+6 26 7 10 GIOSY foci
+7 14 7 21 FPUY szinjatszo
+7 27 8 2 DKPRX hittan
+7 28 8 6 FJLOP cserkesz
+7 9 7 14 FKO gombasz
+…
+A második sorban egy színjátszó tábor adatai szerepelnek. A tábor július 14-én kezdődik és
+július 21-én fejeződik be, tehát összesen 8 napos, és ez az F, P, U, Y betűjelekkel azonosított
+tanulókat érdekli.
+Készítsen programot, amely az állomány adatait felhasználva meg oldja az alábbi
+feladatokat! A program forráskódját mentse  utemez  néven! A program megírásakor
+a felhasználó által megadott adatok helyességét, érvényességét nem kell ellenőriznie, és
+feltételezheti, hogy a beolvasandó adatok a leírtaknak megfelelnek.
+A képernyőre írást igénylő részfe ladatok esetén – a mintához ta rtalmában hasonlóan – írja
+ki a képernyőre a feladat sorszámát (például: 2. feladat ), és utaljon a kiírt tartalomra is!
+Ha a felhasználótól kér be adatot, jelenítse meg a képernyőn, hogy milyen értéket vár! Mindkét
+esetben az ékezetmentes kiírás is elfogadott.
+1. Olvassa be, és tárolja el a taborok.txt állomány tartalmát!
+2. Jelenítse meg a képernyőn, hogy hány tábor adatait tartalmazza a bemeneti fájl! Írja
+a képernyőre az elsőként és az utolsóként rögzített tábor témáját!
+3. Írja a képernyőre, mikor kezdődik a „ zenei” tábor! Ha több ilyen tábor is volt,
+az összeset jelenítse meg a lenti mintának megfelelően! Ha egy sem volt, akkor a „Nem
+volt zenei tábor.” szöveget jelenítse meg a képernyőn!
+4. Keresse meg, melyik táborba jelentkeztek a legtöbben! Írja a képernyőre a tábor kezdő
+dátumát és a témáját! Ha több ilyen tábor is van, az összeset jelenítse meg!
+5. Készítsen függvényt sorszam néven, amely megadja, hogy a paraméterként kapott
+hónap és nap a nyári szünet hányadik napja! A dátumot a függvény két egész számként
+kapja meg, a visszaadott érték egy egész szám legyen! A nyári szünet első napja június
+(6. hó) 16. A nyári szünet 77. napja augusztus (8. hó) 31. (A n yári hónapok rendre 30,
+31, 31 naposak.) A későbbi feladatok megoldásánál ezt a függvényt felhasználhatja.
+6. Kérjen be a felhasználótól egy dátumot a lenti mintának megfele lően, majd adja meg,
+hány tábor zajlik éppen ekkor!
+Digitális kultúra
+emelt szint
+2311 gyakorlati vizsga 15 / 16 2023. május 22.
+Azonosító
+jel:
+
+7. Olvassa be egy tanuló betűjelét! Határozza meg, hogy az adott b etűjelű tanuló mely
+táborok iránt érdeklődött! A tábor ok adatait kezdő dátum szerin t növekvő sorrendben
+írja az egytanulo.txt fájlba a minta formátumának megfelelően! Jelenítse meg
+a képernyőn, hogy a tanuló mindegyiken részt tud-e venni, azaz nincs-e olyan nap,
+amelyen több táborban kellene lennie!
+Az egytanulo.txt fájl első néhány sora:
+6.18-6.29. evezos
+6.22-6.26. cserkesz
+7.2-7.8. csillagasz
+7.8-7.20. erdojaro
+…
+Példa a szöveges kommunikáció kialakításához:
+2. feladat
+Az adatsorok száma: 28
+Az először rögzített tábor témája: foci
+Az utoljára rögzített tábor témája: filmes
+3. feladat
+Zenei tábor kezdődik 8. hó 4. napján.
+Zenei tábor kezdődik 6. hó 18. napján.
+4. feladat
+Legnépszerűbbek:
+8 27 fotos
+6. feladat
+hó: 8
+nap: 1
+Ekkor éppen 3 tábor tart.
+7. feladat
+Adja meg egy tanuló betűjelét: L
+Nem mehet el mindegyik táborba.
+
+
+Források:
+A feladatlap bázisszövegei az eredeti forrásszövegek módosításával (rövidítésével, nyelvtani egyszerűsítésével),
+adatainak felhasználásával, de az eredeti szöveg, adatok integritásának megtartása mellett jöttek létre. Az eredeti
+szövegek, adatok, képek forrása:
+1A. Dominó
+https://szamoldki.hu/hu/kalkulator/dominos-konny-feladvany Utolsó letöltés: 2021.11.18.
+1B. Adóazonosító jel
+https://www.jogiforum.hu/torvenytar/tv/1996/XX/ Utolsó letöltés: 2022.06.17.
+2. Szinkron
+Internetes Szinkron Adatbázis, https://iszdb.hu/. Utolsó letöltés: 2022.09.10.
+
+50 pont 

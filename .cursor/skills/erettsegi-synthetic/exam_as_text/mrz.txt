@@ -1,0 +1,204 @@
+
+Digitális kultúra 15 / 20 emelt szintű gyakorlati vizsga
+E2512  2026. május 18.
+Azonosító
+jel:
+
+3. MRZ kód
+Az útlevél elsősorban külföldi utazásra jogosító okmány, ezért a gépi ellenőrzés
+megkönnyítésére az adatoldalon egy úgynevezett MRZ (Machine Readible Zone) kód található.
+Az MRZ kód az okmányról és annak tulajdonosáról m eghatározott a datokat és ellenőrző
+értékeket tartalmaz. Az útlevélnél az MRZ kód 2 soros, mindegyik sorban 44 karakter található.
+Az MRZ kódban csak az angol ábécé nagybetűi, számok és a „<” ka rakter szerepelhetnek
+(elválasztásra, illetve kitöltésre). Például:
+P<HUNNAGY<KOVACS<<GYOENGYVIRAG<MARIA<<<<<<<<  
+XT123456<9HUN9805138F3005132<<<<<<<<<<<<<<04  
+Az MRZ kód első sora sorrendben a következő adatokat tartalmazza:
+Megnevezés Hossz Hely Példa
+Az okmány típusa (P esetén útlevél), ha nem
+2 karakter, akkor „<” a második karakter
+2 karakter 1-2. P<
+Az okmányt kiadó ország 3 karakteres kódja 3 karakter 3-5. HUN
+Az okmány tulajdonosának családi és
+utóneve.
+A családi nevet az utónévtől „<<”, a többtagú
+családi vagy utóneveket pedig „<” választja el.
+Ha rövidebb, mint 39 karakter, akkor „<” jellel
+van feltöltve.
+39 karakter 6-44.
+NAGY<KOVACS<<  
+GYOENGYVIRAG<  
+MARIA  
+<<<<<<<<  
+Az MRZ kód második sora sorrendben a következő adatokat tartalmazza:
+Megnevezés Hossz Hely Példa
+Okmányszám (ha rövidebb, mint 9 karakter,
+akkor „<” jellel van feltöltve) 9 karakter 1-9. XT123456<
+Okmányszám ellenőrző számjegye 1 karakter 10. 9
+Az okmány birtokosának nemzetisége 3 karakter 11-13. HUN
+Az okmány birtokosának születési ideje
+(ÉÉHHNN formátumban) 6 karakter 14-19. 980513
+A születési idő ellenőrző számjegye 1 karakter 20. 8
+Az okmány tulajdonosának neme
+(F–Nő, M–Férfi) 1 karakter 21. F
+Az okmány érvényességi idejének utolsó
+napja (ÉÉHHNN formátumban) 6 karakter 22-27. 300513
+Az érvényességi idő ellenőrző számjegye 1 karakter 28. 2
+Az okmányt kiadó által választható adat (nem
+kötelező, ha nincs, akkor „<” jelekkel van
+feltöltve)
+14 karakter 29-42.
+<<<<<<<<<<<<<<
+Az okmányt kiadó által választható adat
+ellenőrző számjegye 1 karakter 43. 0 
+Összesített ellenőrző számjegy 1 karakter 44. 4
+Készítsen programot az MRZ kód ellenőrzésére, amely egy állomán yban megadott MRZ kód
+beolvasása után az alábbi kérdésekre válaszol! A program forrás kódját mentse mrz n é v e n !
+A program megírásakor a felhaszná ló által megadott adatok helye sségét, érvényességét nem
+kell ellenőriznie.
+
+Digitális kultúra 16 / 20 emelt szintű gyakorlati vizsga
+E2512  2026. május 18.
+Azonosító
+jel:
+
+A képernyőre írást igénylő részfeladatok eredményének megjelení tése előtt írja a képernyőre
+a feladat sorszámát (például: 2. feladat )! Ha a felhasználótól kér be adatot, jelenítse meg
+a képernyőn, hogy milyen értéket vár! Az ékezetmentes kiírás is elfogadott.
+Három MRZ kód rendelkezésre áll az mrz1.txt, mrz2.txt és mrz3.txt állományokban.
+1. Kérje be a felhasználótól az egyik MRZ fájl nevét! Olvassa be é s tárolja el a megadott
+állományban lévő MRZ kódot, majd írja ki a minta szerint a képernyőre!
+2. Az MRZ kód alapján határozza meg, és írja ki a képernyőre, hogy  az okmány tulajdonosa
+férfi vagy nő!
+3. Kérje be a felhasználótól az aktuális dátumot ÉÉHHNN formában! Vizsgálja meg az MRZ
+kódban lévő érvényességi idő al apján, hogy érvényes-e az okmány ! Ha az okmány lejárt,
+akkor írja a képernyőre, hogy „Lejárt.”, ellenkező esetben az „Érvényes.” üzenetet írja
+ki! (A vizsgálat során feltételezheti, hogy az MRZ-ben lévő érvényességi idő helyes.)
+4. Írja ki a képernyőre az MRZ kód első sorában lévő nevet a minta  szerint! Amennyiben az
+okmány tulajdonosának családi és utóneve (elválasztó karakterek kel együtt) rövidebb
+39 karakternél, akkor a maradék he lyet „<” karakterrel töltik k i. Ha az 1. sor végén nincs
+„<” karakter, akkor azt kell feltételezni, hogy a név csonkolt.  Írja ki a képernyőre a minta
+szerint, ha a név nem csonkolt: „A név nem csonkolt. ”,  különben a „Lehetséges,
+hogy csonkolt a név. ” szöveget! Feltételezheti, hogy az utónévből mindig szerepel
+legalább egy karakter.
+Az ellenőrző számjegy az MRZ-ben megadott adatok ellenőrzésére szolgál. Az útlevél MRZ
+kódjában 5 ellenőrző karakter van. Ezek közül a legfontosabb há rom az okmányszámé,
+a születési időé és az érvényességi időé, amiket az alábbi tábl ázat harmadik oszlopában
+megadott karakterekből számítanak.
+Megnevezés Hely Számításhoz használt
+karakterek
+Okmányszám ellenőrző számjegye 2. sor 10. 2. sor 1-9. karakter
+A születési idő ellenőrző számjegye 2. sor 20. 2. sor 14-19. ka rakter
+Az érvényességi idő ellenőrző számjegye 2. sor 28. 2. sor 22-27 . karakter
+Az ellenőrző számjegy számítása a következő eljárás alapján történik. A számításhoz használt
+karakterek és számok számértékének meghatározása után a számért ékeket rendre
+a 7, 3, 1 számmal egyenként megszorozzák. Az így kapott értékek et összeadják, majd az
+összeget elosztják 10-zel és a maradékként kapott egyjegyű szám lesz az ellenőrző számjegy.
+Az ellenőrzésre kerülő karakterek számértékeit az alábbi táblázatok tartalmazzák:
+
+<  0  1  2  3  4  5  6  7  8  9 
+0  0  1  2  3  4  5  6  7  8  9 
+
+A  B  C  D  E  F  G  H  I  J  K  L  M  N  O  P  Q  R  S  T  U  V  W  X  Y  Z 
+10  11  12  13  14  15  16  17  18  19  20  21  22  23  24  25  26  27  28  29  30  31  32  33  34  35 
+
+A számokhoz és a karakterekhez tartozó számértéket a kodok.txt fájl is tartalmazza, ahol
+a sorokban lévő értékek szóközzel vannak elválasztva. Az első érték mindig a karakter vagy
+a szám, a második pedig a hozzá rendelt számérték.
+
+Digitális kultúra 17 / 20 emelt szintű gyakorlati vizsga
+E2512  2026. május 18.
+Azonosító
+jel:
+
+Példa az ellenőrző számjegy számítására, ha az okmányszám XT123456<
+Az ellenőrzéshez használt karakterek X T 1 2 3 4 5 6 <
+Az ellenőrzéshez használt karakterek számértéke 33 29 1 2 3 4 5 6 0
+Szorzó 7 3 1 7 3 1 7 3 1
+Szorzat értékek 231 87 1 14 9 4 35 18 0
+A szorzatokból képzett összeg 399
+10-zel való osztás maradéka (az ellenőrző számjegy) 9
+5. Készítsen egy Elljegyszamolo nevű függvényt, amely az ellenőrző számjegyet számítja
+ki a fenti eljárásnak megfelelően! A függvény bemenetként a szá mításhoz szükséges
+karaktereket kapja meg, visszatérési értéke pedig az ellenőrző számjegy! A karakterekhez
+rendelt számértékek meghatározásához dolgozhat a kodok.txt állománnyal, rögzítheti
+a programban annak tartalmát, va gy más módszerrel is meghatároz hatja a hozzárendelt
+számértékeket.
+6. Ellenőrizze az MRZ-ben lévő okmányszám, születési idő és érvény ességi idő ellenőrző
+számjegyének helyességét! A képernyőn a minta szerint jelenítse meg az MRZ kódban lévő
+és a kiszámított ellenőrző számjegyet! Ha az ellenőrző számjegy megegyezik az MRZ-ben
+lévővel, akkor a képernyőre írja ki a minta szerint a „ HELYES” szót, ellenkező esetben
+a „HIBÁS” szót! A számításhoz felhasználhatja az előző feladatban elkészített függvényt!
+Minta a szöveges kimenetek kialakításához:
+1. feladat
+Az állomány neve: mrz1.txt
+P<HUNNAGY<KOVACS<<GYOENGYVIRAG<MARIA<<<<<<<<
+XT123456<9HUN9805138F3005132<<<<<<<<<<<<<<04
+2. feladat
+Az okmány tulajdonosa nő.
+3. feladat
+Aktuális dátum: 260910
+Érvényes.
+4. feladat
+Családi név: NAGY KOVACS
+Utónév: GYOENGYVIRAG MARIA
+A név nem csonkolt.
+6. feladat
+Okmányszám ellenőrző szám
+  MRZ-kódban: 9 / Számított érték: 9 HELYES
+Születési idő ellenőrző szám
+  MRZ-kódban: 8 / Számított érték: 8 HELYES
+Érvényességi idő ellenőrző szám
+  MRZ-kódban: 2 / Számított érték: 2 HELYES
+
+Digitális kultúra 18 / 20 emelt szintű gyakorlati vizsga
+E2512  2026. május 18.
+Azonosító
+jel:
+
+Minta az mrz2.txt és az mrz3.txt fájllal.
+1. feladat
+Az állomány neve: mrz2.txt
+P<HUNSZENTGYOERGYI<FAZEKAS<<SZEBASZTIAN<KRIS
+XT123457<2HUN0011272M2511270<<<<<<<<<<<<<<06
+2. feladat
+Az okmány tulajdonosa férfi.
+3. feladat
+Aktuális dátum: 251220
+Érvényes.
+4. feladat
+Családi név: SZENTGYOERGYI FAZEKAS
+Utónév: SZEBASZTIAN KRIS
+Lehetséges, hogy csonkolt a név.
+6. feladat
+Okmányszám ellenőrző szám
+  MRZ-kódban: 2 / Számított érték: 2 HELYES
+Születési idő ellenőrző szám
+  MRZ-kódban: 2 / Számított érték: 1 HIBÁS
+Érvényességi idő ellenőrző szám
+  MRZ-kódban: 0 / Számított érték: 0 HELYES
+
+1. feladat
+Az állomány neve: mrz3.txt
+P<HUNSZELID<<ANGYAL<VIRAG<<<<<<<<<<<<<<<<<<<
+XE01279590HUN8103158F31031531289<<<<<<<<<<01
+2. feladat
+Az okmány tulajdonosa nő.
+3. feladat
+Aktuális dátum: 301201
+Érvényes.
+4. feladat
+Családi név: SZELID
+Utónév: ANGYAL VIRAG
+A név nem csonkolt.
+6. feladat
+Okmányszám ellenőrző szám
+  MRZ-kódban: 0 / Számított érték: 0 HELYES
+Születési idő ellenőrző szám
+  MRZ-kódban: 8 / Számított érték: 8 HELYES
+Érvényességi idő ellenőrző szám
+  MRZ-kódban: 3 / Számított érték: 3 HELYES
+
+
+
+50 pont 

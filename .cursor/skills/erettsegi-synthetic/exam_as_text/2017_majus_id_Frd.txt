@@ -1,0 +1,100 @@
+Informatika
+emelt szint
+1511 gyakorlati vizsga 12 / 16 2017. május 15.
+Azonosító
+jel:
+
+4. Fürdő
+A fürd őkben egyre gyakoribb a különböz ő beléptet ő és fürd őn belüli mozgást rögzít ő
+rendszerek alkalmazása. Egy fürd ő a szolgáltatások fejlesztés e miatt szeretné a vendégek
+fürdőzési szokásait felmérni. Ezért egy napi forgalomból véletlenszer űen választották ki
+a vendégek adatait.
+A fürdő négy elkülönített részleggel rendelkezik. A vendégek a fürdő részlegeit az öltözőből
+kilépve az átjárón keresztü l érhetik el, és a fürd őből távozni is az öltöz őn keresztül tudnak.
+Minden vendég a belépéskor egy ka rszalagot kap. A karszalagon lév ő érzékel ő minden
+részlegbe való belépést és kilépést rögzít. Minden vendég az öltözőt egyszer hagyja el – ekkor
+lép a fürdő belső területére –, és egyszer megy be az öltözőbe – ekkor hagyja el a fürdőt. A nap
+folyamán már nem jön vissza ismét a fürdőbe. A fürdő 6 órától 20 óráig tart nyitva.
+A szóközökkel tagolt furdoadat.txt fájl maximálisan 800 adatsort tartalmazhat.
+A fájlban 100 fürdővendég adatai vannak. A lista vendé genként csoportosított, azon belül id ő
+szerint rendezett. A vendégek sorrendjét az öltözőből való kilépés ideje szabja meg.
+ A sor első értéke egy háromjegyű szám, ami a vendég azonosítója.
+ A sor második értéke a fürdőrészleg azonosítója.
+Részleg Azonosító
+Öltöző 0
+Uszoda 1
+Szaunák 2
+Gyógyvizes medencék 3
+Strand 4
+ A sor harmadik értéke 0, ha a vendég az adott
+részlegre belépett; és 1, ha kilépett a részlegből.
+ A sor negyedik, ötödik és hatodik értéke az adott
+részlegbe való belépés vagy kilépés id őpontja óra perc másodperc formában,
+24 órás alakban.
+Például:
+453 0 1 6 15 27
+453 1 0 6 17 19
+453 1 1 6 52 56
+453 0 0 6 56 32
+…
+266 0 1 16 7 52
+266 4 0 16 9 30
+…
+A példában a 453-as és a 266-os azonosítóval rendelkez ő vendég néhány adata látható.
+A 453-as vendég 6:15:27-kor  lépett ki  az öltöz őből és 6:17:19-kor lépett be az uszodába.
+Az uszodából 6:52:56-kor lépett ki, majd 6:56:32-kor bement az öltözőbe.
+Készítsen programot, amely a furdoadat.txt állomány adatait felhasználva az alábbi
+kérdésekre válaszol! A program forráskódját mentse furdostat néven! (A program
+megírásakor a felhasználó által megadott adatok helyességét, érvényességét nem kell
+ellenőriznie, feltételezheti, hogy a rendelkezésre álló adatok a leírtaknak megfelelnek.)
+A képernyőre írást igénylő részfeladatok eredményének megjelenítése előtt írja a képernyőre
+a feladat sorszámát (például: 4. feladat)! Az ékezetmentes kiírás is elfogadott.
+
+Informatika
+emelt szint
+1511 gyakorlati vizsga 13 / 16 2017. május 15.
+Azonosító
+jel:
+
+1. Olvassa be a furdoadat.txt fájl tartalmát!
+2. Írja a képernyőre, hogy az első és az utolsó vendég mikor lépett ki az öltözőből!
+3. Határozza meg és írja ki a képernyőre, hogy hány olyan fürdővendég volt, aki az öltözőn
+kívül csak egy részlegen járt és azt a részleget csak egyszer használta!
+4. Határozza meg, hogy melyik ve ndég töltötte a legtöbb id őt a fürd őben! A vendég
+azonosítóját és a fürdőben tartózkodás idejét írja ki a képernyőre! A fürdőben a legtöbb
+időt töltő vendégek közül elegendő egy vendég adatait megjelenítenie.
+5. Készítsen statisztikát, hogy 06:00:00-08:59:59 óra között, 09:00:00-15:59:59 óra között
+és 16:00:00-19:59:59 óra között hány vendég érkezett a fürd őbe! Az eredményt írja ki
+a képernyőre a mintán látható formában!
+6. Készítsen egy listát a szauna  részlegen járt vendégekr ől és az általuk ott töltött id őről!
+A vendég azonosítóját és a részlegen eltöltött id őt a szauna.txt fájlba írja ki!
+A fájlban egy sorban a vendég azonosítója és szóközzel elválasztva a részlegen eltöltött
+idő szerepeljen óra:perc:másodperc formában! Ügyeljen arra, hogy egy vendég a szauna
+részlegben a nap folyamán többször is járhatott!
+7. Készítsen egy listát, amelyben megadja, hogy az egyes részlegeket hányan használták!
+Az eredményt a minta szerint írja ki a képerny őre! Ha egy vendég egy részlegen
+többször is járt a nap folyamán, azt a statisztikában csak egynek számolja!
+Minta a szöveges kimenetek kialakításához:
+2. feladat
+Az első vendég 6:14:56-kor lépett ki az öltözőből.
+Az utolsó vendég 18:35:37-kor lépett ki az öltözőből.
+
+3. feladat
+A fürdőben 33 vendég járt csak egy részlegen.
+
+4. feladat
+A legtöbb időt eltöltő vendég:
+306. vendég 6:41:19
+
+5. feladat
+6-9 óra között 9 vendég
+9-16 óra között 45 vendég
+16-20 óra között 46 vendég
+
+7. feladat
+Uszoda: 41
+Szaunák: 52
+Gyógyvizes medencék: 54
+Strand: 48
+
+45 pont 

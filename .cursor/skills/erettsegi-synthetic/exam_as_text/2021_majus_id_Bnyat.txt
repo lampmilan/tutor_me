@@ -1,0 +1,92 @@
+Informatika
+emelt szint
+2011 gyakorlati vizsga 12 / 16 2021. május 17.
+Azonosító
+jel:
+
+4. Bányató
+A bányató egy elhagyott külszíni bánya, amely egy idő után megt elik vízzel. Ebben
+a feladatban egy bányató mélységét kell elemeznie.
+A tó felszínét sakktáblaszerűen 1 m oldalhosszúságú négyzetekre bontották, és minden ilyen
+négyzetben megmérték a tó mélységét. A mérést deciméter pontoss ággal végezték.
+A szárazföldet a 0 érték jelzi. A mérési adatokat egy téglalap alakú táblázatban rögzítették,
+például:
+
+Az ábrán az első oszlop, illetve az első sor a mérési adatok ko ordinátáját adja meg, például
+12. sor 6. oszlopában lévő mérési eredmény 33 dm. (A tó medrét szürke háttér jelzi.)
+Rendelkezésére áll a melyseg.txt nevű adatfájl, amelynek első két sorában az adatokat
+tartalmazó táblázat sorainak majd oszlopainak száma található. A fájlban ezt a mérési adatok
+követik soronként, az adatokat sz óköz választja el egymástól. A  fájlban a sorok és oszlopok
+azonosítói nem szerepelnek. Például egy 42 sorból és 25 oszlopb ól álló táblázat esetén az első
+4 sor adatai a fájlban:
+42
+25
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 3 0 0 0 0 0 8 10 10 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 19 10 0 11 16 18 10 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 9 17 35 5 11 11 22 18 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+…
+Készítsen programot, amely az állomány adatait felhasználva az alábbi kérdésekre válaszol!
+A program forráskódját mentse banyato néven! A megoldás során felhasználhatja, hogy a fájl
+legfeljebb 99 sort és legfelje bb 99 oszlopot tartalmaz. A progr am megírásakor a felhasználó
+által megadott adatok helyességét, érvényességét nem kell ellen őriznie, és feltételezheti, hogy
+a rendelkezésre álló adatok a leírtaknak megfelelnek.
+A képernyőre írást igénylő részfe ladatok esetén – a mintához ta rtalmában hasonlóan – írja
+ki a képernyőre a feladat sorszámát (például: 3. feladat ), és utaljon a kiírt tartalomra is!
+Ha a felhasználótól kér be adatot, jelenítse meg a képernyőn, hogy milyen értéket vár! Mindkét
+esetben az ékezetmentes kiírás is elfogadott.
+
+Informatika
+emelt szint
+2011 gyakorlati vizsga 13 / 16 2021. május 17.
+Azonosító
+jel:
+
+1. Olvassa be és tárolja el a melyseg.txt állomány adatait, és annak felhasználásával oldja
+meg a következő feladatokat!
+2. Kérje be egy mérési eredmény so r- és oszlopazonosítóját, majd í rassa ki az adott helyen
+mért adatot a képernyőre! (A sorok és oszlopok számozása kezdődjön 1-gyel!)
+3. Határozza meg a tó (vagyis az ábrán szürkével jelölt rész) fels zínének területét, valamint
+a tó átlagos mélységét! Írassa ki a két eredményt a mintának me gfelelően a képernyőre!
+A tó átlagos mélysége méterben kifejezve, két tizedesjegy pontossággal jelenjen meg!
+4. Mekkora a tó legnagyobb mélysége, és hol a legmélyebb a tó? Jel enítse meg a választ
+a képernyőn! A legmélyebb pont koor dinátáit a mintának megfelel ően ( sor; oszlop)
+formában írassa ki! Ha több ilyen mérési eredmény is van, minde gyik koordinátapárja
+jelenjen meg!
+5. Milyen hosszú a tó partvonala, vagyis az ábrán a szürkével jelölt részt határoló vastag fekete
+vonal hossza? A partvonalhoz vegye hozzá a tóban lévő szigetek kerületét is! Írassa ki
+az eredményt a mintának megfelelően a képernyőre! (A megoldás s orán felhasználhatja,
+hogy a táblázat első és utolsó sorában és oszlopában minden adat 0.)
+6. Kérje be a felhasználótól egy oszlop azonosítóját, és szemlélte sse a diagram.txt
+szöveges állományban „sávdiagramon” a tó mélységét az adott osz lopban a következő
+módon! A sor elején jelenjen meg a mérési adat sorának azonosít ója pontosan két
+számjeggyel, majd tegyen egymás mellé annyi csillagot (*), ahán y méter az adott helyen
+a tó mélysége! A mérési adatokat a matematika szabályainak megfelelően kerekítse!
+Példa a szöveges kimenetek kialakításához (a tizedesjel az alka lmazott fejlesztői környezettől
+függően eltérhet):
+2. feladat
+A mérés sorának azonosítója=12
+A mérés oszlopának azonosítója=6
+A mért mélység az adott helyen 33 dm
+3. feladat
+A tó felszíne: 646 m2, átlagos mélysége: 4,28 m
+4. feladat
+A tó legnagyobb mélysége: 98 dm
+A legmélyebb helyek sor-oszlop koordinátái:
+(14; 20)   (26; 11)   (32; 16)
+5. feladat
+A tó partvonala 270 m hosszú
+6. feladat
+A vizsgált szelvény oszlopának azonosítója=6
+Példa a diagram.txt szöveges állomány tartalmára:
+01
+02
+03**
+04****
+05******
+06******
+07***
+08*****
+…
+
+45 pont 

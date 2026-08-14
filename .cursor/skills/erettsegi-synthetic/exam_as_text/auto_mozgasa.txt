@@ -1,0 +1,106 @@
+
+Digitális kultúra 14 / 16 emelt szintű gyakorlati vizsga
+E2312  2024. október 22.
+Azonosító
+jel:
+
+3. Autók mozgása
+Egy autóút meghatározott szakaszán vizsgálták az egyik irányba haladó autók mozgását.
+A vizsgálat során az autókba építe tt rádióadók jeleket sugározt ak az útszakaszra történő
+belépéskor, majd ezt követően bizonyos időpontokban. A gépkocsik mozgását tekinthetjük úgy,
+hogy a jeladáskor mért sebességgel haladtak a következő jeladás ig. A mért adatok a
+jeladas.txt szöveges állományban találhatók, melynek első néhány sora a következő:
+TLJ-509 6 4 95
+TLJ-509 6 14 88
+AVY-894 6 15 98
+ANF-997 6 17 86
+ZVJ-638 6 20 119
+AVY-894 6 23 105
+ANF-997 6 26 88
+Minden sorban egy jeladás adatai  szerepelnek tabulátorral elvál asztva: az autó rendszáma,
+a jeladás idejének óra, illetve perc értéke, valamint a jeladás kor mért sebesség
+km/h mértékegységben. Az adatfelvétel reggel 6:00 és 22:45 között történt. A fenti példában a
+TLJ-509 rendszámú autó érkezett elő ször az útszakasz elejéhez 6 :04 perckor, és 10 percig
+haladt 95 km/h sebességgel, majd 6:14-től 88 km/h sebességgel.
+Az autók száma legfeljebb 200, a jeladások száma legfeljebb 2000. Az óra, perc és sebesség
+értékek egész számok. Minden autó csak egyszer haladt át az úts zakaszon. A bemeneti
+állományban a jeladások időrendben szerepelnek, de az időpontok at csak perc pontossággal
+rögzítették.
+Készítsen programot, amely a járművek adatait felhasználva az alábbi feladatokat oldja meg!
+A program forráskódját mentse autok néven! A program megírásakor a bemeneti állományban
+található vagy a felhasználó ál tal megadott adatok helyességét,  érvényességét nem kell
+ellenőriznie, feltételezheti, hogy azok a leírtaknak megfelelnek.
+A képernyőre írást igénylő részfeladatok eredményének megjelenítése előtt írja a képernyőre
+a feladat sorszámát (például: 2. feladat: ), és az eredmények megjelenítésekor utaljon
+a tartalomra! Ha a felhasználótól kér be adatot, jelenítse meg a képernyőn, hogy milyen értéket
+vár! Az ékezetmentes kiírás is elfogadott a képernyőn történő megjelenítés során.
+1. Olvassa be és tárolja el a további feldolgozáshoz a jeladas.txt állomány tartalmát!
+2. Állapítsa meg, hogy milyen időpontb an történt a legutolsó jelad ás, és írja a képernyőre
+az időpontot, valamint az utoljára jelet adó autó rendszámát!
+3. Írja ki a bemeneti állományban elsőként szereplő jármű rendszám át, valamint azt, hogy
+milyen időpontokban adott jelzést! Az időpontokat óra:perc form átumban, szóközzel
+elválasztva, egy sorban jelenítse meg!
+4. Kérje be a felhasználótól egy időpont óra és perc értékét, és a dja meg, hogy hány jeladás
+történt az adott időpontban! Ha nem történt jeladás, akkor 0-t írjon ki!
+5. Állapítsa meg, hogy mennyi az adatok szerint a legnagyobb sebes ség, amellyel egy jármű
+a jeladáskor haladt, illetve adja meg az összes autó rendszámát, ami haladt ilyen sebességgel!
+Amennyiben egy jármű többször is haladt a legnagyobb sebességge l, akkor a rendszámát
+többször is megjelenítheti. A rendszámokat egy sorban, szóközzel elválasztva jelenítse meg
+a minta szerint!
+
+Digitális kultúra 15 / 16 emelt szintű gyakorlati vizsga
+E2312  2024. október 22.
+Azonosító
+jel:
+
+6. Kérje be a felhasználótól egy jármű rendszámát, és jelenítse me g a jármű jeladásainak
+időpontját és az adott rendszámú autó távolságát az útszakasz k ezdetétől! A bevezető
+példában az első jármű esetén a 6:04-kor a jármű távolsága az útszakasz kezdetétől 0,0 km,
+míg 6:14-kor 15,8 km, mivel a jármű az eltelt 10 perc (10/60 ór a) alatt 95 km/h-val haladt.
+A kimenetet a mintának megfelelőn alakítsa ki, a távolságot min den esetben egy
+tizedesjegyre kerekítve írja ki km mértékegységben! Ha nem szerepel a bekért rendszámmal
+jármű, akkor azt egy rövid mondatban jelezze a felhasználónak!
+7. Készítsen egy ido.txt szöveges állományt, amelynek mindegyik sorában egy-egy jármű
+rendszáma, illetve első és utolsó jeladásának óra és perc értéke szerepeljen! Az állományban
+minden jármű pontosan egyszer forduljon elő tetszőleges sorrendben!
+
+Minta a felhasználóval történő kommunikációra:
+2. feladat:
+Az utolsó jeladás időpontja 22:45, a jármű rendszáma MWO-680
+3. feladat:
+Az első jármű: TLJ-509
+Jeladásainak időpontjai: 6:4 6:14 6:30 6:32 6:51 6:54 7:7 7:19 7:30 7:31
+4. feladat:
+Kérem, adja meg az órát: 6
+Kérem, adja meg a percet: 54
+A jeladások száma: 3
+5. feladat:
+A legnagyobb sebesség km/h: 154
+A járművek: XQE-678 PAL-958
+6. feladat:
+Kérem, adja meg a rendszámot: ZVJ-638
+6:20 0.0 km
+6:33 25.8 km
+6:39 37.7 km
+…
+7:23 123.2 km
+7:31 140.0 km
+Minta az ido.txt szöveges állományra:
+TLJ-509 6 4 7 31
+AVY-894 6 15 7 33
+ANF-997 6 17 8 3
+ZVJ-638 6 20 7 31
+DZW-809 6 26 8 10
+…
+
+Források:
+1A. Iskolacsalogató
+https://pixabay.com/illustrations/illustration-child-clipart-graphics-2814002/ Utolsó letöltés: 2022. 08.04.
+https://pixabay.com/vectors/animation-colors-pencil-school-1298762/  Utolsó letöltés: 2022. 08.04.
+https://pixabay.com/vectors/robot-robotic-technology-software-2027195   Utolsó letöltés: 2022. 08.04.
+1B. Bolygópályák
+https://ssd.jpl.nasa.gov/horizons/app.html#/     Utolsó letöltés: 2022. 08.16.
+https://hu.wikipedia.org/wiki/Ekvatoriális_koordináta-rendszerek   Utolsó letöltés: 2022. 08.16.
+2. Asztalitenisz
+https://hu.wikipedia.org/wiki/Magyar_asztalitenisz-bajnokság    Utolsó letöltés: 2022. 07.17.
+50 pont 

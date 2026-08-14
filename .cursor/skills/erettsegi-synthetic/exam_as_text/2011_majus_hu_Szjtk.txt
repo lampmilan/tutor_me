@@ -1,0 +1,97 @@
+
+gyakorlati vizsga 1021 10 / 16 2011. május 10.
+Informatika — emelt szint Azonosító
+jel:
+
+4. Szójáték
+Sok szórakoztató szóját ékkal lehet elütni az id őt. Ezek közül némelyekhez segítségül
+hívhatjuk a technikát is. Az alábbiakban szójátékokhoz kapcsolódó problémákat kell megol-
+dania.
+A feladatok megoldásához rendelkezésére áll a szoveg.txt fájl, amelybe Gárdonyi Géza
+Egri csillagok cím ű regényéb ől gy űjtöttünk ki szavakat. Az állományban csak olyan szavak
+szerepelnek, melyek az angol ábécé bet űivel leírhatók, és minden sz ó csak egyszer szerepel.
+A könnyebb feldolgozhatóság érdekébe n valamennyi szó csupa kisbet űvel szerepel, szavan-
+ként külön sorban. Tudjuk, hogy ebben az állományban a szavak 20 karakternél nem hosszab-
+bak.
+Készítsen programot, amely az alábbi fela datokat megoldja! A program forráskódját
+szavak néven mentse!
+Minden – képernyőre írást igénylő – részfeladat megoldása előtt írja a képernyőre a feladat
+sorszámát! Ha a felhasználótól kér be adatot, jelenítse meg a képerny őn, hogy milyen értéket
+vár (például a 1. feladat esetén: „ 1. feladat Adjon meg egy szót: ”)! Az ékezetmentes
+kiírás is elfogadott.
+1. Kérjen be a felhasználótól egy szót, és  döntse el, hogy tartalmaz-e magánhangzót!
+Amennyiben tartalmaz, írja ki, hogy „ Van benne magánhangzó. ”! Ha nincs, akkor írja
+ki, hogy „Nincs benne magánhangzó.”! A begépelendő szóról feltételezheti, hogy csak
+az angol ábécé kisbetűit tartalmazza. (Az angol ábécé magánhangzói: a, e, i, o, u.)
+2. Írja ki a képerny őre, hogy melyik a leghosszabb szó a szoveg.txt állományban, és
+az hány karakterb ől áll! Ha több azonos leghosszabb hosszúságú szó is van a szógy űjte-
+ményben, akkor azok közül elegend ő egyetlen szót kiírnia.  A feladatot úgy oldja meg,
+hogy tetszőleges hosszúságú szövegállomány esetén m űködjön, azaz a teljes szöveget ne
+tárolja a memóriában!
+3. A magyar nyelv szavaiban általában kevese bb a magánhangzó, mint a mássalhangzó.
+Határozza meg, hogy az állomány mely szav aiban van több magánhangzó, mint egyéb
+karakter! Ezeket a szavakat írja ki a képerny őre egy-egy szóközzel el választva! A szavak
+felsorolása után a mintának megfelelően az alábbi adatokat adja meg:
+• hány szót talált;
+• hány szó van összesen az állományban;
+• a talált szavak hány százalékát teszik ki az összes szónak!
+A százalékot két tizedessel szerepeltesse!
+Például:
+130/3000 : 4,33%
+A következőkben a szólétra játékkal kapcsolatos feladatokat kell megoldania.
+A szólétra építés egy olyan játék, amikor adott egy szó közepe, például isz, amit a létra
+fokának nevezünk. Ennek a szócsonknak az elejére és a végére kell egy-egy betűt illesztenünk
+úgy, hogy értelmes szót hozzunk létre, például hiszi vagy liszt. Ezt az értelmes szót a játékban
+létraszónak nevezzük. Az adott szórészlethez minél több létraszót tudunk kitalálni, annál
+magasabb lesz a szólétra. A cél az, hogy egy megadott szócsonkhoz a lehet ő legmagasabb
+szólétrát építsük.
+
+gyakorlati vizsga 1021 11 / 16 2011. május 10.
+Informatika — emelt szint Azonosító
+jel:
+
+Például:
+ Szórészlet: isz
+ A hozzá tartozó létraszavak:
+hiszi
+liszt
+viszi
+tiszt
+…
+4. Hozzon létre egy tömb vagy lista adatszerkezetet, és ebbe gy űjtse ki a fájlban található
+ötkarakteres szavakat! A szoveg.txt állomány legfeljebb 1000 darab ötkarakteres szót
+tartalmaz. Kérjen be a felhasználótól egy 3 karakteres szórészletet! Írja ki a képerny őre
+a szólétra építés szabályai szerint hozzá tartozó ötkarakteres szavakat a tárolt adathalmaz-
+ból! A kiírásnál a szavakat egy-egy szóköz válassza el! (Teszteléshez használhatja például
+az „isz” vagy „obo” szórészl eteket, mert ezekhez a megadott szövegállományban több
+létraszó is tartozik.)
+5. Az eltárolt ötkarakteres s zavakból csoportosítsa azokat a szavakat, melyek ugyanannak
+a hárombet űs szórészletnek a létraszavai! Hozzon létre egy letra.txt állományt,
+amelybe ezeket a szavakat írja az alábbiak szerint:
+• minden szó külön sorba kerüljön;
+• csak olyan szó szerepeljen az állományban, aminek van legalább egy párja, amivel
+egy létrát alkotnak (azaz első és utolsó karakter nélkül megegyeznek);
+• az egy létrához tartozó szavak közvetlenül egymás után helyezkedjenek el;
+• két létra szavai között egy üres elválasztó sor legyen!
+
+Például:
+letra.txt
+megye
+vegye
+hegyi
+tegye
+
+lehet
+teher
+mehet
+
+tejes
+fejet
+fejen
+
+neked
+nekem
+reked
+...
+
+45 pont 

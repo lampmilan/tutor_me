@@ -1,0 +1,94 @@
+
+gyakorlati vizsga 1111 10 / 12 2012. május 14.
+Informatika — emelt szint Azonosító
+jel:
+
+4. Törtek
+A matematikában sokszor van szükségünk m űveletvégzésre a közönséges törtekkel.
+A legtöbb számológép és számítógépes program csak a tizedestörteket ismeri.
+Készítsen programot, amely az alábbi – közön séges törtekkel kapcsolatos – feladatokat
+megoldja! A program forráskódját tort néven mentse! A feladatban csak pozitív számokkal
+kell dolgoznia, és ennek a tu lajdonságnak a feldolgozandó fájlb an található számadatok is
+megfelelnek. A felhasználótól bekérend ő és a feldolgozandó fájlban található számokról
+feltételezheti, hogy legfeljebb kétjegyűek.
+Minden – képernyőre írást igénylő – részfeladat megoldása előtt írja a képernyőre a feladat
+sorszámát! Ha a felhasználótól kér be adatot, jelenítse meg a képerny őn, hogy milyen értéket
+vár (például az 1. feladat esetén: „ 1. feladat Adja meg a számlálót: ”)!
+Az ékezetmentes kiírás is elfogadott.
+1. Kérjen be a felhasználótól két számot, amel y egy közönséges tört számlálója és nevez ője!
+Döntse el, hogy az így bevitt tört felírható-e egész számként! Ha igen, írja ki értékét egész
+számként, ha nem, írja ki „Nem egész”!
+2. A közönséges törteket úgy tudjuk a legegyszer űbb alakra hozni, ha a számlálóját és
+nevezőjét elosztjuk a két szám legnagyobb közös oszt ójával, és az így kapott érték lesz az
+új számláló, illetve nevez ő. Az egyszer űsítéshez készítsen egy rekurzív függvényt az
+alább leírt euklideszi algoritmusnak megfelelően!
+Függvény lnko(a, b : egész számok) : egész szám
+  ha a=b akkor lnko := a
+  ha a<b akkor lnko := lnko(a, b-a)
+  ha a>b akkor lnko := lnko(a-b, b)
+Függvény vége
+3. Az els ő feladatban bekért törtet hozza a legegyszer űbb alakra a létrehozott függvény
+segítségével! Amennyiben nem sikerül az el őírt függvényt elkészítenie, alkalmazhat más
+megoldást, hogy a további feladatokat meg tudj a oldani. Az eredményt írja ki a következ ő
+formában:
+24/32 = 3/4
+Amennyiben a tört felírható egész számként, akkor ebben az alakban jelenjen meg:
+24/6 = 4
+4. Két törtet úgy tudunk összeszorozni, hogy a két tört számlálóját összeszorozva kapjuk az
+eredmény számlálóját, és a két tört nevez őjét összeszorozva kapjuk az eredmény
+nevezőjét. Kérjen be a felhasználótól egy új abb közönséges törtet a számlálójával és
+a nevezőjével! Szorozza meg ezzel a törttel az els ő feladatban bekért törtet! Az eredményt
+hozza a legegyszerűbb alakra, és ezt írja ki a következő formában:
+24/32 * 12/15 = 288/480 = 3/5
+Amennyiben az eredmény felírható egész számként, akkor ebben az alakban jelenjen meg:
+24/32 * 8/3 = 192/96 = 2
+
+gyakorlati vizsga 1111 11 / 12 2012. május 14.
+Informatika — emelt szint Azonosító
+jel:
+
+5. Két közönséges tört összeadásához a következő lépésekre van szükség:
+• Mindkét számot bővíteni kell, azaz mind a számlálóját, mind a nevez őjét ugyanazzal
+a számmal kell megszorozni. Ezt a b ővítést úgy célszer ű elvégezni, hogy a közös
+nevező a két eredeti nevez ő legkisebb közös többszöröse  legyen. Ez lesz az összeg
+nevezője.
+• A két bővített alakú tört számlálóját összeadjuk, ez lesz az eredmény számlálója.
+Ehhez készítsen függvényt az alábbiakban le írtak szerint – a korábban elkészített lnko
+függvény felhasználásával – a legkisebb közös többszörös meghatározására!
+Függvény lkkt(a, b : egész számok) : egész szám
+  lkkt := a * b / lnko(a, b)
+Függvény vége
+6. A függvény segítségével határo zza meg a két bekért tört összegét, és ezt adja meg
+a következő formában! (Amennyiben nem sikerül az el őírt függvényt elkészítenie,
+alkalmazhat más megoldást, hogy a további feladatokat meg tudja oldani.)
+24/32 + 8/3 = 72/96 + 256/96 = 328/96 = 41/12
+Amennyiben az eredmény felírható egész számként, akkor ebben az alakban jelenjen meg:
+22/4 + 27/6 = 66/12 + 54/12 = 120/12 = 10
+7. Az adat.txt állományban található m űveleteket végezze el, és az eredményeket
+a korábbi, képerny őre kiírt formátumnak megfelel ően írja az eredmeny.txt
+állományba! Az adat.txt fájlnak legfeljebb 100 sora le het; soronként 4 számot és egy
+műveleti jelet tartalmaz, melyeket minde nhol egy szóköz választ el egymástól. M űveleti
+jelként csak összeadás és szorzás szerepel.
+Például:
+adat.txt:
+24 32 8 3 +
+24 32 8 3 *
+eredmeny.txt:
+24/32 + 8/3 = 72/96 + 256/96 = 328/96 = 41/12
+24/32 * 8/3 = 192/96 = 2
+
+Forrás:
+1. TCP/IP modell
+http://gigaszhajok.com
+http://www.freedigitalphotos.net
+http://www.technet.hu/notebook/20100712/melyik_bongeszo_mit_tud/
+http://indafoto.hu/jeepo/image/9660435-27ef965e/details/l/user
+45 pont
+3
+8
+32
+24 +
+3
+8
+32
+24 ⋅

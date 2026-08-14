@@ -1,0 +1,75 @@
+
+gyakorlati vizsga 1221 10 / 12 2013. május 13.
+Informatika — emelt szint Azonosító
+jel:
+
+4. Számok
+A Szereti Ön a számokat?  internetes vetélked őben a versenyz ők olyan kérdéseket kapnak,
+amelyekre egy egész számmal kell válaszolniuk. A kérdések különböz ő témakörökb ől
+származnak (pl. magyar, matematika, történelem, kémia), és nehézségüktől függően 1-től 3-ig
+terjedő pontszámot érnek. Tudjuk, hogy a kérdésekre adható válaszok értéke 0 és 1 milliárd
+közé esik.
+A feladatokat a verseny szervez ői egy adatfájlban tárolják. A fájlban minden feladat két
+sorban helyezkedik el. Az els ő sor tartalmazza a kérdést, a második pedig – egy-egy
+szóközzel elválasztva – a helyes választ, a helyes válaszért adható pontszámot és a témakör
+megnevezését. A fájlban egyel őre ékezetes bet űk nem szerepelnek, pl. a „gyümölcsíz ű” szó
+helyett a „gyumolcsizu” szót írták be.
+Például:
+Mikor volt a mohacsi vesz?
+1526 1 tortenelem
+A példában szerepl ő kérdés: Mikor volt a mohacsi vesz?  A helyes válasz: 1526.
+A helyes válasz 1 pontot ér, és a kérdés a tortenelem témakörbe tartozik.
+Az adatfájl még csak részben készült el. Az  Ön feladata ennek a félkész adatfájlnak
+a tesztelése. A fájl legfeljebb 100 kérdést ta rtalmaz. Biztosan van benne matematika,
+történelem és földrajz feladat, de más témakörök is előfordulnak.
+Készítsen programot, amely a felszam.txt állomány adatait felhasználva az alábbi
+kérdésekre válaszol! A pr ogram forráskódját mentse szamok néven! (A beolvasott fájl
+adatait és a felhasználó válaszainak az érvényességét nem kell ellenőriznie.)
+A képernyőre írást igénylő feladatok eredményének megjelenítése előtt írja ki a képernyőre
+a feladat sorszámát (például: 3. feladat)! Ha a felhasználótól kér be adatot, akkor jelenítse
+meg a képernyőn azt is, hogy milyen adatot vár! Az ékezetmentes kiírás is elfogadott.
+1. Olvassa be a felszam.txt állományban talált adatokat, és  azok felhasználásával oldja
+meg a következő feladatokat!
+2. Hány feladat van az adatfájlban? A választ írassa ki a képernyőre!
+3. Határozza meg, hogy hány matematika feladat van az adatfájlban, és ezek közül hány
+feladat ér 1, 2, illetve 3 pontot! A választ egész mondatban írassa ki a képernyőre!
+Például:
+Az adatfajlban 20 matematika feladat van, 1 pontot er
+10 feladat, 2 pontot er 6 feladat, 3 pontot er 4 feladat.
+4. Mettől meddig terjed a fájlban található válaszok számértéke? A választ egész mondatban
+írja ki a képernyőre!
+5. Milyen témakörök szerepelnek ténylegesen az adatfájlban? Írassa ki a témakörök nevét
+a képernyőre úgy, hogy minden előforduló témakör pontosan egyszer jelenjen meg!
+
+gyakorlati vizsga 1221 11 / 12 2013. május 13.
+Informatika — emelt szint Azonosító
+jel:
+
+6. Kérje be egy témakör nevét, és véletlenszer űen sorsoljon ki egy kérdést ebb ől
+a témakörből! Sorsoláskor ügyeljen arra, hogy az adott témakörbe eső valamennyi feladat-
+nak legyen esélye! (Feltétel ezheti, hogy a felhasználó hely esen adta meg egy létez ő
+témakör nevét.) Írassa ki a kérdést, kérje be a felhasználó vála szát, majd adja meg
+a válaszért járó pontszámot! (Hel ytelen válaszért 0 pont jár.) Ha a válasz helytelen volt,
+a helyes választ is közölje! A párbeszéd az alábbi formában jelenjen meg:
+Például:
+Milyen temakorbol szeretne kerdest kapni? tortenelem
+Mikor volt a mohacsi vesz? 1514
+A valasz 0 pontot er.
+A helyes valasz: 1526
+7. Generáljon egy 10 kérdésből álló feladatsort véletlenszerűen úgy, hogy egyetlen feladat se
+szerepeljen benne kétszer! (Ügyeljen azonba n arra, hogy minden beolvasott feladatnak
+legyen esélye a kiválasztásra! ) A feladatsort írassa ki a tesztfel.txt állományba
+az alábbi formátumban! (Az els ő szám a helyes megoldásért járó pontszám, ezt követi
+a helyes válasz, majd a kérdés egy-egy szóköz zel elválasztva.) Az állomány végére írassa
+ki a feladatsorra összesen adható pontszámot is!
+Például:
+…
+1 1526 Mikor volt a mohacsi vesz?
+…
+A feladatsorra osszesen 20 pont adhato.
+
+
+Forrás:
+1. Étlap
+http://g.virbcdn.com/_f/cdn_images/resize_640x640/3d/PageImage-477875-1676299-XL01_aff91cfbda74.jpg
+45 pont 

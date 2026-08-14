@@ -1,0 +1,70 @@
+
+gyakorlati vizsga 0801 10 / 12 2008. május 19.
+Informatika — emelt szint Azonosító
+jel:
+
+4. SMS
+Esemes Ern ő szenvedélyes SMS-küld ő, ezért a MaMobil nev ű cég tesztelésre kérte fel.
+Ehhez egy új, kézreálló telefont adnak, amel ynek tesztüzemben egyetlen hátránya, hogy leg-
+feljebb az először érkező 10 darab, egyenként legfeljebb 100 karakteres üzenetet tud eltárolni.
+Ha ettől több üzenet van, akkor azokat korlátlan számban a szolgáltató őrzi meg a hangpostá-
+hoz hasonlóan, tehát azokhoz csak bizonyos díj fe jében juthat hozzá. Az üzenetek nem tartal-
+mazhatnak ékezetes karaktereket.
+Az sms.txt állomány els ő sorában az a k szám olvash ató, amely megadja, hogy hány
+üzenet érkezett a készülékre a mai napon. Az érkez ő üzenetek száma legalább egy, de nem
+haladja meg a 100 darabot. Minden üzenethez 2 sor tartozik. Az els ő sor szerkezete a követ-
+kező: el őször az érkezés órája (szám), érkezés perce (szám), telefonszám (pontosan 9 jegy ű
+szám), a másodikban pedig az üzenet (legfeljeb b 100 karakternyi szöveg) található. Az állo-
+mányban az üzenetek számát követ ően k×2 sor szerepel. Az üzenetek érkezési id ő szerint
+növekvően rendezettek.
+Például:
+30
+9 11 123456789
+Szia, mikor jossz?
+9 13 434324223
+Nem kerek ebedet!
+9 14 434324223
+Hova menjek erted?
+9 20 123456789
+Hozd el a mintas pulcsimat!
+9 21 434324223
+Nyertünk a palyazaton!
+…
+Készítsen programot sms néven, amely az alábbi kérdések re válaszol! Ügyeljen arra, hogy
+a program forráskódját a megadott helyre mentse!
+A képerny őre írást igényl ő részfeladatok eredményének megjelenítése el őtt írja a képer-
+nyőre a feladat sorszámát! (Például 3. feladat: )
+1. Olvassa be az sms.txt állományban talált adatokat, s annak felhasználásával oldja meg a
+következő feladatokat! Ha az állományt nem tudja beolvasni, akkor a benne található ada-
+tok közül az els ő tíz üzenet adatait jegyezze be a pr ogramba, s úgy oldja meg a feladato-
+kat!
+2. A fájlban tárolt utolsó üzenet érkezésekor melyik üzenet a legfrissebb a telefon memóriá-
+jában? Írja az üzenet szövegét a képernyőre!
+3. Adja meg a leghosszabb és a legrövidebb ü zenetek adatait! Ha több azonos hosszúságú
+üzenet van, akkor elegend ő csak egyet-egyet megadnia! A képerny őn óra, perc, telefon-
+szám, üzenet formában jelenítse meg az adatokat!
+
+gyakorlati vizsga 0801 11 / 12 2008. május 19.
+Informatika — emelt szint Azonosító
+jel:
+
+4. Készítsen karakterhossz szerinti statisztikát: 1-20, 21-40, 41-60, 61-80, 81-100!
+Az intervallumok mellé a hozzájuk tartozó ü zenetek darabszámát írja, mint eredményt a
+képernyőre!
+5. Ha Ernő minden óra 0. percében elolvasná a memóriában lév ő üzeneteket (az éppen ekkor
+érkező üzeneteket nem látja), majd ki is törölné, akkor hány olyan üzenet lenne, amelynek
+elolvasásához fel kellene hívnia a szolgáltatót? Írja ezt a számot a képerny őre! (Az üzene-
+teket először 1, utoljára 24 órakor olvassa el.)
+6. Ernő barátnője gyakran küld sms-t az 123456789-es számról. Mennyi volt a leghosszabb
+idő, amennyi eltelt két üzenete között? Ha legfeljebb 1 üzenet érkezett t őle, akkor írja ki,
+hogy „nincs elegend ő üzenet”, egyébként pedi g adja meg a leghosszabb id őtartamot óra
+perc alakban!
+7. Egy üzenet véletlenül késett. Olvassa be a billenty űzetről ennek az sms-nek az adatait,
+majd tárolja el a memóriában a többihez hasonlóan!
+8. Az smski.txt állományban készítsen egy listát az üzenetekr ől telefonszám szerinti cso-
+portosításban, telefonszám szerint növekv ő sorrendben! Egy csoporthoz tartozó els ő sor-
+ban a feladó telefonszáma szerepeljen! Az alatta lévő sorokban a feladás ideje, majd a tőle
+újabb szóközzel elválasztva az üzenet szövege szerepeljen!
+
+
+45 pont 

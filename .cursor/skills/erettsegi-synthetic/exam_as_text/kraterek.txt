@@ -1,0 +1,132 @@
+
+Digitális kultúra 12 / 16 emelt szintű gyakorlati vizsga
+E2211  2024. május 21.
+Azonosító
+jel:
+
+3. Kráterek
+Egy még felderítetlen égitestet először közelített meg egy földi szonda. A szondáról küldött
+képeken látható, hogy a légkör nélküli égitest felszínét meteor becsapódások által létrehozott
+kráterek borítják. A szonda feltérképezte a felszín egy részét, és a kráterek elhelyezkedéséről is
+adatokat küldött.
+A szonda minden krátert egy körként azonosított, és megadta a k ör (azaz kráter)
+középpontjának helyét és a kör (aza z a kráter) sugarát. A szond a minden kráternek nevet is
+adott úgy, hogy véletlenszerűen választott egy listából, amelyb en csillagászok nevei
+szerepeltek. Minden kráternek egyedi nevet adott, tehát nincs két azonos nevű kráter. Az adatok
+kétféle formátumban állnak rendelkezésre. A felszin_tpont.txt szöveges állományban
+a valós számok tizedes ponttal, a felszin_tvesszo.txt állományban pedig
+tizedesvesszővel szerepelnek. A feladat megoldásakor a választott programozási környezetnek
+megfelelő fájllal dolgozzon!
+A fájl első néhány sora például a következő:
+5.23 2.47 3.86 George Ogden Abell
+3.67 2.19 1.13 Robert Henry Dicke
+1.15 7.25 2.89 Abu Bakr ibn Tufajl
+3.45 2.78 0.35 Stephen Hawking
+Egy soron belül az első három valós szám a kráter
+középpontjának X és Y koordinátája, valamint a kráter
+sugara. Ezt követi egy csillagász neve, vagyis a kráter
+elnevezése. Az adatokat egy soron belül egy-egy
+tabulátor választja el egymástól.
+Az ábra koordináta-rendszerben mutatja az előbbi
+négy kráter elhelyezkedését az égitest felszínén.
+Készítsen programot, amely az egyik megadott
+állományt felhasználva az alábbi  kérdésekre válaszol! A program  forráskódját mentse
+kraterek néven! A program megírásakor a bemeneti állományban található,  v a g y
+a felhasználó által megadott adatok helyességét, érvényességét nem kell ellenőriznie,
+feltételezheti, hogy azok a leírtaknak megfelelnek.
+A képernyőre írást igénylő részfeladatok eredményének megjelenítése előtt írja a képernyőre
+a feladat sorszámát (például: 2. feladat )! Ha a felhasználótól kér be adatot, jelenítse meg
+a képernyőn, hogy milyen értéket vár! Az ékezetmentes kiírás is  elfogadott. A valós számok
+kiírásakor tizedes pont és tizedesvessző is használható.
+1. Olvassa be és tárolja el a bemeneti állomány tartalmát! Az állo mányban legfeljebb 100
+kráter adatai szerepelnek.
+2. Számolja meg, hogy hány kráter található a bemeneti állományban , és írja a képernyőre
+a kráterek számát!
+3. Kérje be a felhasználótól egy kráter pontos nevét, majd írja ki a kráter adatait! A kiírás egy
+teljes mondat legyen, például: „ A(z) Stephen Hawking középpontja X=3.45
+Y=2.78 sugara R=0.35.”. Ha a név nem szerepel a kráterek nevei között, akkor írja ki:
+„Nincs ilyen nevű kráter.”.
+
+
+Digitális kultúra 13 / 16 emelt szintű gyakorlati vizsga
+E2211  2024. május 21.
+Azonosító
+jel:
+
+4. Vizsgálja meg a szonda által kapott adatokat, és adja meg a leg nagyobb sugarú kráter
+sugarát és névadójának nevét! Amennyiben több legnagyobb kráter van, úgy elég az egyiket
+megadnia.
+5. A következő feladatokban szüksége lesz arra, hogy kiszámítsa ké t kráter középpontjának
+távolságát. Készítsen függvényt, amely a Pitagorasz-tétel felha sználásával kiszámítja két,
+koordinátákkal adott pont távolságát! A függvény bemenete a két pont, (x1, y1) és (x2, y2)
+koordinátái (valós számok), visszaa dott értéke a távolságuk (va lós szám). A függvény
+leírása a következő:
+Függvény tavolsag(x1, y1, x2, y2 : Valós ) : Valós
+   tavolsag := Négyzetgyök((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1))
+Függvény vége
+6. Két kráter nem fedi át egymást , nincs közös részük, ha középpon tjaik távolsága nagyobb,
+mint a két kráter sugarának összege. Kérje be egy kráter nevét,  és adja meg azoknak
+a krátereknek a nevét, amelyekkel a bekért kráternek nincs közö s része! A kiírásban
+szereplő kráterek nevei között egy vessző és egy szóköz legyen az elválasztás! Ha nincs
+ilyen kráter, akkor nem kell megjelenítenie semmit.
+7. Egy kráter tartalmaz egy másik krátert, ha a kisebb kráter teljes egészében a nagy kráterben
+található. Ez körök esetében azt jelenti, hogy a két kör középp ontjának távolsága kisebb,
+mint a nagyobb kör sugarának és a kisebb kör sugarának különbsé ge. Vizsgálja meg
+a krátereket, és írja ki azoknak a krátereknek a nevét, amelyek  esetében a nagyobb kráter
+tartalmazza a kisebb krátert! Minden ilyen tartalmazást csak eg yszer jelenítsen meg úgy,
+hogy megadja, hogy melyik kráter tartalmazza a másikat!
+8. A kráterek adatai alapján számítsa ki, hogy mekkora területűek az egyes kráterek, és
+készítsen egy terulet.txt szöveges állományt, amely tartalmazza a kráterek nevét és
+területét! A kör területe 𝑇ൌ𝑟 ଶ𝜋 ahol r a kör sugara, 𝜋 értéke két tizedesjegyre kerekítve
+3.14. Az állomány minden egyes sorában egy kráter adatai szerep eljenek: először a kráter
+területe két tizedesjegyre kerekítve, majd egy tabulátor karakter, majd a kráter neve!
+Minta a szöveges kimenetek kialakításához:
+2. feladat
+A kráterek száma: 20
+3. feladat
+Kérem egy kráter nevét: Thomas Gold
+A(z) Thomas Gold középpontja X=14.58 Y=31.29 sugara R=2.45.
+4. feladat
+A legnagyobb kráter neve és sugara: Wilhelm Anderson 4.45
+6. feladat
+Kérem egy kráter nevét: Jacques Cassini
+Nincs közös része: George Ogden Abell, Robert Henry Dicke, Abu Bakr ibn
+Tufajl, Stephen Hawking, Charles Messier, James Challis, William
+Herschel, Ralph Fowler, Eric Walter Elst, Nicole Oresme, Thomas Gold,
+Joseph Plateau, Camille Flammarion, Maarten Schmidt, Edmond Halley,
+Gerard Kuiper, Henri Debehogne.
+7. feladat
+A(z) George Ogden Abell kráter tartalmazza a(z) Robert Henry Dicke
+krátert.
+A(z) George Ogden Abell kráter tartalmazza a(z) Stephen Hawking krátert.
+A(z) Robert Henry Dicke kráter tartalmazza a(z) Stephen Hawking krátert.
+A(z) Wilhelm Anderson kráter tartalmazza a(z) Jacques Cassini krátert.
+A(z) Joseph Plateau kráter tartalmazza a(z) Maarten Schmidt krátert.
+A szöveges állomány kialakításához szükséges minta a következő oldalon található:
+
+Digitális kultúra 14 / 16 emelt szintű gyakorlati vizsga
+E2211  2024. május 21.
+Azonosító
+jel:
+
+Minta a terulet.txt szöveges állomány kialakításához:
+46.78 George Ogden Abell
+4.01 Robert Henry Dicke
+26.23 Abu Bakr ibn Tufajl
+0.38 Stephen Hawking
+...
+
+Forrás:
+A feladatlap bázisszövegei az eredeti forrásszövegek módosításá val (rövidítésével, nyelvtani egyszerűsítésével),
+adatainak felhasználásával, de az eredeti szövegek, adatok integritásának megtartása mellett jöttek létre. Az eredeti
+szövegek, adatok, képek forrása:
+1A. Morzekód
+http://www.samuelmorse.net/images/samuelmorse/Samuel-F-B-Morse.jpg Utolsó letöltés: 2021. október 12.
+https://wmn.hu/juzer/54290-ta-ti-ta-ti-ti-ti-ta-ta--minden-amit-a-morzekodrol-tudni-szeretnel Utolsó letöltés: 2021. október 12.
+http://www.mimicsoda.hu/cikk.php?id=714 Utolsó letöltés: 2021. október 12.
+https://www.clipartmax.com/middle/m2i8d3A0d3A0d3b1_drawing-of-a-telegraph/ Utolsó letöltés: 2021. október 12.
+2. Magyar királyok
+https://hu.wikipedia.org/wiki/Magyarország_uralkodóinak_listája Utolsó letöltés: 2021.11.17.
+3. Kráterek:
+https://hu.wikipedia.org/wiki/Csillagászok_listája Utolsó letöltés: 2021. december 1.
+50 pont 

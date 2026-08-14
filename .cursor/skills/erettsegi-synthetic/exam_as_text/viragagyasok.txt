@@ -1,0 +1,123 @@
+Digitális kultúra
+emelt szint
+2212 gyakorlati vizsga 13 / 16 2022. október 25.
+Azonosító
+jel:
+
+3. Virágágyások
+Egy frissen épült óriási lakópark ba költözők elhatározták, hogy  a még kopár környezetet
+megszépítik. A lakóparkot határoló kerítés mellett kijelölték a  virágágyások helyét, és
+sorszámokkal látták el azokat. A sorszámozást, amely eggyel kezdődik, az egyetlen bejárat jobb
+oldalán lévő ágyással kezdték, és a bejárat bal oldalán lévő ág yással fejezték be. A lakók
+megadhatták, hogy mely szomszédos ágyásokat szeretnék beültetni. A felajánlásban megadták
+azt is, hogy milyen színű virággal.
+Minden ágyásnak, az első és az utolsó kivételével, két szomszéd ja van, az eggyel kisebb és
+az eggyel nagyobb sorszámú, valamint az utolsó az első szomszédjának számít.
+A felajanlas.txt állomány első sorában a virágágyások száma szerepel, amely nem
+haladja meg a 3000 értéket. A fájl további soraiban két szám és  egy betű található, egymástól
+egy-egy szóközzel elválasztva, amely egy lakó felajánlását írja  le. (A felajánlások száma nem
+haladja meg a virágágyások számát.) Az első szám az első, a második az utolsó beültetni kívánt
+ágyás sorszáma. A betű az angol ábécé nagybetűje, amely a válas ztott színt jelöli. Ha az első
+szám nagyobb, mint a második, akkor a választott intervallumba a sorszám szerinti utolsó és
+első ágyás, tehát a bejárat két oldala is beletartozik. Mindenki csak egy felajánlást tehet, de egy
+ágyás több felajánlásban is szerepelhet, azaz a felajánlásokban  szereplő intervallumok
+átfedhetik egymást. Az ültetést a felajánlások sorrendjében végzik el a lakók.
+Például:
+100
+91 98 K
+95 5 Z
+63 76 N
+…
+A fenti példában az ágyások száma 100. A sorban az első felajánló kezdi az ültetést, 8 ágyást
+ültet be, a második felajánló 11 ágyás beültetésére vállalkozott, amelyből négyet már az első
+felajánló beültet, ezért csak 7 ágyást ültet be. A második felajánló ülteti be a bejárat két oldalán
+lévő 1. és 100. virágágyást is.
+Készítsen programot, amely az állomány adatait felhasználva az alábbi kérdésekre válaszol!
+A program forráskódját mentse  park  néven! A program megírásakor a felhasználó által
+megadott adatok helyességét, érvényességét nem kell ellenőrizni e, és feltételezheti, hogy
+a rendelkezésre álló adatok a leírtaknak megfelelnek.
+A képernyőre írást igénylő részfe ladatok esetén – a mintához ta rtalmában hasonlóan – írja
+ki a képernyőre a feladat sorszámát (például: 5. feladat ), és utaljon a kiírt tartalomra is!
+Ha a felhasználótól kér be adatot, jelenítse meg a képernyőn, hogy milyen értéket vár! Mindkét
+esetben az ékezetmentes kiírás is elfogadott.
+1. Olvassa be a felajanlas.txt állomány tartalmát, tárolja el a felajánlások adatait, és
+annak felhasználásával oldja meg a következő feladatokat!
+2. Írja ki, hány felajánlást tartalmaz az állomány!
+3. Jelenítse meg a képernyőn azon felajánlások sorszámát, amelyek a bejárat bal és jobb
+oldalán található ágyást is beültetnék! A sorszámokat egy-egy s zóközzel válassza el
+egymástól!
+A feladat a következő oldalon folytatódik.
+Digitális kultúra
+emelt szint
+2212 gyakorlati vizsga 14 / 16 2022. október 25.
+Azonosító
+jel:
+
+4. Kérje be a felhasználótól egy ágyás sorszámát! A tesztelés során használhatja az 1. ágyást,
+amelyet többen is beültetnének és a 269. ágyást, amelynek beült etésére senki sem
+vállalkozik.
+a) Írja a képernyőre, hogy hány felajánlásban szerepel ez az ágyás!
+b) Adja meg, milyen színű lesz ez az ágyás, ha mindenki a felajánl ások
+sorrendjében végzi el az ültetést, de nem ültet, ha másvalaki e lőtte már ültetett
+oda! Ha nem ültetett oda senki, akkor „Ezt az ágyást nem ülteti k be.” szöveget
+jelenítse meg!
+c) Adja meg, milyen színekben pompázna ez az ágyás, ha az eredeti tervvel
+ellentétesen minden felajánló el ültetné virágait! Minden színt csak egyszer
+tüntessen fel! Az egyes színek et szóközökkel válassza el egymás tól! Ha nem
+ültettek oda virágot, ne jelenítsen meg semmit!
+5. A felajánlások alapján több eset lehetséges. Határozza meg, melyik teljesül! Az idézőjelek
+közötti szöveget írja a képernyőre!
+• „Minden ágyás beültetésére van jelentkező.”
+• Ha nincs minden ágyásra jelentkező, de a felajánlásokban vállal t ágyások
+számának összege nagyobb vagy egyenlő, mint, az ágyások száma, akkor:
+„Átszervezéssel megoldható a beültetés.”
+• Ha kevesebb ágyás beültetésére v állalkoztak, mint amennyi van: „A beültetés
+nem oldható meg.”
+6. A beültetést a felajánlások sorre ndjében végezték el. Ha egy ág yást valaki már beültetett,
+akkor más már nem ültetett oda. A munka eredményét tárolja el a  szinek.txt fájlban!
+A fájlban soronként az ágyások sorszámának sorrendjében két értéket, az ágyás színét jelző
+karaktert és az ültetéshez tartozó felajánlás sorszámát írja ki . Amelyik ágyás virág nélkül
+maradt, színként a # karaktert, a felajánlás sorszámának helyére pedig a 0-t írja!
+
+Digitális kultúra
+emelt szint
+2212 gyakorlati vizsga 15 / 16 2022. október 25.
+Azonosító
+jel:
+
+Példa a szöveges kimenetek kialakításához:
+2. feladat
+A felajánlások száma: 465
+
+3. feladat
+A bejárat mindkét oldalán ültetők: 10 34 98 107 115 142 156 160
+340 360 378
+
+4. feladat
+Adja meg az ágyás sorszámát! 100
+A felajánlók száma: 8
+A virágágyás színe, ha csak az első ültet: Z
+A virágágyás színei: O Z S K
+
+5. feladat
+Átszervezéssel megoldható a beültetés.
+A szinek.txt fájl 1-3. sora:
+K 10
+K 10
+K 10
+A szinek.txt fájl 268-270. sora:
+Z 364
+# 0
+# 0
+
+
+
+Források:
+.
+Dobogókő
+https://turistautak.openstreetmap.hu/mentettutv-163532779823na Utolsó letöltés: 2021.11.17
+Állóképesség
+https://www.netfit.eu/public/pb_riport_megye.php Utolsó letöltés: 2021.12.1.
+https://www.ksh.hu/stadat?lang=hu&theme=okt Utolsó letöltés: 2021.12.1.
+
+50 pont 

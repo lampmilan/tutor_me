@@ -9,7 +9,7 @@ export const hu = {
     noExams: "Még nincs feladatsor. Indítsd el a backendet a katalógus betöltéséhez.",
     filterLevel: "Szint",
     filterDifficulty: "Nehézség",
-    filterTag: "Címke",
+    filterTags: "Témakör",
     filterAll: "Mind",
     filterClear: "Szűrők törlése",
     filterNoMatch: "Nincs a szűrőknek megfelelő feladatsor.",

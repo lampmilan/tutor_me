@@ -23,14 +23,14 @@ def execute(body: ExecuteRequest, db: Session = Depends(get_db)):
         .first()
     )
     if not workspace:
-        raise HTTPException(status_code=404, detail="Workspace not found")
+        raise HTTPException(status_code=404, detail="A munkaterület nem található.")
 
     try:
         task: Task | None = None
         if body.task_id is not None:
             task = next((t for t in workspace.exam.tasks if t.id == body.task_id), None)
             if task is None:
-                raise HTTPException(status_code=404, detail="Task not found")
+                raise HTTPException(status_code=404, detail="A feladat nem található.")
         elif body.filename:
             task = next(
                 (t for t in workspace.exam.tasks if t.solution_file == body.filename),
@@ -88,7 +88,7 @@ def execute(body: ExecuteRequest, db: Session = Depends(get_db)):
     except HTTPException:
         raise
     except Exception as exc:
-        raise HTTPException(status_code=500, detail=f"Execution failed: {exc}") from exc
+        raise HTTPException(status_code=500, detail=f"Futtatás sikertelen: {exc}") from exc
 
 
 @router.post("/judge", response_model=JudgeResponse)
@@ -100,7 +100,7 @@ def judge(body: JudgeRequest, db: Session = Depends(get_db)):
         .first()
     )
     if not workspace:
-        raise HTTPException(status_code=404, detail="Workspace not found")
+        raise HTTPException(status_code=404, detail="A munkaterület nem található.")
 
     exam = (
         db.query(Exam)
@@ -119,4 +119,4 @@ def judge(body: JudgeRequest, db: Session = Depends(get_db)):
             filename=body.filename,
         )
     except Exception as exc:
-        raise HTTPException(status_code=500, detail=f"Judging failed: {exc}") from exc
+        raise HTTPException(status_code=500, detail=f"Értékelés sikertelen: {exc}") from exc

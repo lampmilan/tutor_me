@@ -1,12 +1,15 @@
 "use client";
 
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { confetti } from "@tsparticles/confetti";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { CodeEditor } from "@/components/CodeEditor";
 import { FileExplorer } from "@/components/FileExplorer";
 import { OutputPanel } from "@/components/OutputPanel";
 import { ProblemPanel } from "@/components/ProblemPanel";
+import { translateError } from "@/lib/errors";
+import { hu } from "@/lib/messages/hu";
 import {
   api,
   type Exam,
@@ -15,6 +18,11 @@ import {
   type Workspace,
   type WorkspaceFile,
 } from "@/lib/api";
+import {
+  clearStoredWorkspaceId,
+  getStoredWorkspaceId,
+  setStoredWorkspaceId,
+} from "@/lib/workspaceStorage";
 
 type ExamWorkspaceProps = {
   examId: number;
@@ -26,7 +34,6 @@ function fireExamCompleteConfetti() {
   void confetti({
     particleCount: 100,
     spread: 70,
-    // Bottom center of the viewport
     origin: { x: 0.5, y: 1 },
   });
 }
@@ -68,7 +75,58 @@ function statusFromJudge(result: JudgeResponse): Record<number, PhaseStatus> {
   return next;
 }
 
+function applyWorkspaceFiles(
+  ws: Workspace,
+  examData: Exam,
+): {
+  map: Record<string, WorkspaceFile>;
+  starter: string;
+  firstTask: Task | undefined;
+} {
+  const map: Record<string, WorkspaceFile> = {};
+  for (const f of ws.files) map[f.filename] = f;
+  const firstTask = examData.tasks
+    .slice()
+    .sort((a, b) => a.order_index - b.order_index)[0];
+  const starter =
+    firstTask?.solution_file && map[firstTask.solution_file]
+      ? firstTask.solution_file
+      : ws.files.find((f) => f.filename.endsWith(".py") && !f.read_only)?.filename || "";
+  return { map, starter, firstTask };
+}
+
+async function resolveWorkspace(
+  examId: number,
+  preferredId?: number | null,
+): Promise<Workspace> {
+  const candidates = [preferredId, getStoredWorkspaceId(examId)].filter(
+    (id): id is number => id != null && id > 0,
+  );
+  for (const id of candidates) {
+    try {
+      const ws = await api.getWorkspace(id);
+      if (ws.exam_id === examId) {
+        setStoredWorkspaceId(examId, ws.id);
+        return ws;
+      }
+    } catch {
+      // try next candidate or create fresh
+    }
+  }
+  const ws = await api.startExam(examId);
+  setStoredWorkspaceId(examId, ws.id);
+  return ws;
+}
+
 export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
+  const searchParams = useSearchParams();
+  const urlWorkspaceId = useMemo(() => {
+    const raw = searchParams.get("ws");
+    if (!raw) return null;
+    const id = Number(raw);
+    return Number.isFinite(id) && id > 0 ? id : null;
+  }, [searchParams]);
+
   const [exam, setExam] = useState<Exam | null>(null);
   const [workspace, setWorkspace] = useState<Workspace | null>(null);
   const [files, setFiles] = useState<Record<string, WorkspaceFile>>({});
@@ -88,42 +146,46 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
   const splitRef = useRef<HTMLDivElement>(null);
   const dragging = useRef(false);
   const celebratedRef = useRef(false);
+  const loadGen = useRef(0);
 
-  useEffect(() => {
-    let cancelled = false;
-    celebratedRef.current = false;
-    (async () => {
+  const bootstrap = useCallback(
+    async (preferredWsId?: number | null) => {
+      const gen = ++loadGen.current;
+      celebratedRef.current = false;
+      setLoadError(null);
       try {
-        const [examData, ws] = await Promise.all([
-          api.getExam(examId),
-          api.startExam(examId),
-        ]);
-        if (cancelled) return;
+        const examData = await api.getExam(examId);
+        const ws = await resolveWorkspace(examId, preferredWsId);
+        if (gen !== loadGen.current) return;
+        const { map, starter, firstTask } = applyWorkspaceFiles(ws, examData);
         setExam(examData);
         setWorkspace(ws);
-        const map: Record<string, WorkspaceFile> = {};
-        for (const f of ws.files) map[f.filename] = f;
         setFiles(map);
         setPhaseStatus({});
-
-        const firstTask = examData.tasks
-          .slice()
-          .sort((a, b) => a.order_index - b.order_index)[0];
-        const starter =
-          firstTask?.solution_file && map[firstTask.solution_file]
-            ? firstTask.solution_file
-            : ws.files.find((f) => f.filename.endsWith(".py") && !f.read_only)?.filename ||
-              "";
+        setDirtyFiles(new Set());
+        setJudge(null);
+        setOutput("");
+        setError("");
         setActiveFile(starter);
         setActivePhaseId(firstTask?.id ?? null);
       } catch (e) {
-        if (!cancelled) setLoadError(e instanceof Error ? e.message : "Failed to load exam");
+        if (gen !== loadGen.current) return;
+        const msg = e instanceof Error ? e.message : hu.workspace.loadFailed;
+        setLoadError(translateError(msg));
       }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [examId]);
+    },
+    [examId],
+  );
+
+  useEffect(() => {
+    void bootstrap(urlWorkspaceId);
+  }, [bootstrap, urlWorkspaceId]);
+
+  const resetWorkspace = useCallback(async () => {
+    if (!window.confirm(hu.workspace.resetConfirm)) return;
+    clearStoredWorkspaceId(examId);
+    await bootstrap(null);
+  }, [bootstrap, examId]);
 
   useEffect(() => {
     const onMove = (e: MouseEvent) => {
@@ -216,7 +278,9 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
         return next;
       });
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Save failed");
+      setError(
+        translateError(e instanceof Error ? e.message : hu.workspace.saveFailed),
+      );
     } finally {
       setSaving(false);
     }
@@ -247,11 +311,13 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
       const code = files[activeTask.solution_file]?.content ?? current.content;
       const result = await api.execute(workspace.id, code, activeTask.stdin || "", activeTask.id);
       setOutput(result.output);
-      setError(result.error);
+      setError(translateError(result.error));
       setRuntime(result.runtime);
       setExitCode(result.exit_code);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Execution failed");
+      setError(
+        translateError(e instanceof Error ? e.message : hu.workspace.runFailed),
+      );
     } finally {
       setBusy(false);
     }
@@ -282,7 +348,9 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
         return next;
       });
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Judging failed");
+      setError(
+        translateError(e instanceof Error ? e.message : hu.workspace.judgeFailed),
+      );
     } finally {
       setBusy(false);
     }
@@ -314,7 +382,7 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
   if (!exam || !workspace || !current || !activeTask) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[var(--bg)] text-[var(--muted)]">
-        Loading workspace…
+        {hu.workspace.loading}
       </div>
     );
   }
@@ -333,18 +401,26 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
         <div className="min-w-0 flex-1">
           <h1 className="truncate text-sm font-medium">{exam.title}</h1>
           <p className="truncate text-xs text-[var(--muted)]">
-            {activePhaseNumber}. feladat · {activeTask.solution_file}
+            {activePhaseNumber}. {hu.workspace.feladat} · {activeTask.solution_file}
             {activeTask.uses_preamble ? ` · +${exam.shared_variable}` : ""}
           </p>
         </div>
         <div className="flex items-center gap-2">
           <button
             type="button"
+            onClick={() => void resetWorkspace()}
+            disabled={busy}
+            className="rounded border border-[var(--border)] px-3 py-1.5 text-sm text-[var(--muted-strong)] transition hover:border-[var(--accent)] hover:text-[var(--fg)] disabled:opacity-50"
+          >
+            {hu.workspace.resetWorkspace}
+          </button>
+          <button
+            type="button"
             onClick={() => void save()}
             disabled={saving || !isDirty || current.read_only}
             className="rounded border border-[var(--border)] px-3 py-1.5 text-sm text-[var(--muted-strong)] transition hover:border-[var(--accent)] hover:text-[var(--fg)] disabled:opacity-40"
           >
-            {saving ? "Saving…" : isDirty || dirty ? "Save" : "Saved"}
+            {saving ? hu.workspace.saving : isDirty || dirty ? hu.workspace.save : hu.workspace.saved}
           </button>
           <button
             type="button"
@@ -352,26 +428,25 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
             disabled={busy}
             className="rounded bg-[var(--accent)] px-3 py-1.5 text-sm font-medium text-[var(--bg)] transition hover:brightness-110 disabled:opacity-50"
           >
-            Run
+            {hu.workspace.run}
           </button>
           <button
             type="button"
             onClick={() => void submit()}
             disabled={busy}
-            title="Submit current phase"
+            title={hu.workspace.submitTitle}
             className="rounded border border-[var(--accent)] px-3 py-1.5 text-sm text-[var(--accent)] transition hover:bg-[var(--accent-soft)] disabled:opacity-50"
           >
-            Submit
+            {hu.workspace.submit}
           </button>
         </div>
       </header>
 
       {activeTask.uses_preamble ? (
         <div className="border-b border-[var(--border)] bg-[var(--panel)] px-4 py-2 text-xs text-[var(--muted-strong)]">
-          Run/Submit injects the file contents as a string into{" "}
-          <code className="text-[var(--accent)]">{exam.shared_variable}</code> before
-          your code. You do not need to open the data file again — split and convert
-          it yourself.
+          {hu.workspace.preambleBanner}{" "}
+          <code className="text-[var(--accent)]">{exam.shared_variable}</code>{" "}
+          {hu.workspace.preambleSuffix}
         </div>
       ) : null}
 
@@ -396,7 +471,7 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
         <div
           role="separator"
           aria-orientation="vertical"
-          aria-label="Resize panels"
+          aria-label={hu.workspace.resizePanels}
           onMouseDown={() => {
             dragging.current = true;
             document.body.style.cursor = "col-resize";

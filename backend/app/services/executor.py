@@ -140,7 +140,7 @@ def _run_docker(
         stderr = exc.stderr if isinstance(exc.stderr, str) else (exc.stderr or b"").decode(errors="replace")
         return ExecutionResult(
             output=stdout,
-            error=(stderr + "\nExecution timed out.").strip(),
+            error=(stderr + "\nIdőtúllépés — a program túl sokáig futott.").strip(),
             runtime=round(runtime, 4),
             exit_code=124,
         )
@@ -221,7 +221,7 @@ def _run_subprocess(
         stderr = exc.stderr if isinstance(exc.stderr, str) else (exc.stderr or b"").decode(errors="replace")
         return ExecutionResult(
             output=stdout,
-            error=(stderr + "\nExecution timed out.").strip(),
+            error=(stderr + "\nIdőtúllépés — a program túl sokáig futott.").strip(),
             runtime=round(runtime, 4),
             exit_code=124,
         )
@@ -229,7 +229,7 @@ def _run_subprocess(
         runtime = time.perf_counter() - started
         return ExecutionResult(
             output="",
-            error=f"Python interpreter not found: {python_bin}",
+            error=f"Python értelmező nem található: {python_bin}",
             runtime=round(runtime, 4),
             exit_code=127,
         )

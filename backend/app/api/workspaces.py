@@ -18,7 +18,7 @@ def start_exam(exam_id: int, body: StartExamRequest | None = None, db: Session =
         .first()
     )
     if not exam:
-        raise HTTPException(status_code=404, detail="Exam not found")
+        raise HTTPException(status_code=404, detail="A feladatsor nem található.")
 
     user_id = (body.user_id if body else "anonymous") or "anonymous"
     workspace = create_workspace(db, exam, user_id=user_id)
@@ -39,7 +39,7 @@ def get_workspace(workspace_id: int, db: Session = Depends(get_db)):
         .first()
     )
     if not workspace:
-        raise HTTPException(status_code=404, detail="Workspace not found")
+        raise HTTPException(status_code=404, detail="A munkaterület nem található.")
     return workspace
 
 
@@ -51,7 +51,7 @@ def get_file(workspace_id: int, filename: str, db: Session = Depends(get_db)):
         .first()
     )
     if not file:
-        raise HTTPException(status_code=404, detail="File not found")
+        raise HTTPException(status_code=404, detail="A fájl nem található.")
     return file
 
 
@@ -69,13 +69,13 @@ def save_file(
         .first()
     )
     if not workspace:
-        raise HTTPException(status_code=404, detail="Workspace not found")
+        raise HTTPException(status_code=404, detail="A munkaterület nem található.")
 
     file = next((f for f in workspace.files if f.filename == filename), None)
     if not file:
-        raise HTTPException(status_code=404, detail="File not found")
+        raise HTTPException(status_code=404, detail="A fájl nem található.")
     if file.read_only:
-        raise HTTPException(status_code=403, detail="File is read-only")
+        raise HTTPException(status_code=403, detail="A fájl csak olvasható.")
 
     file.content = body.content
     db.commit()

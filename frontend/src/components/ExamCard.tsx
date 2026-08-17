@@ -1,5 +1,7 @@
 "use client";
 
+import { hu } from "@/lib/messages/hu";
+
 type ExamCardProps = {
   exam: {
     id: number;
@@ -51,7 +53,7 @@ export function ExamCard({ exam }: ExamCardProps) {
         ) : null}
       </div>
       <span className="shrink-0 text-sm text-[var(--accent)] opacity-0 transition group-hover:opacity-100">
-        Start →
+        {hu.examCard.start}
       </span>
     </a>
   );

@@ -112,31 +112,31 @@ export function ProblemPanel({
                   {samplePreview}
                 </pre>
               ) : null}
-
-              {constraints.length > 0 ? (
-                <div className="mt-5">
-                  <h3 className="mb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
-                    Megkötések
-                  </h3>
-                  <ul className="list-disc space-y-1 pl-5 text-sm leading-relaxed text-[var(--muted-strong)]">
-                    {constraints.map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
-                </div>
-              ) : null}
-
-              {dataExplanation.trim() ? (
-                <div className="mt-5">
-                  <h3 className="mb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
-                    Bejövő fájl magyarázat
-                  </h3>
-                  <p className="text-sm leading-relaxed text-[var(--muted-strong)]">
-                    {dataExplanation}
-                  </p>
-                </div>
-              ) : null}
             </section>
+          ) : null}
+
+          {constraints.length > 0 ? (
+            <div className="mt-8">
+              <h3 className="mb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
+                Megkötések
+              </h3>
+              <ul className="list-disc space-y-1 pl-5 text-sm leading-relaxed text-[var(--muted-strong)]">
+                {constraints.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+
+          {dataExplanation.trim() ? (
+            <div className="mt-5">
+              <h3 className="mb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
+                Bejövő fájl magyarázat
+              </h3>
+              <p className="text-sm leading-relaxed text-[var(--muted-strong)]">
+                {dataExplanation}
+              </p>
+            </div>
           ) : null}
 
           <section className="mt-8">
@@ -150,9 +150,10 @@ export function ProblemPanel({
                 const samples = (task.test_cases ?? []).filter(
                   (tc) => !tc.is_hidden && tc.expected_output != null,
                 );
-                const sampleInput = (task.test_cases ?? []).find(
-                  (tc) => !tc.is_hidden && (tc.stdin || "").trim(),
-                )?.stdin;
+                const sampleInput =
+                  (task.test_cases ?? []).find(
+                    (tc) => !tc.is_hidden && (tc.stdin || "").trim(),
+                  )?.stdin || (task.stdin || "").trim() || "";
                 return (
                   <li key={task.id}>
                     <button

@@ -116,8 +116,8 @@ with open("felajanlas.txt", encoding="utf-8") as f:
 
 Allowed **after** that line, not instead of it:
 
-- `[function]` task: a correct named function body later tasks may call
-- **Tables** / constant extra files (`kodok.txt`): a literal `dict`/`list` (not swapped by hidden tests)
+- `[function]` task: set `functions` on the exam template with the named function body later tasks may call (appended after the load block in the composed preamble)
+- **Tables** / constant extra files (`kodok.txt`): use `aux_files: [{filename, content, read_only}]` (not swapped by hidden tests) or a literal `dict`/`list` in `functions`
 
 Never:
 
@@ -143,7 +143,10 @@ MD `### Virágágyások` → folder `viragagyasok`.
 | `data_file` | `felajanlas.txt` |
 | `dataset_type` | `viragagyasok` |
 | `shared_variable` | `felajanlasok` |
-| `preamble` | raw `f.read()` into `felajanlasok` |
+| `preamble` | raw `f.read()` into `felajanlasok` (or omit — platform default) |
+| `functions` | optional named helpers for `[function]` tasks (e.g. `percben`) |
+| `seed` | optional `random.seed(N)` injected at preamble start for `[random]` tasks |
+| `aux_files` | optional read-only lookup tables (e.g. `kodok.txt`) |
 
 **New conversions must prefix `solution_file` and custom `type`.** Legacy viragagyasok uses `beolvasas.py` and `offer_count`; a new exam named similarly would use `viragagyasok_beolvasas.py` and `viragagyasok_offer_count`.
 
@@ -152,7 +155,7 @@ MD `### Virágágyások` → folder `viragagyasok`.
 | 1 IO load | `store` | `{id}_beolvasas.py` | empty expected |
 | 2 count | `{id}_offer_count` | `{id}_felajanlasok_szama.py` | formatted sentence |
 | 3 wrap search | `{id}_wrap_offers` | `{id}_bejart.py` | |
-| 4 nested IO | `{id}_bed_query` | `{id}_egy_agyas.py` | `stdin: "100\n"` |
+| 4 nested IO | `{id}_bed_query` | `{id}_egy_agyas.py` | `stdin: "100\n"`; `hidden_stdin: ["1\n", ...]` per hidden dataset |
 | 5 validate | `{id}_planting_status` | `{id}_megoldhatosag.py` | exact strings |
 | 6 file write | `{id}_colors_file` | `{id}_szinek.py` | `expected_file: "szinek.txt"` |
 
@@ -215,10 +218,19 @@ Közép “hardcode the array in source”: still emit `data_file` + preamble lo
 
 Sum does not need to match a real OH paper.
 
+## Platform fields (M1)
+
+| Field | Where | Purpose |
+|---|---|---|
+| `stdin` | task | Sample / visible test stdin |
+| `hidden_stdin` | task | List aligned with `hidden[]`; overrides stdin per hidden test case |
+| `seed` | exam | Prepends `import random` + `random.seed(N)` to preamble; oracles use the same seed |
+| `functions` | exam | Named function bodies appended after the file-load preamble |
+| `aux_files` | exam | Read-only extra files copied into the workspace (not swapped on hidden tests) |
+
 ## Out of scope without extra code
 
 - Two independently swapped input files (loader has one `data_file`)
-- Hidden tests with different `stdin` (template stdin is copied to every test case)
-- Unseeded `[random]` exact grading
+- Unseeded `[random]` exact grading (use `seed` on the template)
 - One `.py` for the whole exam (explicitly rejected)
 - Injecting a parsed list or file handle to “make later tasks easier”

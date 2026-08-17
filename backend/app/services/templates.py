@@ -12,7 +12,7 @@ from typing import Any
 
 from sqlalchemy.orm import Session
 
-from app.exams.builders import expected_for_task, parse_dataset, raw_file_preamble
+from app.exams.builders import build_exam_preamble, expected_for_task, parse_dataset
 from app.exams.loader import LoadedExam, load_exam_by_id
 from app.models import Exam, ExamFile, Task, TestCase
 from app.schemas.templates import ExamTemplate
@@ -23,6 +23,21 @@ def _task_spec_dict(task: Any) -> dict[str, Any]:
     if hasattr(task, "model_dump"):
         return task.model_dump()
     return dict(task)
+
+
+def _stdin_for_case(spec: dict[str, Any], *, hidden_index: int | None = None) -> str:
+    """Resolve stdin for sample (hidden_index=None) or a hidden test case."""
+    if hidden_index is not None:
+        hidden_stdin = list(spec.get("hidden_stdin") or [])
+        if hidden_index < len(hidden_stdin):
+            return hidden_stdin[hidden_index] or ""
+    return spec.get("stdin") or ""
+
+
+def _effective_seed(template: Any, override: int | None = None) -> int | None:
+    if override is not None:
+        return override
+    return getattr(template, "seed", None)
 
 
 def compose_source(exam: Exam, task: Task, student_code: str) -> str:
@@ -38,11 +53,13 @@ def materialize_loaded_exam(
     loaded: LoadedExam,
     *,
     use_ai: bool = False,
+    seed_override: int | None = None,
 ) -> Exam:
     """Create DB exam/tasks/tests from a loaded catalog exam."""
     template = loaded.template
     data_file = template.data_file
     dataset_type = template.dataset_type
+    seed = _effective_seed(template, seed_override)
 
     story = template.story
     if use_ai:
@@ -52,9 +69,7 @@ def materialize_loaded_exam(
         )
 
     shared_variable = template.shared_variable or "data"
-    preamble = (template.preamble or "").strip() or raw_file_preamble(
-        template.data_file, shared_variable
-    )
+    preamble = build_exam_preamble(template)
 
     exam = Exam(
         title=template.title,
@@ -81,6 +96,16 @@ def materialize_loaded_exam(
         )
     )
 
+    for aux in template.aux_files or []:
+        db.add(
+            ExamFile(
+                exam_id=exam.id,
+                filename=aux.filename,
+                content=aux.content,
+                read_only=aux.read_only,
+            )
+        )
+
     plugin = loaded.plugin
     visible_rows = parse_dataset(dataset_type, loaded.visible_content, plugin=plugin)
     hidden_rows_list = [
@@ -89,13 +114,17 @@ def materialize_loaded_exam(
 
     for idx, task_tmpl in enumerate(template.tasks):
         spec = _task_spec_dict(task_tmpl)
-        expected_visible = expected_for_task(visible_rows, spec, plugin=plugin)
+        sample_stdin = _stdin_for_case(spec)
+        spec_with_stdin = {**spec, "stdin": sample_stdin}
+        expected_visible = expected_for_task(
+            visible_rows, spec_with_stdin, plugin=plugin, seed=seed
+        )
         points = int(spec.get("points", 1))
         hints = list(spec.get("hints") or [])
         uses_preamble = bool(spec.get("uses_preamble", False))
         starter = spec.get("starter") or ""
         solution_file = spec.get("solution_file") or f"feladat{idx + 1}.py"
-        stdin = spec.get("stdin") or ""
+        stdin = sample_stdin
         expected_file = spec.get("expected_file") or ""
         task_tags = list(spec.get("tags") or [])
 
@@ -140,13 +169,17 @@ def materialize_loaded_exam(
         for h_idx, (hidden_content, hidden_rows) in enumerate(
             zip(loaded.hidden_contents, hidden_rows_list), start=1
         ):
-            expected_hidden = expected_for_task(hidden_rows, spec, plugin=plugin)
+            hidden_stdin = _stdin_for_case(spec, hidden_index=h_idx - 1)
+            spec_hidden = {**spec, "stdin": hidden_stdin}
+            expected_hidden = expected_for_task(
+                hidden_rows, spec_hidden, plugin=plugin, seed=seed
+            )
             db.add(
                 TestCase(
                     task_id=task.id,
                     name=f"{spec.get('type', 'task')}-hidden-{h_idx:02d}",
                     input_files=json.dumps({data_file: hidden_content}, ensure_ascii=False),
-                    stdin=stdin,
+                    stdin=hidden_stdin,
                     expected_output=expected_hidden,
                     is_hidden=True,
                     points=points,
@@ -167,14 +200,13 @@ def create_exam_from_template(
     seed: int | None = None,
 ) -> Exam:
     """Materialize an exam from catalog id or an inline template dict."""
-    del seed
     if exam_id:
         loaded = load_exam_by_id(exam_id)
-        return materialize_loaded_exam(db, loaded, use_ai=use_ai)
+        return materialize_loaded_exam(db, loaded, use_ai=use_ai, seed_override=seed)
 
     if template is None:
         loaded = load_exam_by_id("cities")
-        return materialize_loaded_exam(db, loaded, use_ai=use_ai)
+        return materialize_loaded_exam(db, loaded, use_ai=use_ai, seed_override=seed)
 
     if isinstance(template, ExamTemplate):
         tmpl = template
@@ -187,15 +219,17 @@ def create_exam_from_template(
         raise ValueError(
             f"Inline template must match a catalog exam folder (missing: {tmpl.id})"
         ) from exc
+    effective_seed = seed if seed is not None else tmpl.seed
     loaded.template = tmpl.model_copy(
         update={
             "visible": loaded.template.visible,
             "hidden": loaded.template.hidden,
             "data_file": loaded.template.data_file,
             "dataset_type": loaded.template.dataset_type,
+            "seed": effective_seed,
         }
     )
-    return materialize_loaded_exam(db, loaded, use_ai=use_ai)
+    return materialize_loaded_exam(db, loaded, use_ai=use_ai, seed_override=seed)
 
 
 def default_exam_id() -> str:

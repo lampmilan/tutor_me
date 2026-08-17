@@ -39,6 +39,27 @@ def raw_file_preamble(data_file: str, shared_variable: str) -> str:
     )
 
 
+def build_exam_preamble(template: Any) -> str:
+    """Assemble runtime preamble: optional seed, file load, optional functions."""
+    parts: list[str] = []
+    seed = getattr(template, "seed", None)
+    if seed is not None:
+        parts.append(f"import random\nrandom.seed({int(seed)})")
+
+    shared_variable = getattr(template, "shared_variable", None) or "data"
+    data_file = getattr(template, "data_file", "")
+    load = (getattr(template, "preamble", None) or "").strip() or raw_file_preamble(
+        data_file, shared_variable
+    )
+    parts.append(load)
+
+    functions = (getattr(template, "functions", None) or "").strip()
+    if functions:
+        parts.append(functions)
+
+    return "\n\n".join(parts)
+
+
 def load_exam_plugin(exam_dir: Path) -> ExamPlugin | None:
     path = exam_dir / "builders.py"
     if not path.is_file():
@@ -263,7 +284,12 @@ def expected_for_task(
     task_spec: dict[str, Any],
     *,
     plugin: ExamPlugin | None = None,
+    seed: int | None = None,
 ) -> str:
+    if seed is not None:
+        import random
+
+        random.seed(seed)
     ttype = task_spec.get("type", "count")
     if plugin and ttype in plugin.task_builders:
         return plugin.task_builders[ttype](rows, task_spec)

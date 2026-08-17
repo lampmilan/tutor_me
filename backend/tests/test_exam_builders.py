@@ -5,7 +5,7 @@ from __future__ import annotations
 import unittest
 from pathlib import Path
 
-from app.exams.builders import expected_for_task, parse_dataset, raw_file_preamble
+from app.exams.builders import build_exam_preamble, expected_for_task, parse_dataset, raw_file_preamble
 from app.exams.loader import discover_exams, load_exam_by_id
 
 
@@ -23,9 +23,7 @@ class CatalogStructureTests(unittest.TestCase):
         self.assertGreaterEqual(len(exams), 7)
         for loaded in exams:
             tmpl = loaded.template
-            preamble = (tmpl.preamble or "").strip() or raw_file_preamble(
-                tmpl.data_file, tmpl.shared_variable or "data"
-            )
+            preamble = build_exam_preamble(tmpl)
             self.assertIn("f.read()", preamble)
             self.assertNotIn(".append(", preamble)
             visible = parse_dataset(

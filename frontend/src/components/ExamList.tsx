@@ -40,39 +40,55 @@ export function ExamList({ exams }: ExamListProps) {
 
   return (
     <section>
-      <div className="mb-4 flex flex-wrap items-end gap-4">
-        <label className="flex flex-col gap-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
-          {hu.home.filterLevel}
-          <select
-            value={level}
-            onChange={(e) => setLevel(e.target.value as LevelFilter)}
-            className="rounded border border-[var(--border)] bg-[var(--panel)] px-2 py-1.5 text-sm normal-case tracking-normal text-[var(--fg)]"
-          >
-            <option value="all">{hu.home.filterAll}</option>
-            <option value="kozep">{hu.home.levelKozep}</option>
-            <option value="emelt">{hu.home.levelEmelt}</option>
-          </select>
-        </label>
+      <div className="mb-4 space-y-3">
+        <div className="flex flex-wrap items-end gap-4">
+          <label className="flex flex-col gap-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
+            {hu.home.filterLevel}
+            <select
+              value={level}
+              onChange={(e) => setLevel(e.target.value as LevelFilter)}
+              className="rounded border border-[var(--border)] bg-[var(--panel)] px-2 py-1.5 text-sm normal-case tracking-normal text-[var(--fg)]"
+            >
+              <option value="all">{hu.home.filterAll}</option>
+              <option value="kozep">{hu.home.levelKozep}</option>
+              <option value="emelt">{hu.home.levelEmelt}</option>
+            </select>
+          </label>
 
-        <label className="flex flex-col gap-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
-          {hu.home.filterDifficulty}
-          <select
-            value={difficulty === "all" ? "all" : String(difficulty)}
-            onChange={(e) => {
-              const v = e.target.value;
-              setDifficulty(v === "all" ? "all" : Number(v));
-            }}
-            className="rounded border border-[var(--border)] bg-[var(--panel)] px-2 py-1.5 text-sm normal-case tracking-normal text-[var(--fg)]"
-          >
-            <option value="all">{hu.home.filterAll}</option>
-            {[1, 2, 3, 4, 5].map((n) => (
-              <option key={n} value={n}>
-                {"⬤".repeat(n)}
-                {"○".repeat(5 - n)}
-              </option>
-            ))}
-          </select>
-        </label>
+          <label className="flex flex-col gap-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
+            {hu.home.filterDifficulty}
+            <select
+              value={difficulty === "all" ? "all" : String(difficulty)}
+              onChange={(e) => {
+                const v = e.target.value;
+                setDifficulty(v === "all" ? "all" : Number(v));
+              }}
+              className="rounded border border-[var(--border)] bg-[var(--panel)] px-2 py-1.5 text-sm normal-case tracking-normal text-[var(--fg)]"
+            >
+              <option value="all">{hu.home.filterAll}</option>
+              {[1, 2, 3, 4, 5].map((n) => (
+                <option key={n} value={n}>
+                  {"⬤".repeat(n)}
+                  {"○".repeat(5 - n)}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          {hasFilters ? (
+            <button
+              type="button"
+              onClick={() => {
+                setLevel("all");
+                setDifficulty("all");
+                setSelectedTags([]);
+              }}
+              className="rounded border border-[var(--border)] px-3 py-1.5 text-sm text-[var(--muted-strong)] transition hover:border-[var(--accent)] hover:text-[var(--fg)]"
+            >
+              {hu.home.filterClear}
+            </button>
+          ) : null}
+        </div>
 
         <TagToggleBar
           tags={allTags}
@@ -80,20 +96,6 @@ export function ExamList({ exams }: ExamListProps) {
           onChange={setSelectedTags}
           label={hu.home.filterTags}
         />
-
-        {hasFilters ? (
-          <button
-            type="button"
-            onClick={() => {
-              setLevel("all");
-              setDifficulty("all");
-              setSelectedTags([]);
-            }}
-            className="rounded border border-[var(--border)] px-3 py-1.5 text-sm text-[var(--muted-strong)] transition hover:border-[var(--accent)] hover:text-[var(--fg)]"
-          >
-            {hu.home.filterClear}
-          </button>
-        ) : null}
       </div>
 
       {filtered.length === 0 ? (

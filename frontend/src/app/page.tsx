@@ -31,7 +31,7 @@ export default async function HomePage() {
         }}
       />
 
-      <div className="relative mx-auto flex min-h-screen max-w-5xl flex-col justify-center px-6 py-16">
+      <div className="relative mx-auto flex min-h-screen max-w-5xl flex-col px-6 pb-16 pt-16">
         <p className="mb-3 font-[family-name:var(--font-display)] text-5xl tracking-tight text-[var(--accent)] md:text-6xl">
           Érettségi Lab
         </p>

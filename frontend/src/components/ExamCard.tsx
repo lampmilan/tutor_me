@@ -49,7 +49,6 @@ export function ExamCard({ exam }: ExamCardProps) {
             {levelLabel(exam.level)} <DifficultyDots value={difficulty} />
           </span>
         </div>
-        <p className="mt-1 text-sm text-[var(--muted-strong)]">{exam.description}</p>
         {tags.length > 0 ? (
           <div className="mt-2 flex flex-wrap gap-1">
             {sortTagsForDisplay(tags).map((tag) => (

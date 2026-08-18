@@ -1,0 +1,81 @@
+name: Oracle tests & catalog materialize
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  oracle-tests:
+    name: Builder oracle tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r backend/requirements.txt pytest
+
+      - name: Run oracle & materialization tests
+        working-directory: backend
+        env:
+          PYTHONPATH: .
+          DATABASE_URL: sqlite:///:memory:
+        run: pytest tests/ -v --tb=short
+
+  materialize-all:
+    name: Materialize all catalog exams
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r backend/requirements.txt
+
+      - name: Materialize every catalog exam (in-memory SQLite)
+        working-directory: backend
+        env:
+          PYTHONPATH: .
+          DATABASE_URL: sqlite:///:memory:
+        run: |
+          python3 - <<'EOF'
+          from sqlalchemy import create_engine
+          from sqlalchemy.orm import sessionmaker
+          from app.database import Base
+          from app.exams.loader import discover_exams
+          from app.services.templates import materialize_loaded_exam
+
+          engine = create_engine("sqlite:///:memory:", connect_args={"check_same_thread": False})
+          Base.metadata.create_all(engine)
+          Session = sessionmaker(bind=engine)
+
+          exams = discover_exams()
+          print(f"Found {len(exams)} catalog exams")
+          for loaded in exams:
+              db = Session()
+              try:
+                  exam = materialize_loaded_exam(db, loaded)
+                  print(f"  OK  {exam.id}")
+              except Exception as exc:
+                  print(f"  FAIL {loaded.template.id}: {exc}")
+                  raise
+              finally:
+                  db.close()
+
+          print("All exams materialized successfully.")
+          EOF

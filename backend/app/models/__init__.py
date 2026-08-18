@@ -70,6 +70,9 @@ class Workspace(Base):
     user_id: Mapped[str] = mapped_column(String(100), default="anonymous", index=True)
     path: Mapped[str] = mapped_column(String(512), nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    last_accessed_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True, server_default=func.now()
+    )
 
     exam: Mapped["Exam"] = relationship(back_populates="workspaces")
     files: Mapped[list["File"]] = relationship(back_populates="workspace", cascade="all, delete-orphan")

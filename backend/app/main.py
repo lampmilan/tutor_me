@@ -8,7 +8,7 @@ from app.api import exams, execution, workspaces
 from app.config import get_settings
 from app.database import Base, SessionLocal, engine, ensure_schema
 from app.seed import seed_all_exams
-from app.services.workspace import ensure_workspaces_root
+from app.services.workspace import cleanup_expired_workspaces, ensure_workspaces_root
 
 _SEED_LOCK_ID = 872341
 
@@ -35,6 +35,11 @@ async def lifespan(_: FastAPI):
                 db.commit()
         else:
             seed_all_exams(db)
+        try:
+            cleanup_expired_workspaces(db)
+        except Exception:
+            # TTL sweep must not block API startup.
+            pass
     finally:
         db.close()
     yield
@@ -48,16 +53,9 @@ app = FastAPI(
 )
 
 _settings = get_settings()
-_origins = _settings.cors_origin_list()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=_origins,
-    allow_origin_regex=r"https://.*\.vercel\.app" if _origins == ["*"] else None,
-    # Wildcard + credentials is rejected by browsers; Vercel same-origin rewrites
-    # don't need cookies.
-    allow_credentials=False,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    **_settings.cors_middleware_kwargs(),
 )
 
 app.include_router(exams.router)
@@ -71,4 +69,5 @@ def health():
     return {
         "status": "ok",
         "execution_backend": settings.execution_backend,
+        "ai_generation_enabled": settings.ai_generation_enabled,
     }

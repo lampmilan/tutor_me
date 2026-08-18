@@ -6,12 +6,13 @@ from app.models import Exam, File, Task, Workspace
 from app.schemas import ExecuteRequest, ExecuteResponse, JudgeRequest, JudgeResponse
 from app.services.executor import execute_python
 from app.services.judge import RUN_ENTRYPOINT, judge_workspace, prepare_run, student_code_for_task
-from app.services.workspace import sync_workspace_to_disk
+from app.services.rate_limit import limit_execute, limit_judge
+from app.services.workspace import sync_workspace_to_disk, touch_workspace
 
 router = APIRouter(tags=["execution"])
 
 
-@router.post("/execute", response_model=ExecuteResponse)
+@router.post("/execute", response_model=ExecuteResponse, dependencies=[Depends(limit_execute)])
 def execute(body: ExecuteRequest, db: Session = Depends(get_db)):
     workspace = (
         db.query(Workspace)
@@ -24,6 +25,7 @@ def execute(body: ExecuteRequest, db: Session = Depends(get_db)):
     )
     if not workspace:
         raise HTTPException(status_code=404, detail="A munkaterület nem található.")
+    touch_workspace(db, workspace)
 
     try:
         task: Task | None = None
@@ -91,7 +93,7 @@ def execute(body: ExecuteRequest, db: Session = Depends(get_db)):
         raise HTTPException(status_code=500, detail=f"Futtatás sikertelen: {exc}") from exc
 
 
-@router.post("/judge", response_model=JudgeResponse)
+@router.post("/judge", response_model=JudgeResponse, dependencies=[Depends(limit_judge)])
 def judge(body: JudgeRequest, db: Session = Depends(get_db)):
     workspace = (
         db.query(Workspace)
@@ -101,6 +103,7 @@ def judge(body: JudgeRequest, db: Session = Depends(get_db)):
     )
     if not workspace:
         raise HTTPException(status_code=404, detail="A munkaterület nem található.")
+    touch_workspace(db, workspace)
 
     exam = (
         db.query(Exam)

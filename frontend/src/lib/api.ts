@@ -1,3 +1,5 @@
+import { hu } from "@/lib/messages/hu";
+
 // Browser: same-origin /api is rewritten to the backend (see next.config.ts).
 const API_URL = "/api";
 
@@ -116,6 +118,18 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   });
   if (!res.ok) {
     const text = await res.text();
+    if (res.status === 429) {
+      let detail = hu.workspace.rateLimited;
+      try {
+        const parsed = JSON.parse(text) as { detail?: string };
+        if (typeof parsed.detail === "string" && parsed.detail.trim()) {
+          detail = parsed.detail;
+        }
+      } catch {
+        // keep default Hungarian copy
+      }
+      throw new Error(detail);
+    }
     throw new Error(text || `Request failed: ${res.status}`);
   }
   return res.json() as Promise<T>;

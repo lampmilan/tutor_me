@@ -1,0 +1,24 @@
+name: Staging smoke (manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      api_url:
+        description: "Staging API URL (no trailing slash)"
+        required: true
+        default: "https://erettsegi-api-placeholder.run.app"
+
+jobs:
+  smoke:
+    name: Run + Submit smoke
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run staging smoke script
+        env:
+          API_URL: ${{ github.event.inputs.api_url }}
+        run: |
+          chmod +x scripts/staging-smoke.sh
+          ./scripts/staging-smoke.sh

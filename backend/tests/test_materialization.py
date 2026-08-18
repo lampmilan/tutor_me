@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from app.database import Base
 from app.exams.builders import build_exam_preamble, expected_for_task
-from app.exams.loader import load_exam_by_id
+from app.exams.loader import discover_exams, load_exam_by_id
 from app.models import ExamFile, Task, TestCase
 from app.schemas.templates import AuxFileTemplate, ExamTemplate, TaskTemplate
 from app.services.templates import materialize_loaded_exam
@@ -135,6 +135,23 @@ class MaterializationTests(unittest.TestCase):
         stdins = [tc.stdin for tc in hidden]
         self.assertEqual(stdins, ["1\n", "100\n", "50\n"])
         self.assertEqual(len(set(stdins)), 3)
+
+
+class MaterializeAllCatalogTests(unittest.TestCase):
+    """Verify that every catalog exam can be materialized without error (M5 CI gate)."""
+
+    def test_every_catalog_exam_materializes_without_error(self) -> None:
+        exams = discover_exams()
+        self.assertGreaterEqual(len(exams), 20, "Expected at least 20 catalog exams")
+        for loaded in exams:
+            with self.subTest(exam=loaded.template.id):
+                db = _session()
+                try:
+                    exam = materialize_loaded_exam(db, loaded)
+                    self.assertIsNotNone(exam.id)
+                    self.assertEqual(exam.template_type, loaded.template.id)
+                finally:
+                    db.close()
 
 
 if __name__ == "__main__":

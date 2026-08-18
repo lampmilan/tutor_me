@@ -1,0 +1,117 @@
+{
+  "id": "adagolo",
+  "title": "Adagoló",
+  "level": "emelt",
+  "difficulty": 3,
+  "tags": [
+    "IO",
+    "count",
+    "sum",
+    "min_max",
+    "search",
+    "group"
+  ],
+  "description": "Értékelje ki az automata adagoló betegnaplóját az adagolo.txt alapján!",
+  "story": "Egy rendelő automata adagolója a kiadott készítményeket betegnaplóba írja. Egy beteghez több tétel tartozhat, a beteg zárását egy `X` karakterű sor jelzi. A tételek a készítmény nevét és a kiadott dobozok számát tartalmazzák. A naplóban a betegek az ellátás sorrendjében követik egymást. A program a naplót beolvassa, majd a betegek számát, a legnagyobb adagot és egy kiválasztott készítmény összesített forgalmát határozza meg.",
+  "constraints": [
+    "Betegek száma 1–200; tételek betegenként 1–8.",
+    "Készítménynév: ékezetmentes nagybetű vagy kötőjel; dobozszám 1–5.",
+    "Az állomány minden beteget `X` sorral zár, üres beteg (két `X` egymás után) nem fordul elő.",
+    "5. feladat tesztjavaslat: `PARACETAMOL`. Ha a név egyetlen tételben sem szerepel, írja ki: `Nincs ilyen keszitmeny.`"
+  ],
+  "data_explanation": "A nem `X` sorok egy tételt írnak le: készítmény neve és dobozszám. Az `X` az aktuális beteg zárása. A mintában négy beteg van; a harmadik kapta a legtöbb dobozt (5).",
+  "data_file": "adagolo.txt",
+  "dataset_type": "adagolo",
+  "shared_variable": "naplo",
+  "preamble": "with open(\"adagolo.txt\", encoding=\"utf-8\") as f:\n    naplo = f.read()\n",
+  "visible": "datasets/visible.txt",
+  "hidden": [
+    "datasets/hidden/01.txt",
+    "datasets/hidden/02.txt",
+    "datasets/hidden/03.txt"
+  ],
+  "tasks": [
+    {
+      "type": "store",
+      "tags": [
+        "IO"
+      ],
+      "title": "Beolvasás",
+      "description": "Olvassa be és tárolja el a `adagolo.txt` tartalmát!",
+      "points": 1,
+      "solution_file": "adagolo_beolvasas.py",
+      "uses_preamble": false,
+      "starter": "# 1. feladat: olvassa be a adagolo.txt tartalmát.\n# Tárolja a teljes szöveget a `naplo` változóban.\n# tételek, X zárja a beteget\n\nnaplo = \"\"\n",
+      "hints": [
+        "Read adagolo.txt into `naplo` as a raw string."
+      ]
+    },
+    {
+      "type": "adagolo_count",
+      "tags": [
+        "count"
+      ],
+      "title": "Betegek",
+      "description": "Határozza meg, hány beteg adatait tartalmazza az állomány! Az `X` sorokat ne számolja tételnek! Az eredményt nevezze meg a kiírásban!",
+      "points": 1,
+      "solution_file": "adagolo_betegek.py",
+      "uses_preamble": true,
+      "starter": "# A adagolo.txt tartalma a `naplo` változóban van (str).\n# X = betegvége\n#\n# Betegek\n",
+      "hints": [
+        "Derive the answer from the current file contents; do not hard-code the sample."
+      ]
+    },
+    {
+      "type": "adagolo_max",
+      "tags": [
+        "sum",
+        "min_max",
+        "group"
+      ],
+      "title": "Legnagyobb adag",
+      "description": "Betegenként adja össze a kiadott dobozokat! Írja ki az összes kiadott doboz számát, valamint annak a betegnek a sorszámát (1-től) és dobozszámát, aki a legtöbbet kapta! Ha több ilyen van, az állományban első beteget adja meg!",
+      "points": 2,
+      "solution_file": "adagolo_legnagyobb.py",
+      "uses_preamble": true,
+      "starter": "# A adagolo.txt tartalma a `naplo` változóban van (str).\n# döntetlennél az első\n#\n# Legnagyobb adag\n",
+      "hints": [
+        "Derive the answer from the current file contents; do not hard-code the sample."
+      ]
+    },
+    {
+      "type": "adagolo_nev",
+      "tags": [
+        "IO",
+        "search",
+        "sum"
+      ],
+      "title": "Egy készítmény",
+      "description": "Kérje be a felhasználótól egy készítmény nevét! A teszteléshez használhatja a `PARACETAMOL` nevet. Ha a név egyetlen tételben sem fordul elő, írja ki a `Nincs ilyen keszitmeny.` szöveget, és ne végezze el a következő részfeladatot!\n\n1. Adja meg, hány dobozt adtak ki ebből a készítményből a nap során, minden beteg tételét beleszámítva!",
+      "points": 3,
+      "solution_file": "adagolo_keszitmeny.py",
+      "uses_preamble": true,
+      "starter": "# A adagolo.txt tartalma a `naplo` változóban van (str).\n# stdin név\n#\n# Egy készítmény\n\nprint(\"Adja meg a keszitmeny nevet!\")\nnev = input().strip()\n",
+      "hints": [
+        "Derive the answer from the current file contents; do not hard-code the sample."
+      ],
+      "stdin": "PARACETAMOL\n"
+    },
+    {
+      "type": "adagolo_file",
+      "tags": [
+        "IO",
+        "group"
+      ],
+      "title": "betegek.txt",
+      "description": "A betegek összesítését a `betegek.txt` állományba kell menteni. Minden betegről egy sort írjon: a beteg sorszámát (1-től) és a neki kiadott dobozok összegét, szóközzel elválasztva! A sorok a napló sorrendjét kövessék!",
+      "points": 3,
+      "solution_file": "adagolo_file.py",
+      "uses_preamble": true,
+      "starter": "# A adagolo.txt tartalma a `naplo` változóban van (str).\n# kimenet\n#\n# betegek.txt\n\nwith open(\"betegek.txt\", \"w\", encoding=\"utf-8\") as f:\n    pass\n",
+      "hints": [
+        "Derive the answer from the current file contents; do not hard-code the sample."
+      ],
+      "expected_file": "betegek.txt"
+    }
+  ]
+}

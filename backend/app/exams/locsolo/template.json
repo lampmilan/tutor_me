@@ -1,0 +1,93 @@
+{
+  "id": "locsolo",
+  "title": "Locsoló",
+  "level": "kozep",
+  "difficulty": 4,
+  "tags": [
+    "IO",
+    "count",
+    "path",
+    "validate"
+  ],
+  "description": "Értékelje ki a locsolókocsi parancsszavát a parancs.txt alapján!",
+  "story": "Egy kertészet automata locsolókocsija a gyepet egy parancsszó alapján járja be. A kocsi mindig északnak nézve indul a (0, 0) pontból. Az E betű egy métert lép a nézőiránya szerint, a J betű 90 fokot fordul jobbra, a B betű 90 fokot fordul balra. A program a parancsszót a forrásában tárolja, majd a megtett út adatait értékeli ki.",
+  "constraints": [
+    "Parancsszó hossza 1–80 karakter; csak `E`, `J` és `B` szerepelhet.",
+    "Kelet pozitív x, észak pozitív y; a kiindulás (0, 0), nézőirány észak.",
+    "Manhattan-távolság: `|x| + |y|`.",
+    "Cserélhető parancsszóval is működnie kell."
+  ],
+  "data_explanation": "Egyetlen parancsszó, szóköz nélkül. A mintában négy előrelépés, egy jobbra és egy balra fordulás van. A program ezt a forrásában tárolja, nem fájlból olvassa.",
+  "data_file": "parancs.txt",
+  "dataset_type": "locsolo",
+  "shared_variable": "parancsok",
+  "preamble": "with open(\"parancs.txt\", encoding=\"utf-8\") as f:\n    parancsok = f.read()\n",
+  "visible": "datasets/visible.txt",
+  "hidden": [
+    "datasets/hidden/01.txt",
+    "datasets/hidden/02.txt",
+    "datasets/hidden/03.txt"
+  ],
+  "tasks": [
+    {
+      "type": "store",
+      "tags": [
+        "IO"
+      ],
+      "title": "Tárolás",
+      "description": "A locsolókocsi parancsszavát a program forrásában kell eltárolnia. Tárolja el a megadott betűsorozatot egy megfelelő adatszerkezetben!",
+      "points": 1,
+      "solution_file": "locsolo_tarolas.py",
+      "uses_preamble": false,
+      "starter": "# 1. feladat: olvassa be a parancs.txt tartalmát.\n# Tárolja a teljes szöveget a `parancsok` változóban.\n\nparancsok = \"\"\n",
+      "hints": [
+        "Read parancs.txt into parancsok as a string."
+      ]
+    },
+    {
+      "type": "locsolo_count",
+      "tags": [
+        "count"
+      ],
+      "title": "Betűk száma",
+      "description": "Határozza meg, hogy a parancsszóban hány `E`, hány `J` és hány `B` betű található! Az eredményeket külön sorban, megnevezve írja a képernyőre!",
+      "points": 1,
+      "solution_file": "locsolo_betuk.py",
+      "uses_preamble": true,
+      "starter": "# A parancs.txt tartalma a `parancsok` változóban van (str).\n# Parancsszó: E/J/B.\n#\n# Betűk száma\n",
+      "hints": [
+        "Derive the answer from the current file contents; do not hard-code the sample."
+      ]
+    },
+    {
+      "type": "locsolo_path",
+      "tags": [
+        "path"
+      ],
+      "title": "Végpont",
+      "description": "Hajtsa végre a parancsszót a kiinduló helyzetből! Adja meg a kocsi végső helyzetét méterben, kelet és észak szerint, valamint a kiindulóponttól mért Manhattan-távolságot!",
+      "points": 2,
+      "solution_file": "locsolo_vegpont.py",
+      "uses_preamble": true,
+      "starter": "# A parancs.txt tartalma a `parancsok` változóban van (str).\n# Kelet +x, észak +y, indulás (0,0).\n#\n# Végpont\n",
+      "hints": [
+        "Derive the answer from the current file contents; do not hard-code the sample."
+      ]
+    },
+    {
+      "type": "locsolo_return",
+      "tags": [
+        "validate"
+      ],
+      "title": "Visszatérés",
+      "description": "Döntse el, hogy a kocsi a parancsszó végrehajtása után a kiinduló ponton áll-e! Ha igen, írja ki: `A locsolo visszater a kiindulo pontra.` Ha nem, írja ki: `A locsolo nem tert vissza a kiindulo pontra.`",
+      "points": 2,
+      "solution_file": "locsolo_vissza.py",
+      "uses_preamble": true,
+      "starter": "# A parancs.txt tartalma a `parancsok` változóban van (str).\n# Kiinduló pont (0, 0).\n#\n# Visszatérés\n",
+      "hints": [
+        "Derive the answer from the current file contents; do not hard-code the sample."
+      ]
+    }
+  ]
+}

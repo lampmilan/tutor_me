@@ -1,0 +1,82 @@
+{
+  "id": "fogasok",
+  "title": "Fogások",
+  "level": "kozep",
+  "difficulty": 1,
+  "tags": ["IO", "count", "min_max"],
+  "description": "Értékelje ki a fogasok.txt állományban tárolt versenyfogásokat!",
+  "story": "Egy sporthorgász-versenyen a zsűri a kifogott halakat egyenként mérlegre tette. Tíz hal tömegét jegyezték fel dekagrammban, a fogás sorrendjében. A program a feljegyzett tömegeket a forrásában tárolja. A kiértékeléshez kell a fogások száma, a legnagyobb hal helye, valamint az, hogy hány hal éri el a kategória alsó határát.",
+  "constraints": [
+    "10 egész tömeg dekagrammban; cserélhető adatokkal is működnie kell.",
+    "Tömegek: 1–30.",
+    "Több azonos legnagyobb érték esetén az első előfordulás sorszáma (1-től).",
+    "Határérték bekérése: pozitív egész; a bemenet érvényességét nem kell ellenőrizni."
+  ],
+  "data_explanation": "Tíz egész szám, a halak tömege dekagrammban, a fogás sorrendjében. A program ezeket a forrásában tárolja, nem fájlból olvassa.",
+  "data_file": "fogasok.txt",
+  "dataset_type": "fogasok",
+  "shared_variable": "fogasok",
+  "preamble": "with open(\"fogasok.txt\", encoding=\"utf-8\") as f:\n    fogasok = f.read()\n",
+  "visible": "datasets/visible.txt",
+  "hidden": [
+    "datasets/hidden/01.txt",
+    "datasets/hidden/02.txt",
+    "datasets/hidden/03.txt"
+  ],
+  "tasks": [
+    {
+      "type": "store",
+      "tags": ["IO"],
+      "title": "Tárolás",
+      "description": "A versenyen mért tíz hal tömegét a program forrásában kell eltárolnia. Tárolja el a megadott számokat egy megfelelő adatszerkezetben!",
+      "points": 1,
+      "solution_file": "fogasok_tarolas.py",
+      "uses_preamble": false,
+      "starter": "# 1. feladat: olvassa be a fogasok.txt tartalmát.\n# Tárolja a teljes szöveget a `fogasok` változóban.\n# A fájl tíz egész tömeget tartalmaz dekagrammban.\n\nfogasok = \"\"\n",
+      "hints": [
+        "Read fogasok.txt into the fogasok string — do not hard-code the ten sample masses."
+      ]
+    },
+    {
+      "type": "fogasok_count",
+      "tags": ["count"],
+      "title": "Fogások száma",
+      "description": "Határozza meg, hány hal tömegét tárolta el a program! Az eredményt a képernyőre írja ki, és nevezze meg a kiírt adatot!",
+      "points": 1,
+      "solution_file": "fogasok_szama.py",
+      "uses_preamble": true,
+      "starter": "# A fogasok.txt tartalma a `fogasok` változóban van (str).\n# Tíz egész tömeg dekagrammban, a fogás sorrendjében.\n#\n# 2. feladat: írja ki a fogások számát a minta szerint.\n\nprint(f\"A fogasok szama: \")\n",
+      "hints": [
+        "Count the stored masses from the file text — do not hard-code 10."
+      ]
+    },
+    {
+      "type": "fogasok_max",
+      "tags": ["min_max"],
+      "title": "Legnagyobb hal",
+      "description": "A zsűri a legnagyobb halat díjazza. Határozza meg a legnagyobb tömeget, és azt, hogy ez a hal hányadik a feljegyzésben! Ha több azonos legnagyobb érték van, az első előfordulást adja meg!",
+      "points": 2,
+      "solution_file": "fogasok_legnagyobb.py",
+      "uses_preamble": true,
+      "starter": "# A fogasok.txt tartalma a `fogasok` változóban van (str).\n#\n# 3. feladat: legnagyobb tömeg és annak első sorszáma (1-től).\n\nprint(f\"A legnagyobb hal: \")\n",
+      "hints": [
+        "On a tie for the maximum mass, report the earliest fish in file order."
+      ]
+    },
+    {
+      "type": "fogasok_threshold",
+      "tags": ["IO", "count"],
+      "title": "Kategória határa",
+      "description": "A nevezési kategória alsó határa versenyenként más. Kérje be a felhasználótól a határértéket dekagrammban, majd adja meg, hány hal tömege éri el vagy haladja meg ezt az értéket! A bekéréskor jelenjen meg a `Kategoria also hatara (dkg):` szöveg.",
+      "points": 2,
+      "stdin": "10\n",
+      "solution_file": "fogasok_kategoria.py",
+      "uses_preamble": true,
+      "starter": "# A fogasok.txt tartalma a `fogasok` változóban van (str).\n# 4. feladat: kérjen be egy határértéket, majd számolja a legalább akkora halakat.\n\nprint(\"Kategoria also hatara (dkg):\")\nhatar = int(input())\n\n",
+      "hints": [
+        "Print the prompt on its own line, then read the threshold from input().",
+        "Count masses that are greater than or equal to the typed threshold."
+      ]
+    }
+  ]
+}

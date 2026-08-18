@@ -1,0 +1,101 @@
+{
+  "id": "hulladekudvar",
+  "title": "Hulladékudvar",
+  "level": "emelt",
+  "difficulty": 3,
+  "tags": [
+    "IO",
+    "count",
+    "sum",
+    "lookup",
+    "weighted_sum",
+    "search"
+  ],
+  "description": "Értékelje ki a hulladékudvar napi beszállításait a beszallitas.txt alapján!",
+  "story": "Egy települési hulladékudvar a beszállított anyagokat típus szerint jegyzi. Minden tételhez feljegyzik az anyag kódját és a tömeget kilogrammban. A pontszámot a típusonként rögzített, kilogrammonkénti díjtáblázat adja: a tétel pontja a tömeg és az egységpont szorzata. A program a napi tételeket állományból olvassa, a díjtáblázatot a feladatban kapja. A kiértékeléshez kell a forgalom, a kiosztott pontok és egy kiválasztott típus részösszege.",
+  "constraints": [
+    "Tételek ≤ 800; tömeg 1–80 kg.",
+    "Típuskód: ékezetmentes nagybetűs szó a táblázatból.",
+    "5. feladat tesztjavaslat: `PAPIR`. Ha a kód a napi tételek között nem szerepel, írja ki: `Nincs ilyen tipus.` Akkor is írja ki, ha a kód a táblázatban létezik, de aznap nem hoztak belőle semmit."
+  ],
+  "data_explanation": "Minden sor egy beszállítás: anyagkód és tömeg kilogrammban. Egy kód több tételben is előfordulhat. A pont a táblázat egységpontjának és a tömegnek a szorzata.",
+  "data_file": "beszallitas.txt",
+  "dataset_type": "hulladekudvar",
+  "shared_variable": "beszallitasok",
+  "preamble": "with open(\"beszallitas.txt\", encoding=\"utf-8\") as f:\n    beszallitasok = f.read()\nEGYSEG = {\"PAPIR\": 5, \"UV\": 15, \"FEM\": 20, \"ZOLD\": 2, \"UREG\": 8}\n",
+  "visible": "datasets/visible.txt",
+  "hidden": [
+    "datasets/hidden/01.txt",
+    "datasets/hidden/02.txt",
+    "datasets/hidden/03.txt"
+  ],
+  "tasks": [
+    {
+      "type": "store",
+      "tags": [
+        "IO"
+      ],
+      "title": "Beolvasás",
+      "description": "Olvassa be és tárolja el a `beszallitas.txt` tartalmát!",
+      "points": 1,
+      "solution_file": "hulladekudvar_beolvasas.py",
+      "uses_preamble": false,
+      "starter": "# 1. feladat: olvassa be a beszallitas.txt tartalmát.\n# Tárolja a teljes szöveget a `beszallitasok` változóban.\n# kod kg\n\nbeszallitasok = \"\"\n",
+      "hints": [
+        "Read beszallitas.txt into `beszallitasok` as a raw string."
+      ]
+    },
+    {
+      "type": "hulladekudvar_count",
+      "tags": [
+        "count",
+        "sum"
+      ],
+      "title": "Forgalom",
+      "description": "Határozza meg a tételek számát és a beszállított össztömeget! Az adatokat külön sorban, megnevezve írja ki!",
+      "points": 1,
+      "solution_file": "hulladekudvar_forgalom.py",
+      "uses_preamble": true,
+      "starter": "# A beszallitas.txt tartalma a `beszallitasok` változóban van (str).\n# kod kg\n#\n# Forgalom\n",
+      "hints": [
+        "Derive the answer from the current file contents; do not hard-code the sample."
+      ]
+    },
+    {
+      "type": "hulladekudvar_pont",
+      "tags": [
+        "weighted_sum",
+        "lookup"
+      ],
+      "title": "Pontok",
+      "description": "A táblázat szerint számítsa ki a napon kiosztott pontok összegét! Minden tétel pontja a tömeg és a típus egységpontjának szorzata. Az eredményt nevezze meg a kiírásban!",
+      "points": 2,
+      "solution_file": "hulladekudvar_pontok.py",
+      "uses_preamble": true,
+      "starter": "# A beszallitas.txt tartalma a `beszallitasok` változóban van (str).\n# EGYSEG táblázat a preambulumban\n#\n# Pontok\n",
+      "hints": [
+        "Derive the answer from the current file contents; do not hard-code the sample."
+      ]
+    },
+    {
+      "type": "hulladekudvar_tipus",
+      "tags": [
+        "IO",
+        "search",
+        "lookup",
+        "sum",
+        "weighted_sum"
+      ],
+      "title": "Egy típus",
+      "description": "Kérje be a felhasználótól egy anyagkódot! A teszteléshez használhatja a `PAPIR` kódot. Ha a kód a napi tételek között nem szerepel, írja ki a `Nincs ilyen tipus.` szöveget, és ne végezze el a következő két részfeladatot!\n\n1. Adja meg, hány kilogrammot hoztak ebből a típusból a nap során!\n2. Számítsa ki a típusra kiosztott pontok összegét a táblázat szerint!",
+      "points": 3,
+      "solution_file": "hulladekudvar_tipus.py",
+      "uses_preamble": true,
+      "starter": "# A beszallitas.txt tartalma a `beszallitasok` változóban van (str).\n# stdin kód\n#\n# Egy típus\n\nprint(\"Adja meg az anyag kodjat!\")\nkod = input().strip()\n",
+      "hints": [
+        "Derive the answer from the current file contents; do not hard-code the sample."
+      ],
+      "stdin": "PAPIR\n"
+    }
+  ]
+}

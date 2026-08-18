@@ -3,7 +3,7 @@
   "title": "Versenyidő",
   "level": "kozep",
   "difficulty": 2,
-  "tags": ["list", "loops", "store", "counting", "search"],
+  "tags": ["IO", "sum", "min_max"],
   "description": "Trivial demo — hét napi edzésperc: összeg, átlag, maximum. (közép synthetic)",
   "story": "Egy úszóedző hét napra feljegyezte a délutáni edzések időtartamát percben.",
   "constraints": [

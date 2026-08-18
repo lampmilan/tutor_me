@@ -3,7 +3,7 @@
   "title": "Cities",
   "level": "kozep",
   "difficulty": 2,
-  "tags": ["list", "loops", "store", "counting", "search"],
+  "tags": ["IO", "count", "min_max"],
   "description": "Értékelje ki a cities.txt fájlban tárolt városok népességadatait!",
   "story": "Egy statisztikai hivatal a magyar városok népességét tartja nyilván. A hivatal munkatársai a települések adatait szöveges fájlban gyűjtik, majd programokkal értékelik ki. Ebben a feladatban Önnek kell feldolgoznia a cities.txt fájlban tárolt városadatokat!",
   "constraints": [

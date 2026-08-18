@@ -29,7 +29,7 @@ Egy gyümölcstermelő szövetkezet hűtőházában minden rakodást számítóg
 - 6. feladat tesztjavaslat: `ALMA` (van a fájlban). Több azonos legnagyobb `BE` esetén az állományban első.
 
 #### Data
-**files:** `rakodas.txt` (180 sor)
+**files:** `rakodas.txt` (12 sor)
 
 Sample:
 ```

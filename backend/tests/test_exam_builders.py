@@ -72,7 +72,116 @@ class CatalogStructureTests(unittest.TestCase):
         root = Path(__file__).resolve().parents[1] / "app" / "exams"
         self.assertTrue((root / "viragagyasok" / "builders.py").is_file())
         self.assertTrue((root / "mrz-kod" / "builders.py").is_file())
+        self.assertTrue((root / "fogasok" / "builders.py").is_file())
+        self.assertTrue((root / "hutohaz" / "builders.py").is_file())
         self.assertFalse((root / "cities" / "builders.py").is_file())
+
+
+LAUNCH_KOZEP = [
+    "cities",
+    "versenyido",
+    "fogasok",
+    "locsolo",
+    "sorsjegy",
+    "csomagfeladas",
+    "uszoda",
+    "csoposta",
+    "kerekparallomas",
+    "madareteto",
+]
+LAUNCH_EMELT = [
+    "viragagyasok",
+    "hutohaz",
+    "kompatkelo",
+    "muhely",
+    "arapaly",
+    "adagolo",
+    "hulladekudvar",
+    "zsilip",
+    "tuzoltosag",
+    "rakododaru",
+]
+
+
+class LaunchCatalogTests(unittest.TestCase):
+    def test_launch_set_present(self) -> None:
+        ids = {e.template.id for e in discover_exams()}
+        for exam_id in LAUNCH_KOZEP + LAUNCH_EMELT:
+            self.assertIn(exam_id, ids)
+
+    def test_preamble_is_raw_file_string(self) -> None:
+        for loaded in discover_exams():
+            if loaded.template.id not in LAUNCH_KOZEP + LAUNCH_EMELT:
+                continue
+            preamble = loaded.template.preamble or ""
+            self.assertIn("f.read()", preamble)
+            self.assertNotIn(".append(", preamble)
+            header = preamble.split("def ", 1)[0]
+            self.assertNotIn("= []", header)
+
+    def test_fogasok_visible_matches_sample(self) -> None:
+        loaded = load_exam_by_id("fogasok")
+        rows = parse_dataset("fogasok", loaded.visible_content, plugin=loaded.plugin)
+        specs = {t.type: t.model_dump() for t in loaded.template.tasks}
+        self.assertEqual(
+            expected_for_task(rows, specs["fogasok_count"], plugin=loaded.plugin),
+            "A fogasok szama: 10",
+        )
+        self.assertEqual(
+            expected_for_task(rows, specs["fogasok_max"], plugin=loaded.plugin),
+            "A legnagyobb hal: 15 dkg, 3. a sorban.",
+        )
+        self.assertEqual(
+            expected_for_task(rows, specs["fogasok_threshold"], plugin=loaded.plugin),
+            "Kategoria also hatara (dkg):\nLegalabb 10 dkg-os halak szama: 6",
+        )
+        hidden = parse_dataset("fogasok", loaded.hidden_contents[0], plugin=loaded.plugin)
+        self.assertNotEqual(
+            expected_for_task(hidden, specs["fogasok_max"], plugin=loaded.plugin),
+            "A legnagyobb hal: 15 dkg, 3. a sorban.",
+        )
+
+    def test_hutohaz_visible_and_missing_product(self) -> None:
+        loaded = load_exam_by_id("hutohaz")
+        rows = parse_dataset("hutohaz", loaded.visible_content, plugin=loaded.plugin)
+        specs = {t.type: t.model_dump() for t in loaded.template.tasks}
+        self.assertEqual(
+            expected_for_task(rows, specs["hutohaz_keszlet"], plugin=loaded.plugin),
+            "Ora:\nPerc:\nA hutohazban ekkor 63 lada volt.",
+        )
+        hidden = parse_dataset("hutohaz", loaded.hidden_contents[2], plugin=loaded.plugin)
+        out = expected_for_task(hidden, specs["hutohaz_termek"], plugin=loaded.plugin)
+        self.assertIn("Nincs ilyen termek.", out)
+
+    def test_sorsjegy_seeded_draw(self) -> None:
+        loaded = load_exam_by_id("sorsjegy")
+        rows = parse_dataset("sorsjegy", loaded.visible_content, plugin=loaded.plugin)
+        spec = next(t.model_dump() for t in loaded.template.tasks if t.type == "sorsjegy_szamok")
+        self.assertEqual(
+            expected_for_task(rows, spec, plugin=loaded.plugin),
+            "A nyero szamok: 7 30 6 1 42 21 26 41",
+        )
+
+    def test_new_solution_files_are_prefixed(self) -> None:
+        skip = {
+            "cities",
+            "versenyido",
+            "kerekparallomas",
+            "viragagyasok",
+            "trains",
+            "temperatures",
+            "students",
+            "mrz-kod",
+        }
+        for loaded in discover_exams():
+            if loaded.template.id in skip:
+                continue
+            for task in loaded.template.tasks:
+                if task.solution_file:
+                    self.assertTrue(
+                        task.solution_file.startswith(loaded.template.id + "_"),
+                        task.solution_file,
+                    )
 
 
 if __name__ == "__main__":

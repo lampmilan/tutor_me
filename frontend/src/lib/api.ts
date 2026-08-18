@@ -119,7 +119,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   if (!res.ok) {
     const text = await res.text();
     if (res.status === 429) {
-      let detail = hu.workspace.rateLimited;
+      let detail: string = hu.workspace.rateLimited;
       try {
         const parsed = JSON.parse(text) as { detail?: string };
         if (typeof parsed.detail === "string" && parsed.detail.trim()) {

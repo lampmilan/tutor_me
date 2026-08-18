@@ -1,6 +1,8 @@
 "use client";
 
 import type { JudgeResponse } from "@/lib/api";
+import { translateError, translateJudgeLabel, translateSummaryLine } from "@/lib/errors";
+import { hu } from "@/lib/messages/hu";
 
 type OutputPanelProps = {
   output: string;
@@ -24,16 +26,16 @@ export function OutputPanel({
   return (
     <section className="flex h-48 shrink-0 flex-col border-t border-[var(--border)] bg-[var(--panel)]">
       <div className="flex items-center gap-3 border-b border-[var(--border)] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
-        <span>Test Result</span>
-        {busy ? <span className="text-[var(--accent)]">Running…</span> : null}
+        <span>{hu.output.title}</span>
+        {busy ? <span className="text-[var(--accent)]">{hu.output.running}</span> : null}
         {runtime !== null && !busy ? (
           <span className="font-mono normal-case tracking-normal text-[var(--muted-strong)]">
-            {runtime.toFixed(3)}s · exit {exitCode ?? 0}
+            {hu.output.runtime(runtime, exitCode ?? 0)}
           </span>
         ) : null}
         {judge ? (
           <span className="ml-auto font-mono normal-case tracking-normal text-[var(--fg)]">
-            {judge.passed_count}/{judge.total_count} passed
+            {hu.output.passedSummary(judge.passed_count, judge.total_count)}
           </span>
         ) : null}
       </div>
@@ -45,9 +47,7 @@ export function OutputPanel({
           <pre className="whitespace-pre-wrap text-[var(--fg)]">{output}</pre>
         ) : null}
         {!output && !error && !judge && !busy ? (
-          <p className="text-[var(--muted)]">
-            Press Run to execute {entrypoint} against the visible dataset
-          </p>
+          <p className="text-[var(--muted)]">{hu.output.emptyHint(entrypoint)}</p>
         ) : null}
         {judge ? (
           <div className="space-y-2">
@@ -59,23 +59,29 @@ export function OutputPanel({
               }
             >
               {judge.passed_count === judge.total_count ? "✓" : "✗"}{" "}
-              {judge.summary_line ||
-                `${judge.passed_count}/${judge.total_count} tests passed`}
+              {judge.passed_count === judge.total_count
+                ? hu.output.allPassed
+                : translateSummaryLine(
+                    judge.summary_line ||
+                      `${judge.passed_count}/${judge.total_count} tests passed`,
+                  )}
             </p>
             {judge.failed_labels.length > 0 ? (
               <ul className="space-y-0.5 text-[var(--danger)]">
                 {judge.failed_labels.map((label) => (
-                  <li key={label}>✗ {label} failed</li>
+                  <li key={label}>
+                    ✗ {hu.output.failedLabel(translateJudgeLabel(label))}
+                  </li>
                 ))}
               </ul>
             ) : null}
             {judge.hints.length > 0 ? (
               <div className="space-y-1 border-t border-[var(--border)] pt-2 font-sans text-[12px] leading-relaxed text-[var(--muted-strong)]">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--muted)]">
-                  Hints
+                  {hu.output.hints}
                 </p>
                 {judge.hints.map((hint) => (
-                  <p key={hint}>{hint}</p>
+                  <p key={hint}>{translateError(hint)}</p>
                 ))}
               </div>
             ) : null}
@@ -85,13 +91,16 @@ export function OutputPanel({
                   key={r.test_case_id}
                   className={r.passed ? "text-[var(--success)]" : "text-[var(--danger)]"}
                 >
-                  {r.passed ? "✓" : "✗"} {r.label || r.name}
+                  {r.passed ? "✓" : "✗"} {translateJudgeLabel(r.label || r.name)}
                   {!r.passed && r.error ? (
-                    <span className="text-[var(--muted-strong)]"> · {r.error}</span>
+                    <span className="text-[var(--muted-strong)]">
+                      {" "}
+                      · {translateError(r.error)}
+                    </span>
                   ) : null}
-                  {!r.is_hidden && !r.passed ? (
+                  {!r.is_hidden && !r.passed && r.expected != null && r.actual != null ? (
                     <span className="block pl-4 text-[var(--muted-strong)]">
-                      expected: {JSON.stringify(r.expected)} · got: {JSON.stringify(r.actual)}
+                      {hu.output.expectedGot(r.expected, r.actual)}
                     </span>
                   ) : null}
                 </li>

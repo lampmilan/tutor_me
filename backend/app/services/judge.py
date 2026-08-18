@@ -14,9 +14,9 @@ from app.services.templates import compose_source
 from app.services.workspace import sync_workspace_to_disk
 
 GENERIC_GENERALIZATION_HINT = (
-    "Your solution works for the example dataset but fails on other datasets."
+    "A minta adathalmazon jó, de más bemeneteken még nem működik."
 )
-GENERIC_RUNTIME_HINT = "Your program did not finish successfully on every dataset."
+GENERIC_RUNTIME_HINT = "A program nem minden teszten futott le hibamentesen."
 
 # Composed run artifact (preamble + student code). Not shown as a phase file.
 RUN_ENTRYPOINT = "main.py"
@@ -129,7 +129,7 @@ def judge_workspace(
             points_possible=0,
             passed_count=0,
             total_count=0,
-            summary_line="0/0 tests passed",
+            summary_line="0/0 teszt sikeres",
             failed_labels=[],
             hints=[],
             results=[],
@@ -164,9 +164,9 @@ def judge_workspace(
 
             if tc.is_hidden:
                 hidden_counter += 1
-                label = f"Hidden Test #{hidden_counter}"
+                label = f"Rejtett teszt #{hidden_counter}"
             else:
-                label = f"Sample · {task.title}"
+                label = f"Minta · {task.title}"
 
             exec_result = execute_python(
                 path,
@@ -206,9 +206,13 @@ def judge_workspace(
                 error_msg = ""
                 if not passed:
                     if not runtime_ok:
-                        error_msg = "Runtime error" if exec_result.exit_code != 124 else "Timed out"
+                        error_msg = (
+                            "Futásidejű hiba"
+                            if exec_result.exit_code != 124
+                            else "Időtúllépés"
+                        )
                     else:
-                        error_msg = "Wrong answer"
+                        error_msg = "Hibás válasz"
                 results.append(
                     TestResult(
                         test_case_id=tc.id,
@@ -229,7 +233,9 @@ def judge_workspace(
                 error_msg = ""
                 if not passed:
                     error_msg = exec_result.error or (
-                        "Wrong answer" if runtime_ok else f"Exit code {exec_result.exit_code}"
+                        "Hibás válasz"
+                        if runtime_ok
+                        else f"Kilépési kód: {exec_result.exit_code}"
                     )
                 results.append(
                     TestResult(
@@ -256,7 +262,7 @@ def judge_workspace(
     )
     passed_count = sum(1 for r in results if r.passed)
     total_count = len(results)
-    summary_line = f"{passed_count}/{total_count} tests passed"
+    summary_line = f"{passed_count}/{total_count} teszt sikeres"
 
     submission = Submission(
         workspace_id=workspace.id,

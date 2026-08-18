@@ -1,6 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { TagChip } from "@/components/TagChip";
+import { sortTagsForDisplay } from "@/lib/tags";
 import type { Task } from "@/lib/api";
 
 export type DataFile = {
@@ -92,9 +94,11 @@ export function ProblemPanel({
           </div>
 
           {tags.length > 0 ? (
-            <p className="mt-2 text-sm italic text-[var(--muted)]">
-              {tags.join(" | ")}
-            </p>
+            <div className="mt-2 flex flex-wrap gap-1">
+              {sortTagsForDisplay(tags).map((tag) => (
+                <TagChip key={tag} tag={tag} size="sm" />
+              ))}
+            </div>
           ) : null}
 
           <div className="mt-5">
@@ -112,31 +116,31 @@ export function ProblemPanel({
                   {samplePreview}
                 </pre>
               ) : null}
-
-              {constraints.length > 0 ? (
-                <div className="mt-5">
-                  <h3 className="mb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
-                    Megkötések
-                  </h3>
-                  <ul className="list-disc space-y-1 pl-5 text-sm leading-relaxed text-[var(--muted-strong)]">
-                    {constraints.map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
-                </div>
-              ) : null}
-
-              {dataExplanation.trim() ? (
-                <div className="mt-5">
-                  <h3 className="mb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
-                    Bejövő fájl magyarázat
-                  </h3>
-                  <p className="text-sm leading-relaxed text-[var(--muted-strong)]">
-                    {dataExplanation}
-                  </p>
-                </div>
-              ) : null}
             </section>
+          ) : null}
+
+          {constraints.length > 0 ? (
+            <div className="mt-8">
+              <h3 className="mb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
+                Megkötések
+              </h3>
+              <ul className="list-disc space-y-1 pl-5 text-sm leading-relaxed text-[var(--muted-strong)]">
+                {constraints.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+
+          {dataExplanation.trim() ? (
+            <div className="mt-5">
+              <h3 className="mb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
+                Bejövő fájl magyarázat
+              </h3>
+              <p className="text-sm leading-relaxed text-[var(--muted-strong)]">
+                {dataExplanation}
+              </p>
+            </div>
           ) : null}
 
           <section className="mt-8">
@@ -150,9 +154,10 @@ export function ProblemPanel({
                 const samples = (task.test_cases ?? []).filter(
                   (tc) => !tc.is_hidden && tc.expected_output != null,
                 );
-                const sampleInput = (task.test_cases ?? []).find(
-                  (tc) => !tc.is_hidden && (tc.stdin || "").trim(),
-                )?.stdin;
+                const sampleInput =
+                  (task.test_cases ?? []).find(
+                    (tc) => !tc.is_hidden && (tc.stdin || "").trim(),
+                  )?.stdin || (task.stdin || "").trim() || "";
                 return (
                   <li key={task.id}>
                     <button
@@ -187,13 +192,8 @@ export function ProblemPanel({
                           </div>
                           {(task.tags ?? []).length > 0 ? (
                             <div className="mt-1.5 flex flex-wrap gap-1">
-                              {(task.tags ?? []).map((tag) => (
-                                <span
-                                  key={tag}
-                                  className="rounded border border-[var(--border)] px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-wide text-[var(--muted-strong)]"
-                                >
-                                  {tag}
-                                </span>
+                              {sortTagsForDisplay(task.tags ?? []).map((tag) => (
+                                <TagChip key={tag} tag={tag} size="sm" />
                               ))}
                             </div>
                           ) : null}

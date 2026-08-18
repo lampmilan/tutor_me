@@ -1,6 +1,7 @@
 "use client";
 
 import Editor from "@monaco-editor/react";
+import { hu } from "@/lib/messages/hu";
 
 type CodeEditorProps = {
   filename: string;
@@ -22,7 +23,7 @@ export function CodeEditor({ filename, content, readOnly, onChange }: CodeEditor
       <div className="flex items-center gap-2 border-b border-[var(--border)] bg-[var(--panel)] px-3 py-1.5">
         <span className="font-mono text-[13px] text-[var(--fg)]">{filename}</span>
         {readOnly ? (
-          <span className="text-[11px] text-[var(--muted)]">read-only</span>
+          <span className="text-[11px] text-[var(--muted)]">{hu.editor.readOnly}</span>
         ) : null}
       </div>
       <div className="min-h-0 flex-1">

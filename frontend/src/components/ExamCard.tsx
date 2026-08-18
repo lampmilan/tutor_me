@@ -1,5 +1,9 @@
 "use client";
 
+import { TagChip } from "@/components/TagChip";
+import { hu } from "@/lib/messages/hu";
+import { sortTagsForDisplay } from "@/lib/tags";
+
 type ExamCardProps = {
   exam: {
     id: number;
@@ -47,11 +51,15 @@ export function ExamCard({ exam }: ExamCardProps) {
         </div>
         <p className="mt-1 text-sm text-[var(--muted-strong)]">{exam.description}</p>
         {tags.length > 0 ? (
-          <p className="mt-1 text-xs italic text-[var(--muted)]">{tags.join(" | ")}</p>
+          <div className="mt-2 flex flex-wrap gap-1">
+            {sortTagsForDisplay(tags).map((tag) => (
+              <TagChip key={tag} tag={tag} size="sm" />
+            ))}
+          </div>
         ) : null}
       </div>
       <span className="shrink-0 text-sm text-[var(--accent)] opacity-0 transition group-hover:opacity-100">
-        Start →
+        {hu.examCard.start}
       </span>
     </a>
   );

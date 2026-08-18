@@ -1,5 +1,7 @@
 "use client";
 
+import { hu } from "@/lib/messages/hu";
+
 type FileExplorerProps = {
   files: { filename: string; read_only: boolean }[];
   activeFile: string;
@@ -10,7 +12,7 @@ export function FileExplorer({ files, activeFile, onSelect }: FileExplorerProps)
   return (
     <aside className="flex h-full w-48 shrink-0 flex-col border-r border-[var(--border)] bg-[var(--panel)]">
       <div className="border-b border-[var(--border)] px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
-        Explorer
+        {hu.explorer.title}
       </div>
       <ul className="flex-1 overflow-auto py-1">
         {files.map((file) => {
@@ -36,7 +38,7 @@ export function FileExplorer({ files, activeFile, onSelect }: FileExplorerProps)
                 <span className="truncate font-mono text-[13px]">{file.filename}</span>
                 {file.read_only ? (
                   <span className="ml-auto text-[10px] uppercase tracking-wide text-[var(--muted)]">
-                    ro
+                    {hu.explorer.readOnly}
                   </span>
                 ) : null}
               </button>

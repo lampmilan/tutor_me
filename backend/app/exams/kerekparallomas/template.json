@@ -3,7 +3,7 @@
   "title": "Kerékpárállomás",
   "level": "kozep",
   "difficulty": 2,
-  "tags": ["list", "loops", "store", "counting", "search"],
+  "tags": ["IO", "sum", "count", "min_max"],
   "description": "Caveats demo — 8 állomás max/sum/count; kölcsönzés state kihagyva. (közép synthetic)",
   "story": "Egy városi kerékpármegosztó rendszer 8 állomásán reggel megszámolták a rendelkezésre álló kerékpárokat.",
   "constraints": [

@@ -3,7 +3,7 @@
   "title": "Virágágyások",
   "level": "emelt",
   "difficulty": 4,
-  "tags": ["list", "loops", "input", "counting", "search", "validate", "simulation"],
+  "tags": ["IO", "count", "search", "validate", "simulation"],
   "description": "Ültesse be a lakópark virágágyásait a felajanlas.txt felajánlásai alapján!",
   "story": "Egy frissen épült óriási lakóparkba költözők elhatározták, hogy a még kopár környezetet megszépítik. A lakóparkot határoló kerítés mellett kijelölték a virágágyások helyét, és sorszámokkal látták el azokat. A sorszámozást, amely eggyel kezdődik, az egyetlen bejárat jobb oldalán lévő ágyással kezdték, és a bejárat bal oldalán lévő ágyással fejezték be. A lakók megadhatták, hogy mely szomszédos ágyásokat szeretnék beültetni. A felajánlásban megadták azt is, hogy milyen színű virággal.",
   "constraints": [

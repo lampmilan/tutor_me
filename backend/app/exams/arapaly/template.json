@@ -1,0 +1,115 @@
+{
+  "id": "arapaly",
+  "title": "Árapály",
+  "level": "emelt",
+  "difficulty": 4,
+  "tags": [
+    "IO",
+    "count",
+    "min_max",
+    "search",
+    "simulation"
+  ],
+  "description": "Elemezze a partmenti mocsár mélységhálóját a melyseg.txt alapján!",
+  "story": "Egy kutatóállomás a partmenti mocsár vízmélységét négyzetrácsos hálón méri centiméterben. Az állomány első sora a rács méretét adja meg, a további sorok a mélységértékeket. Medencének az a rácspont számít, amelynek mélysége szigorúan kisebb minden létező szomszédjánál; az éleken kevesebb szomszéd van. A program a rácsot beolvassa, majd a szélső értékeket, egy kiválasztott cella környezetét és a medencék számát határozza meg.",
+  "constraints": [
+    "Rács N×M, 2 ≤ N, M ≤ 50; mélységek 0–200 egész centiméter.",
+    "Szomszédok: az észak, dél, nyugat, kelet irányú cellák, ha léteznek; az átlós cellák nem szomszédok.",
+    "Medence: a cella értéke minden létező szomszédnál szigorúan kisebb.",
+    "4. feladat tesztjavaslat: sor 2, oszlop 3 (a mintában belso cella). A sorszámok 1-től indulnak."
+  ],
+  "data_explanation": "Az első sor a sorok és az oszlopok száma. A további N sor egyenként M egész: a vízmélység centiméterben. A mintában a jobb alsó sarok 1 cm, ez medence, mert mindkét létező szomszédja mélyebb.",
+  "data_file": "melyseg.txt",
+  "dataset_type": "arapaly",
+  "shared_variable": "melysegek",
+  "preamble": "with open(\"melyseg.txt\", encoding=\"utf-8\") as f:\n    melysegek = f.read()\n",
+  "visible": "datasets/visible.txt",
+  "hidden": [
+    "datasets/hidden/01.txt",
+    "datasets/hidden/02.txt",
+    "datasets/hidden/03.txt"
+  ],
+  "tasks": [
+    {
+      "type": "store",
+      "tags": [
+        "IO"
+      ],
+      "title": "Beolvasás",
+      "description": "Olvassa be és tárolja el a `melyseg.txt` tartalmát!",
+      "points": 1,
+      "solution_file": "arapaly_beolvasas.py",
+      "uses_preamble": false,
+      "starter": "# 1. feladat: olvassa be a melyseg.txt tartalmát.\n# Tárolja a teljes szöveget a `melysegek` változóban.\n# első sor N M, majd rács\n\nmelysegek = \"\"\n",
+      "hints": [
+        "Read melyseg.txt into `melysegek` as a raw string."
+      ]
+    },
+    {
+      "type": "arapaly_stats",
+      "tags": [
+        "count",
+        "min_max"
+      ],
+      "title": "Statisztika",
+      "description": "Határozza meg a rácspontok számát, valamint a legkisebb és a legnagyobb mélységet! Az adatokat külön sorban, megnevezve írja ki!",
+      "points": 1,
+      "solution_file": "arapaly_stat.py",
+      "uses_preamble": true,
+      "starter": "# A melyseg.txt tartalma a `melysegek` változóban van (str).\n# N*M cella\n#\n# Statisztika\n",
+      "hints": [
+        "Derive the answer from the current file contents; do not hard-code the sample."
+      ]
+    },
+    {
+      "type": "arapaly_medence",
+      "tags": [
+        "simulation",
+        "count"
+      ],
+      "title": "Medencék",
+      "description": "Számolja meg a medencéket a fenti definíció szerint! A medencék számát nevezze meg a kiírásban!",
+      "points": 2,
+      "solution_file": "arapaly_medencek.py",
+      "uses_preamble": true,
+      "starter": "# A melyseg.txt tartalma a `melysegek` változóban van (str).\n# szigorúan kisebb szomszédoknál\n#\n# Medencék\n",
+      "hints": [
+        "Derive the answer from the current file contents; do not hard-code the sample."
+      ]
+    },
+    {
+      "type": "arapaly_cella",
+      "tags": [
+        "IO",
+        "search"
+      ],
+      "title": "Egy cella",
+      "description": "Kérje be a felhasználótól egy cella sor- és oszlopsorszámát! Feltételezheti, hogy a sorszámok a rács tartományába esnek. Írja ki a cella mélységét, majd a létező szomszédok mélységét a `N:`, `S:`, `NY:`, `K:` címkékkel, abban a sorrendben, amelyik irány létezik!",
+      "points": 2,
+      "solution_file": "arapaly_cella.py",
+      "uses_preamble": true,
+      "starter": "# A melyseg.txt tartalma a `melysegek` változóban van (str).\n# stdin sor oszlop\n#\n# Egy cella\n\nprint(\"Sor:\")\nsor = int(input())\nprint(\"Oszlop:\")\noszlop = int(input())\n",
+      "hints": [
+        "Derive the answer from the current file contents; do not hard-code the sample."
+      ],
+      "stdin": "2\n3\n"
+    },
+    {
+      "type": "arapaly_file",
+      "tags": [
+        "IO",
+        "simulation"
+      ],
+      "title": "medencek.txt",
+      "description": "A medencék helyét a `medencek.txt` állományba kell menteni. Minden medencéről egy sort írjon: a sor sorszámát, az oszlop sorszámát és a mélységet, szóközzel elválasztva! A sorok a rács bejárási sorrendjében legyenek (felülről le, balról jobbra)!",
+      "points": 3,
+      "solution_file": "arapaly_file.py",
+      "uses_preamble": true,
+      "starter": "# A melyseg.txt tartalma a `melysegek` változóban van (str).\n# kimenet medencek.txt\n#\n# medencek.txt\n\nwith open(\"medencek.txt\", \"w\", encoding=\"utf-8\") as f:\n    pass\n",
+      "hints": [
+        "Derive the answer from the current file contents; do not hard-code the sample."
+      ],
+      "expected_file": "medencek.txt"
+    }
+  ]
+}

@@ -1,0 +1,129 @@
+{
+  "id": "rakododaru",
+  "title": "Rakodódaru",
+  "level": "emelt",
+  "difficulty": 5,
+  "tags": [
+    "IO",
+    "count",
+    "simulation",
+    "validate",
+    "path"
+  ],
+  "description": "Hajtsa végre a rakodódaru parancsait a parancsok.txt alapján!",
+  "story": "Egy csarnokban sínen mozgó rakodódaru dolgozik. A sín 1-től 30-ig számozott állásokból áll; a daru a 15. álláson, üresen indul. A napló parancsai: `J` jobbra, `B` balra adott számú állást, `FEL` teher felvétele, `LE` teher leadása. A daru terhelése 0 és 5 láda között maradhat, és nem hagyhatja el a sínt. A program a parancsokat állományból olvassa, végrehajtja őket, és jelzi, ha egy utasítás szabálytalan helyzetet okozna. A szabálytalan parancsot is végrehajtottnak tekinti a további követéshez, de feljegyzi az első hibát.",
+  "constraints": [
+    "Parancsok ≤ 300; `J`/`B` lépés 1–12; `FEL`/`LE` ládaszám 1–5.",
+    "Sín: állások 1–30; indulás: állás 15, teher 0; maximális teher 5.",
+    "Az első szabálytalanság: állás < 1 vagy > 30, teher < 0, vagy teher > 5. Ha több feltétel egyszerre sérül, a sorrend: pályán kívül, negatív teher, túlterhelés.",
+    "Ha nem volt szabálytalanság, a 5. feladatról ne írjon ki második sort."
+  ],
+  "data_explanation": "Minden sor egy parancs: művelet és egész argumentum. A mintában a daru végig a sín 1–30 tartományában marad, és a teher soha nem lép ki a 0–5 sávból.",
+  "data_file": "parancsok.txt",
+  "dataset_type": "rakododaru",
+  "shared_variable": "parancsok",
+  "preamble": "with open(\"parancsok.txt\", encoding=\"utf-8\") as f:\n    parancsok = f.read()\n",
+  "visible": "datasets/visible.txt",
+  "hidden": [
+    "datasets/hidden/01.txt",
+    "datasets/hidden/02.txt",
+    "datasets/hidden/03.txt"
+  ],
+  "tasks": [
+    {
+      "type": "store",
+      "tags": [
+        "IO"
+      ],
+      "title": "Beolvasás",
+      "description": "Olvassa be és tárolja el a `parancsok.txt` tartalmát!",
+      "points": 1,
+      "solution_file": "rakododaru_beolvasas.py",
+      "uses_preamble": false,
+      "starter": "# 1. feladat: olvassa be a parancsok.txt tartalmát.\n# Tárolja a teljes szöveget a `parancsok` változóban.\n# op arg\n\nparancsok = \"\"\n",
+      "hints": [
+        "Read parancsok.txt into `parancsok` as a raw string."
+      ]
+    },
+    {
+      "type": "rakododaru_count",
+      "tags": [
+        "count"
+      ],
+      "title": "Parancsok",
+      "description": "Határozza meg, hány parancsot tartalmaz az állomány, és írja a képernyőre a parancsok számát! Az eredményt nevezze meg a kiírásban!",
+      "points": 1,
+      "solution_file": "rakododaru_szama.py",
+      "uses_preamble": true,
+      "starter": "# A parancsok.txt tartalma a `parancsok` változóban van (str).\n# egy sor egy parancs\n#\n# Parancsok\n",
+      "hints": [
+        "Derive the answer from the current file contents; do not hard-code the sample."
+      ]
+    },
+    {
+      "type": "rakododaru_veg",
+      "tags": [
+        "simulation",
+        "path"
+      ],
+      "title": "Véghelyzet",
+      "description": "Hajtsa végre a parancsokat a 15. állásról, üresen indulva! Adja meg a daru végső állását és a végső terhelést! A két adatot nevezze meg a kiírásban!",
+      "points": 2,
+      "solution_file": "rakododaru_veg.py",
+      "uses_preamble": true,
+      "starter": "# A parancsok.txt tartalma a `parancsok` változóban van (str).\n# indulás 15, teher 0\n#\n# Véghelyzet\n",
+      "hints": [
+        "Derive the answer from the current file contents; do not hard-code the sample."
+      ]
+    },
+    {
+      "type": "rakododaru_szabaly",
+      "tags": [
+        "validate",
+        "simulation"
+      ],
+      "title": "Szabályosság",
+      "description": "Döntse el, előfordult-e szabálytalan helyzet! Ha a daru végig a sínon maradt és a teher 0–5 között volt, írja ki: `A daru vegig szabalyos maradt.` Különben írja ki: `A daru legalabb egyszer szabalyt szegett.`",
+      "points": 2,
+      "solution_file": "rakododaru_szabaly.py",
+      "uses_preamble": true,
+      "starter": "# A parancsok.txt tartalma a `parancsok` változóban van (str).\n# sín 1-30, teher 0-5\n#\n# Szabályosság\n",
+      "hints": [
+        "Derive the answer from the current file contents; do not hard-code the sample."
+      ]
+    },
+    {
+      "type": "rakododaru_elso_hiba",
+      "tags": [
+        "validate",
+        "simulation"
+      ],
+      "title": "Első hiba",
+      "description": "Ha volt szabálytalanság, adja meg az első hibás parancs sorszámát (1-től) és az okát: `palyan kivul`, `negativ teher` vagy `tulterheles`! Ha nem volt szabálytalanság, erről a feladatról ne írjon ki semmit!",
+      "points": 3,
+      "solution_file": "rakododaru_hiba.py",
+      "uses_preamble": true,
+      "starter": "# A parancsok.txt tartalma a `parancsok` változóban van (str).\n# üres kimenet ha nincs hiba\n#\n# Első hiba\n",
+      "hints": [
+        "Derive the answer from the current file contents; do not hard-code the sample."
+      ]
+    },
+    {
+      "type": "rakododaru_file",
+      "tags": [
+        "IO",
+        "simulation"
+      ],
+      "title": "naplo.txt",
+      "description": "A daru állapotát minden parancs után a `naplo.txt` állományba kell menteni. Minden parancs után egy sort írjon: a parancs sorszámát, az állást és a terhelést, szóközzel elválasztva! A sorok sorrendje egyezzen meg a parancsok sorrendjével!",
+      "points": 3,
+      "solution_file": "rakododaru_file.py",
+      "uses_preamble": true,
+      "starter": "# A parancsok.txt tartalma a `parancsok` változóban van (str).\n# kimenet naplo.txt\n#\n# naplo.txt\n\nwith open(\"naplo.txt\", \"w\", encoding=\"utf-8\") as f:\n    pass\n",
+      "hints": [
+        "Derive the answer from the current file contents; do not hard-code the sample."
+      ],
+      "expected_file": "naplo.txt"
+    }
+  ]
+}

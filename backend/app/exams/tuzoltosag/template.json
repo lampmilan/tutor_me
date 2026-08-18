@@ -1,0 +1,132 @@
+{
+  "id": "tuzoltosag",
+  "title": "Tűzoltóság",
+  "level": "emelt",
+  "difficulty": 3,
+  "tags": [
+    "IO",
+    "count",
+    "sum",
+    "min_max",
+    "search",
+    "group"
+  ],
+  "description": "Értékelje ki a napi tűzoltósági riasztásokat a riasztas.txt alapján!",
+  "story": "Egy megyei tűzoltóság a napi riasztásokat számítógépen gyűjti. Minden eseményhez feljegyzik az óra–perc időpontot, a kerületet, a riasztás típusát és a kivonuló autók számát. A tűzeseteket a nap végén külön jegyzékbe kell tenni. A program a riasztásokat állományból olvassa, összesíti a kivonulásokat, majd a tűzesetek adatait fájlba írja. Egy kerületben több riasztás is előfordulhat.",
+  "constraints": [
+    "Riasztások ≤ 400; óra 0–23, perc 0–59; az állomány időrendben van.",
+    "Típus: `TUZ`, `MUSZAKI` vagy `MENTO`; autók száma 1–6.",
+    "Kerület: római számos azonosító ékezet nélkül (`I`, `V`, `VIII`, `XIII`).",
+    "5. feladat tesztjavaslat: kerület `I`. Ha a kerület egyetlen riasztásban sem szerepel, írja ki: `Nincs ilyen kerulet.`"
+  ],
+  "data_explanation": "Minden sor egy riasztás: óra, perc, kerület, típus, autók száma. A mintában öt tűzeset (`TUZ`) van; ezek kerülnek a kimeneti állományba.",
+  "data_file": "riasztas.txt",
+  "dataset_type": "tuzoltosag",
+  "shared_variable": "riasztasok",
+  "preamble": "with open(\"riasztas.txt\", encoding=\"utf-8\") as f:\n    riasztasok = f.read()\n",
+  "visible": "datasets/visible.txt",
+  "hidden": [
+    "datasets/hidden/01.txt",
+    "datasets/hidden/02.txt",
+    "datasets/hidden/03.txt"
+  ],
+  "tasks": [
+    {
+      "type": "store",
+      "tags": [
+        "IO"
+      ],
+      "title": "Beolvasás",
+      "description": "Olvassa be és tárolja el a `riasztas.txt` tartalmát!",
+      "points": 1,
+      "solution_file": "tuzoltosag_beolvasas.py",
+      "uses_preamble": false,
+      "starter": "# 1. feladat: olvassa be a riasztas.txt tartalmát.\n# Tárolja a teljes szöveget a `riasztasok` változóban.\n# ora perc kerulet tipus auto\n\nriasztasok = \"\"\n",
+      "hints": [
+        "Read riasztas.txt into `riasztasok` as a raw string."
+      ]
+    },
+    {
+      "type": "tuzoltosag_count",
+      "tags": [
+        "count",
+        "sum"
+      ],
+      "title": "Riasztások",
+      "description": "Határozza meg a riasztások számát és a kivonult autók összegét! Az adatokat külön sorban, megnevezve írja ki!",
+      "points": 1,
+      "solution_file": "tuzoltosag_szama.py",
+      "uses_preamble": true,
+      "starter": "# A riasztas.txt tartalma a `riasztasok` változóban van (str).\n# egy sor egy riasztás\n#\n# Riasztások\n",
+      "hints": [
+        "Derive the answer from the current file contents; do not hard-code the sample."
+      ]
+    },
+    {
+      "type": "tuzoltosag_tuz",
+      "tags": [
+        "count",
+        "group"
+      ],
+      "title": "Tűzesetek",
+      "description": "Számolja meg, hány riasztás volt `TUZ` típusú! Az eredményt nevezze meg a kiírásban!",
+      "points": 1,
+      "solution_file": "tuzoltosag_tuz.py",
+      "uses_preamble": true,
+      "starter": "# A riasztas.txt tartalma a `riasztasok` változóban van (str).\n# típus TUZ\n#\n# Tűzesetek\n",
+      "hints": [
+        "Derive the answer from the current file contents; do not hard-code the sample."
+      ]
+    },
+    {
+      "type": "tuzoltosag_elso",
+      "tags": [
+        "min_max"
+      ],
+      "title": "Első riasztás",
+      "description": "Adja meg a nap első riasztásának időpontját, kerületét és típusát! Az állomány időrendben van, ezért az első sor a legkorábbi esemény.",
+      "points": 2,
+      "solution_file": "tuzoltosag_elso.py",
+      "uses_preamble": true,
+      "starter": "# A riasztas.txt tartalma a `riasztasok` változóban van (str).\n# első sor\n#\n# Első riasztás\n",
+      "hints": [
+        "Derive the answer from the current file contents; do not hard-code the sample."
+      ]
+    },
+    {
+      "type": "tuzoltosag_kerulet",
+      "tags": [
+        "IO",
+        "search",
+        "count"
+      ],
+      "title": "Egy kerület",
+      "description": "Kérje be a felhasználótól egy kerület azonosítóját! A teszteléshez használhatja az `I` jelet. Ha a kerület egyetlen riasztásban sem szerepel, írja ki a `Nincs ilyen kerulet.` szöveget, és ne végezze el a következő részfeladatot!\n\n1. Adja meg, hány riasztás történt ebben a kerületben!",
+      "points": 2,
+      "solution_file": "tuzoltosag_kerulet.py",
+      "uses_preamble": true,
+      "starter": "# A riasztas.txt tartalma a `riasztasok` változóban van (str).\n# stdin kerület\n#\n# Egy kerület\n\nprint(\"Adja meg a keruletet!\")\nker = input().strip()\n",
+      "hints": [
+        "Derive the answer from the current file contents; do not hard-code the sample."
+      ],
+      "stdin": "I\n"
+    },
+    {
+      "type": "tuzoltosag_file",
+      "tags": [
+        "IO",
+        "group"
+      ],
+      "title": "tuzesetek.txt",
+      "description": "A tűzesetek jegyzékét a `tuzesetek.txt` állományba kell menteni. Minden `TUZ` típusú riasztásról egy sort írjon: az órát, a percet, a kerületet és az autók számát, szóközzel elválasztva! A sorok sorrendje egyezzen meg az állománybeli sorrenddel!",
+      "points": 3,
+      "solution_file": "tuzoltosag_file.py",
+      "uses_preamble": true,
+      "starter": "# A riasztas.txt tartalma a `riasztasok` változóban van (str).\n# kimenet\n#\n# tuzesetek.txt\n\nwith open(\"tuzesetek.txt\", \"w\", encoding=\"utf-8\") as f:\n    pass\n",
+      "hints": [
+        "Derive the answer from the current file contents; do not hard-code the sample."
+      ],
+      "expected_file": "tuzesetek.txt"
+    }
+  ]
+}

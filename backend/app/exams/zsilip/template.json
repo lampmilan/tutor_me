@@ -1,0 +1,128 @@
+{
+  "id": "zsilip",
+  "title": "Zsilip",
+  "level": "emelt",
+  "difficulty": 4,
+  "tags": [
+    "IO",
+    "count",
+    "min_max",
+    "search",
+    "validate",
+    "function"
+  ],
+  "description": "Értékelje ki a zsilip vízszintméréseit a vizszint.txt alapján!",
+  "story": "Egy tiszai zsilipnél a vízszintet negyedóránként rögzítik. Minden méréshez feljegyzik az óra–perc időpontot és a szintet centiméterben. A kezelőnek a szomszédos mérések különbsége a fontos: ha két egymást követő érték eltérése meghaladja a 12 centimétert, riasztást kell adni. A különbség abszolút értékét egy függvény számolja, amelyet a későbbi feladatok is felhasználnak. A program a méréseket állományból olvassa.",
+  "constraints": [
+    "Mérések 2–200; óra 0–23, perc 0, 15, 30 vagy 45; az állomány időrendben van.",
+    "Vízszint 50–250 cm.",
+    "Riasztás: két egymást követő mérés abszolút különbsége > 12.",
+    "6. feladat: a bekért két időpont szerepel az állományban, az első nem későbbi, mint a második."
+  ],
+  "data_explanation": "Minden sor egy mérés: óra, perc, vízszint centiméterben. A mintában 6:45 és 7:00 között 17 cm a különbség, ez riasztást vált ki.",
+  "data_file": "vizszint.txt",
+  "dataset_type": "zsilip",
+  "shared_variable": "meresek",
+  "preamble": "with open(\"vizszint.txt\", encoding=\"utf-8\") as f:\n    meresek = f.read()\ndef kulonbseg(a, b):\n    return abs(int(a) - int(b))\n",
+  "visible": "datasets/visible.txt",
+  "hidden": [
+    "datasets/hidden/01.txt",
+    "datasets/hidden/02.txt",
+    "datasets/hidden/03.txt"
+  ],
+  "tasks": [
+    {
+      "type": "store",
+      "tags": [
+        "IO"
+      ],
+      "title": "Beolvasás",
+      "description": "Olvassa be és tárolja el a `vizszint.txt` tartalmát!",
+      "points": 1,
+      "solution_file": "zsilip_beolvasas.py",
+      "uses_preamble": false,
+      "starter": "# 1. feladat: olvassa be a vizszint.txt tartalmát.\n# Tárolja a teljes szöveget a `meresek` változóban.\n# ora perc szint\n\nmeresek = \"\"\n",
+      "hints": [
+        "Read vizszint.txt into `meresek` as a raw string."
+      ]
+    },
+    {
+      "type": "zsilip_count",
+      "tags": [
+        "count"
+      ],
+      "title": "Mérések",
+      "description": "Határozza meg, hány mérést tartalmaz az állomány, és írja a képernyőre a mérések számát! Az eredményt nevezze meg a kiírásban!",
+      "points": 1,
+      "solution_file": "zsilip_szama.py",
+      "uses_preamble": true,
+      "starter": "# A vizszint.txt tartalma a `meresek` változóban van (str).\n# egy sor egy mérés\n#\n# Mérések\n",
+      "hints": [
+        "Derive the answer from the current file contents; do not hard-code the sample."
+      ]
+    },
+    {
+      "type": "store",
+      "tags": [
+        "function"
+      ],
+      "title": "kulonbseg",
+      "description": "Készítsen függvényt kulonbseg néven, amely megadja két vízszint abszolút különbségét! A függvény két egész számot kapjon, a visszaadott érték egy egész szám legyen! A 151 és a 168 bemenetre a függvény 17-et adjon. A függvényt a későbbi feladatok megoldásánál felhasználhatja.",
+      "points": 2,
+      "solution_file": "zsilip_kulonbseg.py",
+      "uses_preamble": true,
+      "starter": "# A későbbi feladatok a kulonbseg(a, b) függvényt hívják.\n\ndef kulonbseg(a, b):\n    return 0\n",
+      "hints": [
+        "Return abs(int(a)-int(b)). Empty stdout for this feladat."
+      ]
+    },
+    {
+      "type": "zsilip_max",
+      "tags": [
+        "min_max",
+        "validate"
+      ],
+      "title": "Legnagyobb változás",
+      "description": "A kulonbseg függvény segítségével határozza meg a szomszédos mérések legnagyobb szintváltozását! Írja ki a változás értékét, valamint annak a korábbi mérésnek az óra és perc értékét, ahonnan az ugrás indult! Ha több azonos legnagyobb ugrás van, az állományban elsőt adja meg!",
+      "points": 2,
+      "solution_file": "zsilip_max.py",
+      "uses_preamble": true,
+      "starter": "# A vizszint.txt tartalma a `meresek` változóban van (str).\n# kulonbseg a preambulumban\n#\n# Legnagyobb változás\n",
+      "hints": [
+        "Derive the answer from the current file contents; do not hard-code the sample."
+      ]
+    },
+    {
+      "type": "zsilip_riasztas",
+      "tags": [
+        "validate"
+      ],
+      "title": "Riasztás",
+      "description": "Döntse el, volt-e a napon riasztás, azaz előfordult-e 12 cm-nél nagyobb szomszédos ugrás! Ha volt, írja ki: `Volt riasztas.` Ha nem volt, írja ki: `Nem volt riasztas.`",
+      "points": 2,
+      "solution_file": "zsilip_riasztas.py",
+      "uses_preamble": true,
+      "starter": "# A vizszint.txt tartalma a `meresek` változóban van (str).\n# küszöb 12 cm\n#\n# Riasztás\n",
+      "hints": [
+        "Derive the answer from the current file contents; do not hard-code the sample."
+      ]
+    },
+    {
+      "type": "zsilip_ketto",
+      "tags": [
+        "IO",
+        "search"
+      ],
+      "title": "Két időpont",
+      "description": "Kérje be a felhasználótól két időpont óra és perc értékét! A kulonbseg függvény segítségével adja meg a két időponthoz tartozó vízszintek abszolút különbségét! Feltételezheti, hogy mindkét időpont szerepel az állományban.",
+      "points": 3,
+      "solution_file": "zsilip_ketto.py",
+      "uses_preamble": true,
+      "starter": "# A vizszint.txt tartalma a `meresek` változóban van (str).\n# stdin 4 szám\n#\n# Két időpont\n\nprint(\"Elso ora:\")\no1=int(input())\nprint(\"Elso perc:\")\np1=int(input())\nprint(\"Masodik ora:\")\no2=int(input())\nprint(\"Masodik perc:\")\np2=int(input())\n",
+      "hints": [
+        "Derive the answer from the current file contents; do not hard-code the sample."
+      ],
+      "stdin": "6\n30\n7\n0\n"
+    }
+  ]
+}

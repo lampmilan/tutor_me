@@ -1,0 +1,116 @@
+{
+  "id": "kompatkelo",
+  "title": "Kompátkelő",
+  "level": "emelt",
+  "difficulty": 3,
+  "tags": [
+    "IO",
+    "count",
+    "sum",
+    "min_max",
+    "search",
+    "group"
+  ],
+  "description": "Értékelje ki a komp napi járatait a jaratok.txt alapján!",
+  "story": "Egy Duna-menti kompállomás a napi járatokat számítógépen tartja nyilván. Az állomány első sora a komp befogadóképességét adja meg járműben, a további sorok egy-egy járatot írnak le: a járat azonosítóját, a dátumot, a szállított járművek számát és a célállomás kódját. Egy célra több járat is indulhat. A forgalom értékeléséhez a járatok számát, a legterheltebb fordulót és egy kiválasztott cél összesített forgalmát kell meghatározni.",
+  "constraints": [
+    "Járatok száma ≤ 500; a kapacitás 10–80 jármű.",
+    "Járművek száma járatonként 1 és a kapacitás közé esik.",
+    "Célkód: négy ékezetmentes nagybetű.",
+    "Több azonos legnagyobb járműszám esetén az állományban első járatot adja meg.",
+    "5. feladat tesztjavaslat: `PECS` (szerepel a mintában). Ha a bekért kód egyetlen járatban sem fordul elő, írja ki: `Nincs ilyen celallomas.`"
+  ],
+  "data_explanation": "Az első sor a komp kapacitása járműben. A további sorok szóközzel elválasztott mezői: járatazonosító, hónap, nap, szállított járművek száma, célállomás kódja. A mintában a 104-es járat teljesen tele van (40 jármű).",
+  "data_file": "jaratok.txt",
+  "dataset_type": "kompatkelo",
+  "shared_variable": "jaratok",
+  "preamble": "with open(\"jaratok.txt\", encoding=\"utf-8\") as f:\n    jaratok = f.read()\n",
+  "visible": "datasets/visible.txt",
+  "hidden": [
+    "datasets/hidden/01.txt",
+    "datasets/hidden/02.txt",
+    "datasets/hidden/03.txt"
+  ],
+  "tasks": [
+    {
+      "type": "store",
+      "tags": [
+        "IO"
+      ],
+      "title": "Beolvasás",
+      "description": "Olvassa be és tárolja el a `jaratok.txt` tartalmát!",
+      "points": 1,
+      "solution_file": "kompatkelo_beolvasas.py",
+      "uses_preamble": false,
+      "starter": "# 1. feladat: olvassa be a jaratok.txt tartalmát.\n# Tárolja a teljes szöveget a `jaratok` változóban.\n# Első sor kapacitás; további jarat honap nap jarmu cel\n\njaratok = \"\"\n",
+      "hints": [
+        "Read jaratok.txt into `jaratok` as a raw string."
+      ]
+    },
+    {
+      "type": "kompatkelo_count",
+      "tags": [
+        "count"
+      ],
+      "title": "Járatok száma",
+      "description": "Határozza meg, hány járat adatait tartalmazza az állomány, és írja a képernyőre a járatok számát! Az első sor a kapacitás, azt ne számolja járatnak! Az eredményt nevezze meg a kiírásban!",
+      "points": 1,
+      "solution_file": "kompatkelo_szama.py",
+      "uses_preamble": true,
+      "starter": "# A jaratok.txt tartalma a `jaratok` változóban van (str).\n# Az első sor a kapacitás.\n#\n# Járatok száma\n",
+      "hints": [
+        "Derive the answer from the current file contents; do not hard-code the sample."
+      ]
+    },
+    {
+      "type": "kompatkelo_max",
+      "tags": [
+        "min_max"
+      ],
+      "title": "Legterheltebb",
+      "description": "Keresse meg a legnagyobb járműszámú járatot! Írja a képernyőre a járat azonosítóját, a járművek számát és a cél kódját! Ha több ilyen járat van, az állományban elsőként szereplőt adja meg!",
+      "points": 2,
+      "solution_file": "kompatkelo_legterheltebb.py",
+      "uses_preamble": true,
+      "starter": "# A jaratok.txt tartalma a `jaratok` változóban van (str).\n# Döntetlennél az első járat.\n#\n# Legterheltebb\n",
+      "hints": [
+        "Derive the answer from the current file contents; do not hard-code the sample."
+      ]
+    },
+    {
+      "type": "kompatkelo_group",
+      "tags": [
+        "group",
+        "count",
+        "sum"
+      ],
+      "title": "Célonként",
+      "description": "Célállomásonként határozza meg a járatok számát és a szállított járművek összegét! A célokat az állományban való első előfordulásuk sorrendjében, soronként írja ki!",
+      "points": 2,
+      "solution_file": "kompatkelo_celonkent.py",
+      "uses_preamble": true,
+      "starter": "# A jaratok.txt tartalma a `jaratok` változóban van (str).\n# Első előfordulás sorrendje.\n#\n# Célonként\n",
+      "hints": [
+        "Derive the answer from the current file contents; do not hard-code the sample."
+      ]
+    },
+    {
+      "type": "kompatkelo_cel",
+      "tags": [
+        "IO",
+        "search",
+        "sum"
+      ],
+      "title": "Egy cél",
+      "description": "Kérje be a felhasználótól egy célállomás kódját! A teszteléshez használhatja a `PECS` kódot. Ha a kód egyetlen járatban sem szerepel, írja ki a `Nincs ilyen celallomas.` szöveget, és ne végezze el a következő részfeladatot!\n\n1. Adja meg, hány járat indult erre a célra, és összesen hány járművet szállítottak oda!",
+      "points": 3,
+      "solution_file": "kompatkelo_egy_cel.py",
+      "uses_preamble": true,
+      "starter": "# A jaratok.txt tartalma a `jaratok` változóban van (str).\n# stdin: célkód.\n#\n# Egy cél\n\nprint(\"Adja meg a celallomas kodjat!\")\nkod = input().strip()\n",
+      "hints": [
+        "Derive the answer from the current file contents; do not hard-code the sample."
+      ],
+      "stdin": "PECS\n"
+    }
+  ]
+}

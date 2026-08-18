@@ -1,0 +1,95 @@
+{
+  "id": "csoposta",
+  "title": "Csőposta",
+  "level": "kozep",
+  "difficulty": 5,
+  "tags": [
+    "IO",
+    "count",
+    "simulation",
+    "path"
+  ],
+  "description": "Kövesse a kórházi csőposta kapszulájának útját a lepesek.txt alapján!",
+  "story": "Egy kórház csőpostája tizenhat állomást köt össze egy körben. A kapszula az 1. állomásról indul, és a feljegyzett lépésszámokkal halad előre. A 4., a 9. és a 13. állomás átrakó: ideérkezve a kapszula automatikusan még két állomást ugrik előre. A program a lépéseket a forrásában tárolja, majd a kapszula útját követi.",
+  "constraints": [
+    "Pontosan 7 lépés; minden lépés 1–6 egész.",
+    "Állomások 1–16, körkörösen: 16 után az 1. következik.",
+    "Átrakó állomások: 4, 9, 13; az extra +2 ugrás a lépés után, és az ugrás célja már nem számít újabb átrakónak.",
+    "Cserélhető lépéssorral is működnie kell."
+  ],
+  "data_explanation": "Hét egész szám, a kapszula lépései állomásban. A program ezeket a forrásában tárolja. A mintában az első lépés a 4. állomásra visz, ahonnan az átrakó még kettőt ugrik, így a kapszula a 6. állomásra kerül.",
+  "data_file": "lepesek.txt",
+  "dataset_type": "csoposta",
+  "shared_variable": "lepesek",
+  "preamble": "with open(\"lepesek.txt\", encoding=\"utf-8\") as f:\n    lepesek = f.read()\n",
+  "visible": "datasets/visible.txt",
+  "hidden": [
+    "datasets/hidden/01.txt",
+    "datasets/hidden/02.txt",
+    "datasets/hidden/03.txt"
+  ],
+  "tasks": [
+    {
+      "type": "store",
+      "tags": [
+        "IO"
+      ],
+      "title": "Tárolás",
+      "description": "A csőposta hét lépését a program forrásában kell eltárolnia. Tárolja el a megadott számokat egy megfelelő adatszerkezetben!",
+      "points": 1,
+      "solution_file": "csoposta_tarolas.py",
+      "uses_preamble": false,
+      "starter": "# 1. feladat: olvassa be a lepesek.txt tartalmát.\n# Tárolja a teljes szöveget a `lepesek` változóban.\n\nlepesek = \"\"\n",
+      "hints": [
+        "Read lepesek.txt into lepesek as a string."
+      ]
+    },
+    {
+      "type": "csoposta_count",
+      "tags": [
+        "count"
+      ],
+      "title": "Lépések száma",
+      "description": "Határozza meg, hány lépést tárolt el a program! Az eredményt nevezze meg a kiírásban!",
+      "points": 1,
+      "solution_file": "csoposta_szama.py",
+      "uses_preamble": true,
+      "starter": "# A lepesek.txt tartalma a `lepesek` változóban van (str).\n# Hét egész lépés.\n#\n# Lépések száma\n",
+      "hints": [
+        "Derive the answer from the current file contents; do not hard-code the sample."
+      ]
+    },
+    {
+      "type": "csoposta_veg",
+      "tags": [
+        "simulation",
+        "path"
+      ],
+      "title": "Végállomás",
+      "description": "Kövesse a kapszula útját az 1. állomástól! Adja meg, melyik állomáson áll a hét lépés (és a közben lezajlott átrakók) után! Az állomás sorszámát nevezze meg a kiírásban!",
+      "points": 2,
+      "solution_file": "csoposta_vegallomas.py",
+      "uses_preamble": true,
+      "starter": "# A lepesek.txt tartalma a `lepesek` változóban van (str).\n# 16 állomás, átrakó 4,9,13 (+2).\n#\n# Végállomás\n",
+      "hints": [
+        "Derive the answer from the current file contents; do not hard-code the sample."
+      ]
+    },
+    {
+      "type": "csoposta_atrako",
+      "tags": [
+        "count",
+        "simulation"
+      ],
+      "title": "Átrakók",
+      "description": "Számolja meg, hányszor érkezett a kapszula átrakó állomásra a lépések után, az extra ugrás előtt! Az extra ugrás célállomását ne számolja újabb átrakónak akkor sem, ha az 4, 9 vagy 13!",
+      "points": 2,
+      "solution_file": "csoposta_atrako.py",
+      "uses_preamble": true,
+      "starter": "# A lepesek.txt tartalma a `lepesek` változóban van (str).\n# Átrakó: landolás 4/9/13 a lépés után.\n#\n# Átrakók\n",
+      "hints": [
+        "Derive the answer from the current file contents; do not hard-code the sample."
+      ]
+    }
+  ]
+}

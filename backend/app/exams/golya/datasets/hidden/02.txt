@@ -1,0 +1,4 @@
+8 15 10 50 Magyarorszag
+8 16 12 48 Magyarorszag
+8 17 14 46 Bulgaria
+8 18 16 44 Bulgaria

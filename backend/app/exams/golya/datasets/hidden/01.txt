@@ -1,0 +1,4 @@
+8 10 10 50 Magyarorszag
+8 11 12 48 Szerbia
+8 12 20 40 Romania
+8 13 21 39 Romania

@@ -1,6 +1,12 @@
 from pydantic import BaseModel, Field
 
 
+class AuxFileTemplate(BaseModel):
+    filename: str
+    content: str
+    read_only: bool = True
+
+
 class TaskTemplate(BaseModel):
     type: str
     title: str
@@ -19,6 +25,8 @@ class TaskTemplate(BaseModel):
     starter: str = ""
     tags: list[str] = Field(default_factory=list)
     stdin: str = ""
+    # Per-hidden-dataset stdin overrides (aligned with exam hidden[] order)
+    hidden_stdin: list[str] = Field(default_factory=list)
     expected_file: str = ""
 
 
@@ -34,6 +42,11 @@ class ExamTemplate(BaseModel):
     # Canonical loader injected before student code when uses_preamble=True
     shared_variable: str = "data"
     preamble: str = ""
+    # Named function bodies appended after the file-load preamble ([function] tasks)
+    functions: str = ""
+    # Optional random seed injected at the start of the preamble ([random] tasks)
+    seed: int | None = None
+    aux_files: list[AuxFileTemplate] = Field(default_factory=list)
     level: str = "kozep"
     difficulty: int = 2
     tags: list[str] = Field(default_factory=list)

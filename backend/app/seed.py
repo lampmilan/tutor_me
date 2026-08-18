@@ -4,7 +4,7 @@ import json
 
 from sqlalchemy.orm import Session, joinedload
 
-from app.exams.builders import raw_file_preamble
+from app.exams.builders import build_exam_preamble
 from app.exams.loader import discover_exams
 from app.models import Exam, Task
 from app.services.templates import materialize_loaded_exam
@@ -22,12 +22,7 @@ def _needs_rematerialize(exam: Exam, loaded, expected_hidden: int) -> bool:
     hidden = sum(1 for task in exam.tasks for tc in task.test_cases if tc.is_hidden)
     if hidden < expected_hidden:
         return True
-    want_preamble = (loaded.template.preamble or "").strip()
-    if not want_preamble:
-        want_preamble = raw_file_preamble(
-            loaded.template.data_file,
-            loaded.template.shared_variable or "data",
-        ).strip()
+    want_preamble = build_exam_preamble(loaded.template).strip()
     if (exam.preamble or "").strip() != want_preamble:
         return True
     if (getattr(exam, "shared_variable", None) or "data") != (
@@ -40,6 +35,9 @@ def _needs_rematerialize(exam: Exam, loaded, expected_hidden: int) -> bool:
         (t.solution_file or f"feladat{i + 1}.py")
         for i, t in enumerate(loaded.template.tasks)
     }
+    expected_files.add(loaded.template.data_file)
+    for aux in loaded.template.aux_files or []:
+        expected_files.add(aux.filename)
     existing_names = {f.filename for f in exam.files}
     if expected_files and not expected_files.issubset(existing_names):
         return True
@@ -66,6 +64,19 @@ def _needs_rematerialize(exam: Exam, loaded, expected_hidden: int) -> bool:
             return True
         if (getattr(task, "expected_file", None) or "") != (tmpl.expected_file or ""):
             return True
+        hidden_cases = sorted(
+            (tc for tc in task.test_cases if tc.is_hidden),
+            key=lambda tc: tc.name,
+        )
+        want_hidden_stdin = list(tmpl.hidden_stdin or [])
+        for h_idx, tc in enumerate(hidden_cases):
+            want_stdin = (
+                want_hidden_stdin[h_idx]
+                if h_idx < len(want_hidden_stdin)
+                else (tmpl.stdin or "")
+            )
+            if (tc.stdin or "") != (want_stdin or ""):
+                return True
     return False
 
 

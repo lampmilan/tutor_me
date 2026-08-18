@@ -69,6 +69,7 @@
       "description": "Kérje be a felhasználótól egy ágyás sorszámát! A tesztelés során használhatja az 1. ágyást, amelyet többen is beültetnének és a 269. ágyást, amelynek beültetésére senki sem vállalkozik.\n\n1. Írja a képernyőre, hogy hány felajánlásban szerepel ez az ágyás!\n2. Adja meg, milyen színű lesz ez az ágyás, ha mindenki a felajánlások sorrendjében végzi el az ültetést, de nem ültet, ha másvalaki előtte már ültetett oda! Ha nem ültetett oda senki, akkor `Ezt az ágyást nem ültetik be.` szöveget jelenítse meg!\n3. Adja meg, milyen színekben pompázna ez az ágyás, ha az eredeti tervvel ellentétesen minden felajánló elültetné virágait! Minden színt csak egyszer tüntessen fel! Az egyes színeket szóközökkel válassza el egymástól! Ha nem ültettek oda virágot, ne jelenítsen meg semmit!",
       "points": 3,
       "stdin": "100\n",
+      "hidden_stdin": ["1\n", "100\n", "50\n"],
       "solution_file": "egy_agyas.py",
       "uses_preamble": true,
       "starter": "# A felajanlas.txt tartalma a `felajanlasok` változóban van (str).\n# 4. feladat: kérjen be egy ágyás sorszámát, majd válaszoljon a három kérdésre.\n# A platform teszteléskor a 100-as ágyást adja bemenetként (stdin).\n\nprint(\"Adja meg az ágyás sorszámát!\")\nagyas = int(input())\n\n",

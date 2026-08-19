@@ -1,0 +1,14 @@
+8 20 19 47 Magyarorszag
+8 21 20 46 Magyarorszag
+8 22 21 44 Szerbia
+8 23 22 43 Szerbia
+8 24 23 43 Szerbia
+8 25 25 42 Bulgaria
+8 26 27 41 Bulgaria
+8 27 32 39 Torokorszag
+8 28 34 37 Torokorszag
+8 29 36 35 Sziria
+8 30 35 32 Izrael
+8 31 33 30 Egyiptom
+9 1 32 28 Egyiptom
+9 2 31 27 Egyiptom

@@ -1,0 +1,6 @@
+9 1 31 27 Egyiptom
+9 2 30 26 Egyiptom
+9 3 35 32 Izrael
+9 4 21 44 Szerbia
+9 5 20 45 Szerbia
+9 6 19 47 Magyarorszag

@@ -33,7 +33,7 @@ export default async function HomePage() {
 
       <div className="relative mx-auto flex min-h-screen max-w-5xl flex-col px-6 pb-16 pt-16">
         <p className="mb-3 font-[family-name:var(--font-display)] text-5xl tracking-tight text-[var(--accent)] md:text-6xl">
-          Érettségi Lab
+          VizsgaGO
         </p>
         <h1 className="max-w-2xl text-2xl font-medium leading-snug text-[var(--fg)] md:text-3xl">
           {hu.home.tagline}

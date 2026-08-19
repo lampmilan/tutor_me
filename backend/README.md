@@ -1,1 +1,1 @@
-# Érettségi Lab — backend
+# VizsgaGO — backend

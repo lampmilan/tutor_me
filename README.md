@@ -1,4 +1,4 @@
-# Érettségi Lab
+# VizsgaGO
 
 Online coding practice platform for the Hungarian programming **érettségi**.
 

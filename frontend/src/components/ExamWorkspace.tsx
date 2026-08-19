@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { confetti } from "@tsparticles/confetti";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { CodeEditor } from "@/components/CodeEditor";
-import { FeedbackModal } from "@/components/FeedbackModal";
+import { FeedbackButton } from "@/components/FeedbackModal";
 import { FileExplorer } from "@/components/FileExplorer";
 import { OutputPanel } from "@/components/OutputPanel";
 import { ProblemPanel } from "@/components/ProblemPanel";
@@ -147,7 +147,6 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
   const [judge, setJudge] = useState<JudgeResponse | null>(null);
   const [phaseStatus, setPhaseStatus] = useState<Record<number, PhaseStatus>>({});
   const [loadError, setLoadError] = useState<string | null>(null);
-  const [feedbackOpen, setFeedbackOpen] = useState(false);
   const [leftPct, setLeftPct] = useState(42);
   const splitRef = useRef<HTMLDivElement>(null);
   const dragging = useRef(false);
@@ -464,13 +463,6 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
         <div className="flex items-center gap-2">
           <button
             type="button"
-            onClick={() => setFeedbackOpen(true)}
-            className="rounded border border-[var(--border)] px-3 py-1.5 text-sm text-[var(--muted-strong)] transition hover:border-[var(--accent)] hover:text-[var(--fg)]"
-          >
-            {hu.feedback.button}
-          </button>
-          <button
-            type="button"
             onClick={() => void resetWorkspace()}
             disabled={busy}
             className="rounded border border-[var(--border)] px-3 py-1.5 text-sm text-[var(--muted-strong)] transition hover:border-[var(--accent)] hover:text-[var(--fg)] disabled:opacity-50"
@@ -567,13 +559,13 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
         </div>
       </div>
 
-      {feedbackOpen && (
-        <FeedbackModal
-          examId={examId}
-          taskIndex={activeTask.order_index}
-          onClose={() => setFeedbackOpen(false)}
-        />
-      )}
+      <FeedbackButton
+        examTitle={exam.title}
+        taskTitles={exam.tasks
+          .slice()
+          .sort((a, b) => a.order_index - b.order_index)
+          .map((t) => t.title)}
+      />
     </div>
   );
 }

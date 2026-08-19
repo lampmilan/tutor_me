@@ -21,10 +21,10 @@ export default function LandingPage() {
 
       <div className="relative mx-auto flex max-w-3xl flex-col px-6 pb-24 pt-20">
         {/* ── Hero (copied from current landing) ── */}
-        <p className="mb-3 font-[family-name:var(--font-display)] text-5xl tracking-tight text-[var(--accent)] md:text-6xl">
+        <p className="mb-3 font-[family-name:var(--font-ibm-plex-mono)] text-5xl font-bold tracking-tight text-[var(--accent)] md:text-6xl">
           VizsgaGO
         </p>
-        <h1 className="max-w-2xl text-2xl font-medium leading-snug text-[var(--fg)] md:text-3xl">
+        <h1 className="max-w-2xl font-[family-name:var(--font-ibm-plex-mono)] text-2xl font-bold leading-snug text-[var(--fg)] md:text-3xl">
           {hu.home.tagline}
         </h1>
         <p className="mt-4 max-w-xl text-base leading-relaxed text-[var(--muted-strong)]">
@@ -36,7 +36,7 @@ export default function LandingPage() {
 
           {/* USP 1 */}
           <section className="flex flex-col gap-3">
-            <h2 className="font-[family-name:var(--font-display)] text-3xl font-semibold leading-tight text-[var(--fg)] md:text-4xl">
+            <h2 className="font-[family-name:var(--font-ibm-plex-mono)] text-3xl font-bold leading-tight text-[var(--fg)] md:text-4xl">
               <span className="text-[var(--accent)]">{TOTAL_EXAMS}+</span> Eredeti, érettségi-szintű feladat
             </h2>
             <p className="max-w-2xl text-base leading-relaxed text-[var(--muted-strong)]">
@@ -48,7 +48,7 @@ export default function LandingPage() {
 
           {/* USP 2 */}
           <section className="flex flex-col gap-3">
-            <h2 className="font-[family-name:var(--font-display)] text-3xl font-semibold leading-tight text-[var(--fg)] md:text-4xl">
+            <h2 className="font-[family-name:var(--font-ibm-plex-mono)] text-3xl font-bold leading-tight text-[var(--fg)] md:text-4xl">
               Zökkenőmentes felkészülés
             </h2>
             <p className="max-w-2xl text-base leading-relaxed text-[var(--muted-strong)]">
@@ -59,7 +59,7 @@ export default function LandingPage() {
 
           {/* USP 3 */}
           <section className="flex flex-col gap-3">
-            <h2 className="font-[family-name:var(--font-display)] text-3xl font-semibold leading-tight text-[var(--fg)] md:text-4xl">
+            <h2 className="font-[family-name:var(--font-ibm-plex-mono)] text-3xl font-bold leading-tight text-[var(--fg)] md:text-4xl">
               Fókuszálj arra, ami még nem megy
             </h2>
             <p className="max-w-2xl text-base leading-relaxed text-[var(--muted-strong)]">

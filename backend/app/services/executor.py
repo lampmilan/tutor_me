@@ -6,6 +6,8 @@ Fallback: subprocess (for local Compose when Docker CLI is unavailable).
 
 from __future__ import annotations
 
+import json
+import logging
 import resource
 import shutil
 import subprocess
@@ -15,7 +17,11 @@ import time
 from dataclasses import dataclass, field
 from pathlib import Path
 
+import posthog as posthog_client
+
 from app.config import get_settings
+
+_log = logging.getLogger("analytics")
 
 settings = get_settings()
 
@@ -38,6 +44,10 @@ def execute_python(
     extra_files: dict[str, str] | None = None,
     capture_files: list[str] | None = None,
     isolate: bool = False,
+    visitor_id: str | None = None,
+    exam_id: int | None = None,
+    task_id: int | None = None,
+    workspace_id: int | None = None,
 ) -> ExecutionResult:
     """Run a Python entrypoint inside an isolated environment.
 
@@ -49,6 +59,8 @@ def execute_python(
     script = entrypoint or "main.py"
     capture = [name for name in (capture_files or []) if name]
     needs_copy = isolate or extra_files is not None or bool(capture)
+
+    start_wall = time.monotonic()
 
     if needs_copy:
         with tempfile.TemporaryDirectory(prefix="exec-") as tmp:
@@ -67,9 +79,52 @@ def execute_python(
                 path = tmp_path / name
                 if path.is_file():
                     result.files[name] = path.read_text(encoding="utf-8")
-            return result
+    else:
+        result = _run(src, entrypoint=script, stdin=stdin, timeout=timeout)
 
-    return _run(src, entrypoint=script, stdin=stdin, timeout=timeout)
+    elapsed_ms = round((time.monotonic() - start_wall) * 1000, 1)
+    timed_out = result.exit_code == 124
+    error_type: str | None = None
+    if timed_out:
+        error_type = "timeout"
+    elif result.exit_code != 0:
+        error_type = "memory_limit" if "Killed" in result.error else "student_error"
+
+    backend_used = (
+        "docker"
+        if settings.execution_backend.lower() == "docker" and shutil.which("docker")
+        else "subprocess"
+    )
+    _log.info(
+        json.dumps({
+            "event": "sandbox_execution",
+            "backend": backend_used,
+            "elapsed_ms": elapsed_ms,
+            "timed_out": timed_out,
+            "exit_code": result.exit_code,
+            "error_type": error_type,
+            "workspace_id": workspace_id,
+            "exam_id": exam_id,
+            "task_id": task_id,
+        })
+    )
+    if settings.posthog_api_key and visitor_id:
+        posthog_client.capture(
+            distinct_id=visitor_id,
+            event="sandbox_execution",
+            properties={
+                "exam_id": exam_id,
+                "task_id": task_id,
+                "workspace_id": workspace_id,
+                "elapsed_ms": elapsed_ms,
+                "timed_out": timed_out,
+                "failed": result.exit_code != 0,
+                "error_type": error_type,
+                "backend": backend_used,
+            },
+        )
+
+    return result
 
 
 def _run(

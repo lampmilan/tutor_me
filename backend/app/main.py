@@ -1,5 +1,6 @@
 from contextlib import asynccontextmanager
 
+import posthog as posthog_client
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
@@ -16,6 +17,10 @@ _SEED_LOCK_ID = 872341
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     settings = get_settings()
+    if settings.posthog_api_key:
+        posthog_client.api_key = settings.posthog_api_key
+        posthog_client.host = settings.posthog_host
+        posthog_client.debug = False
     ensure_workspaces_root()
     Base.metadata.create_all(bind=engine)
     ensure_schema()

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Fraunces, IBM_Plex_Mono, Source_Sans_3 } from "next/font/google";
 import "./globals.css";
+import { PostHogProvider } from "@/components/PostHogProvider";
 
 const display = Fraunces({
   variable: "--font-display",
@@ -33,7 +34,7 @@ export default function RootLayout({
   return (
     <html lang="hu">
       <body className={`${display.variable} ${sans.variable} ${mono.variable} antialiased`}>
-        {children}
+        <PostHogProvider>{children}</PostHogProvider>
       </body>
     </html>
   );

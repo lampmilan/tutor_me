@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session, joinedload
 
 from app.database import get_db
@@ -13,7 +13,8 @@ router = APIRouter(tags=["execution"])
 
 
 @router.post("/execute", response_model=ExecuteResponse, dependencies=[Depends(limit_execute)])
-def execute(body: ExecuteRequest, db: Session = Depends(get_db)):
+def execute(body: ExecuteRequest, request: Request, db: Session = Depends(get_db)):
+    visitor_id: str | None = request.headers.get("x-visitor-id")
     workspace = (
         db.query(Workspace)
         .options(
@@ -58,7 +59,15 @@ def execute(body: ExecuteRequest, db: Session = Depends(get_db)):
                     main.content = body.code
                 db.commit()
             path = sync_workspace_to_disk(workspace)
-            result = execute_python(path, entrypoint=RUN_ENTRYPOINT, stdin=body.stdin or "")
+            result = execute_python(
+                path,
+                entrypoint=RUN_ENTRYPOINT,
+                stdin=body.stdin or "",
+                visitor_id=visitor_id,
+                exam_id=workspace.exam_id,
+                task_id=None,
+                workspace_id=workspace.id,
+            )
         else:
             student_code = (
                 body.code if body.code is not None else student_code_for_task(workspace, task, None)
@@ -72,6 +81,10 @@ def execute(body: ExecuteRequest, db: Session = Depends(get_db)):
                 stdin=stdin,
                 capture_files=capture,
                 isolate=bool(capture),
+                visitor_id=visitor_id,
+                exam_id=workspace.exam_id,
+                task_id=task.id,
+                workspace_id=workspace.id,
             )
 
         output = result.output

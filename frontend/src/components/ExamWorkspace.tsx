@@ -20,9 +20,13 @@ import {
 } from "@/lib/api";
 import {
   clearStoredWorkspaceId,
+  getLastSeenDaysAgo,
+  getOrCreateVisitorId,
   getStoredWorkspaceId,
+  recordLastSeen,
   setStoredWorkspaceId,
 } from "@/lib/workspaceStorage";
+import posthog from "posthog-js";
 
 type ExamWorkspaceProps = {
   examId: number;
@@ -168,6 +172,24 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
         setError("");
         setActiveFile(starter);
         setActivePhaseId(firstTask?.id ?? null);
+
+        // Analytics: share link open detection
+        if (preferredWsId != null) {
+          posthog.capture("share_link_opened", {
+            exam_id: examId,
+            workspace_id: ws.id,
+            distinct_id: getOrCreateVisitorId(),
+          });
+        }
+        // Analytics: return visit detection
+        const daysAgo = getLastSeenDaysAgo();
+        if (daysAgo !== null && daysAgo <= 7) {
+          posthog.capture("return_visit", {
+            days_since_last_visit: Math.floor(daysAgo),
+            distinct_id: getOrCreateVisitorId(),
+          });
+        }
+        recordLastSeen();
       } catch (e) {
         if (gen !== loadGen.current) return;
         const msg = e instanceof Error ? e.message : hu.workspace.loadFailed;
@@ -250,8 +272,13 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
       setJudge(null);
       setOutput("");
       setError("");
+      posthog.capture("task_opened", {
+        exam_id: examId,
+        task_index: task.order_index,
+        distinct_id: getOrCreateVisitorId(),
+      });
     },
-    [files],
+    [files, examId],
   );
 
   const onChange = useCallback(
@@ -314,6 +341,11 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
       setError(translateError(result.error));
       setRuntime(result.runtime);
       setExitCode(result.exit_code);
+      posthog.capture("code_executed", {
+        exam_id: examId,
+        task_index: activeTask.order_index,
+        distinct_id: getOrCreateVisitorId(),
+      });
     } catch (e) {
       setError(
         translateError(e instanceof Error ? e.message : hu.workspace.runFailed),
@@ -337,6 +369,20 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
       setJudge(result);
       setRuntime(null);
       setExitCode(null);
+      posthog.capture("judge_submitted", {
+        exam_id: examId,
+        task_index: activeTask.order_index,
+        distinct_id: getOrCreateVisitorId(),
+      });
+      if (result.points_earned === result.points_possible && result.points_possible > 0) {
+        posthog.capture("task_completed", {
+          exam_id: examId,
+          task_index: activeTask.order_index,
+          score: result.points_earned,
+          max_score: result.points_possible,
+          distinct_id: getOrCreateVisitorId(),
+        });
+      }
       setPhaseStatus((prev) => {
         const next = { ...prev, ...statusFromJudge(result) };
         const allPassed =
@@ -344,6 +390,14 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
         if (allPassed && !celebratedRef.current) {
           celebratedRef.current = true;
           fireExamCompleteConfetti();
+          posthog.capture("exam_completed", {
+            exam_id: examId,
+            total_score: exam.tasks.reduce(
+              (sum, t) => sum + (next[t.id] === "passed" ? t.points : 0),
+              0,
+            ),
+            distinct_id: getOrCreateVisitorId(),
+          });
         }
         return next;
       });

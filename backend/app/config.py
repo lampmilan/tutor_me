@@ -34,6 +34,8 @@ class Settings(BaseSettings):
     rate_limit_window_seconds: int = 60
     workspace_ttl_days: int = 7
     cleanup_token: str = ""
+    posthog_api_key: str = ""
+    posthog_host: str = "https://eu.i.posthog.com"
 
     def cors_origin_list(self) -> list[str]:
         raw = (self.cors_origins or "").strip()

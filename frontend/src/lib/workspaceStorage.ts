@@ -1,4 +1,40 @@
 const KEY_PREFIX = "erettsegi-ws-";
+const VISITOR_KEY = "erettsegi-vid";
+const LAST_SEEN_KEY = "erettsegi-last-seen";
+
+export function getOrCreateVisitorId(): string {
+  if (typeof window === "undefined") return "ssr";
+  try {
+    let id = localStorage.getItem(VISITOR_KEY);
+    if (!id) {
+      id = crypto.randomUUID();
+      localStorage.setItem(VISITOR_KEY, id);
+    }
+    return id;
+  } catch {
+    return "ssr";
+  }
+}
+
+export function recordLastSeen(): void {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(LAST_SEEN_KEY, Date.now().toString());
+  } catch {
+    // ignore
+  }
+}
+
+export function getLastSeenDaysAgo(): number | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = localStorage.getItem(LAST_SEEN_KEY);
+    if (!raw) return null;
+    return (Date.now() - Number(raw)) / (1000 * 60 * 60 * 24);
+  } catch {
+    return null;
+  }
+}
 
 export function getStoredWorkspaceId(examId: number): number | null {
   if (typeof window === "undefined") return null;

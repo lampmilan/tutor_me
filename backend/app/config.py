@@ -26,6 +26,8 @@ class Settings(BaseSettings):
     ai_generation_enabled: bool = False
     # Comma-separated origins, or * for any (Vercel preview URLs vary).
     cors_origins: str = "*"
+    posthog_api_key: str = ""
+    posthog_host: str = "https://eu.i.posthog.com"
 
     def cors_origin_list(self) -> list[str]:
         raw = (self.cors_origins or "*").strip()

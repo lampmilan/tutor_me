@@ -1,3 +1,5 @@
+import { getOrCreateVisitorId } from "./workspaceStorage";
+
 // Browser: same-origin /api is rewritten to the backend (see next.config.ts).
 const API_URL = "/api";
 
@@ -111,6 +113,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     ...init,
     headers: {
       "Content-Type": "application/json",
+      "X-Visitor-Id": getOrCreateVisitorId(),
       ...(init?.headers || {}),
     },
   });

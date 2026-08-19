@@ -42,6 +42,15 @@ export const hu = {
     resizePanels: "Panelek méretezése",
     feladat: "feladat",
   },
+  feedback: {
+    button: "Visszajelzés",
+    title: "Visszajelzés",
+    prompt: "Mennyire volt hasznos ez a feladatsor?",
+    placeholder: "Megjegyzés (opcionális)…",
+    send: "Küldés",
+    close: "Bezárás",
+    thanks: "Köszönjük a visszajelzést!",
+  },
   explorer: {
     title: "Fájlok",
     readOnly: "csak olv.",

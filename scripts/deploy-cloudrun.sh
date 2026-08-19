@@ -9,6 +9,7 @@ PROJECT="${GCP_PROJECT:-project-3809701b-6b98-4468-890}"
 REGION="${GCP_REGION:-europe-west1}"
 SERVICE="${CLOUD_RUN_SERVICE:-erettsegi-api}"
 DATABASE_SECRET="${DATABASE_SECRET:-DATABASE_URL}"
+POSTHOG_SECRET="${POSTHOG_SECRET:-posthog-api-key}"
 CORS_ORIGINS="${CORS_ORIGINS:-}"
 ALLOW_OPEN_CORS="${ALLOW_OPEN_CORS:-0}"
 MEMORY="${CLOUD_RUN_MEMORY:-512Mi}"
@@ -53,6 +54,18 @@ gcloud secrets add-iam-policy-binding "${DATABASE_SECRET}" \
   --role="roles/secretmanager.secretAccessor" \
   --quiet >/dev/null
 
+if gcloud secrets describe "${POSTHOG_SECRET}" --project "${PROJECT}" >/dev/null 2>&1; then
+  echo "Granting ${RUNTIME_SA} access to ${POSTHOG_SECRET}..."
+  gcloud secrets add-iam-policy-binding "${POSTHOG_SECRET}" \
+    --project "${PROJECT}" \
+    --member="serviceAccount:${RUNTIME_SA}" \
+    --role="roles/secretmanager.secretAccessor" \
+    --quiet >/dev/null
+else
+  echo "Secret ${POSTHOG_SECRET} not found — PostHog server-side capture will be disabled."
+  POSTHOG_SECRET=""
+fi
+
 # If DATABASE_URL was previously a plaintext env var, drop it so it can be a secret.
 if gcloud run services describe "${SERVICE}" --project "${PROJECT}" --region "${REGION}" >/dev/null 2>&1; then
   gcloud run services update "${SERVICE}" \
@@ -74,7 +87,7 @@ gcloud run deploy "${SERVICE}" \
   --memory "${MEMORY}" \
   --cpu 1 \
   --update-env-vars "^@^EXECUTION_BACKEND=subprocess@WORKSPACES_ROOT=/tmp/erettsegi-workspaces@CORS_ORIGINS=${CORS_ORIGINS}@CORS_ORIGIN_REGEX=${CORS_ORIGIN_REGEX}@AI_GENERATION_ENABLED=false@WORKSPACE_TTL_DAYS=${WORKSPACE_TTL_DAYS}@RATE_LIMIT_EXECUTE_PER_MINUTE=${RATE_LIMIT_EXECUTE_PER_MINUTE}@RATE_LIMIT_JUDGE_PER_MINUTE=${RATE_LIMIT_JUDGE_PER_MINUTE}@CLEANUP_TOKEN=${CLEANUP_TOKEN}" \
-  --set-secrets "DATABASE_URL=${DATABASE_SECRET}:latest"
+  --set-secrets "DATABASE_URL=${DATABASE_SECRET}:latest${POSTHOG_SECRET:+,POSTHOG_API_KEY=${POSTHOG_SECRET}:latest}"
 
 URL="$(gcloud run services describe "${SERVICE}" --project "${PROJECT}" --region "${REGION}" --format='value(status.url)')"
 echo

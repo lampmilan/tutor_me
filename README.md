@@ -71,11 +71,14 @@ echo -n 'postgresql://USER:PASSWORD@...-pooler...neon.tech/neondb?sslmode=requir
 4. Deploy (no `DATABASE_URL` in the shell — Cloud Run reads `neon-database-url`):
 
 ```bash
-export CORS_ORIGINS='*'
+export CORS_ORIGINS='https://YOUR-APP.vercel.app'
+export CLEANUP_TOKEN='long-random-token'
 ./scripts/deploy-cloudrun.sh
 ```
 
-The script prints `https://erettsegi-api-….run.app`. Open `/health` to confirm. If `DATABASE_URL` was previously a plaintext Cloud Run env var, the script removes it and rebinds the name as a secret.
+The script refuses `CORS_ORIGINS=*` (M6). Emergency only: `ALLOW_OPEN_CORS=1`.
+
+The script prints `https://erettsegi-api-….run.app`. Open `/health` to confirm (`ai_generation_enabled` must be `false`). If `DATABASE_URL` was previously a plaintext Cloud Run env var, the script removes it and rebinds the name as a secret.
 
 ### 3. Vercel
 
@@ -88,7 +91,7 @@ The script prints `https://erettsegi-api-….run.app`. Open `/health` to confirm
 
 Browser traffic stays same-origin (`/api/*`); Vercel rewrites it to Cloud Run, so Run/Submit is not limited by Vercel function timeouts.
 
-After the first Vercel URL is known, redeploy Cloud Run with `CORS_ORIGINS` set to that origin if the browser will call the API directly.
+Set Cloud Run `CORS_ORIGINS` to the Vercel production origin anyway, so a browser that calls the API directly cannot use an arbitrary site. Launch checklist: [`.github/BETA_LAUNCH.md`](.github/BETA_LAUNCH.md).
 
 ## Core workflow
 
@@ -118,6 +121,7 @@ docker-compose.yml        Postgres + backend + frontend
 | PUT | `/workspaces/{id}/files/{name}` | Save file |
 | POST | `/execute` | Run `main.py` (visible dataset) |
 | POST | `/judge` | Grade against sample + hidden tests |
+| POST | `/internal/cleanup-workspaces` | Delete idle workspaces (`X-Cleanup-Token`) |
 | POST | `/exams/from-template` | Materialize exam from catalog id |
 
 (Browser clients should use `/api/...` via the frontend proxy.)
@@ -208,13 +212,20 @@ Task types and expected outputs are always computed from the template + datasets
 
 ## Security (code execution)
 
-Docker runs with:
+Docker (local) runs with:
 
 - `--network none`
 - memory / CPU / PID limits
 - execution timeout
 - read-only root filesystem (+ small `/tmp`)
 - container destroyed after each run (`--rm`)
+
+Public beta (Cloud Run) additionally:
+
+- `CORS_ORIGINS` locked to the Vercel production origin (deploy script rejects `*`)
+- `/execute` and `/judge` rate-limited per client IP (429 + Hungarian message)
+- Idle workspaces deleted after `WORKSPACE_TTL_DAYS` (startup sweep + `POST /internal/cleanup-workspaces`)
+- `AI_GENERATION_ENABLED=false`
 
 ## Example exam: Cities
 

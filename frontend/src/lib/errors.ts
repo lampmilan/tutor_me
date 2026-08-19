@@ -13,6 +13,8 @@ const EXACT: Record<string, string> = {
   "Workspace not found": "A munkaterület nem található.",
   "Exam not found": "A feladatsor nem található.",
   "File not found": "A fájl nem található.",
+  "Túl sok kérés. Várj egy percet, majd próbáld újra.":
+    "Túl sok kérés. Várj egy percet, majd próbáld újra.",
 };
 
 const PREFIX: [string, string][] = [

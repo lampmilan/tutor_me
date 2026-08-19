@@ -31,6 +31,7 @@ export const hu = {
     saveFailed: "Mentés sikertelen",
     runFailed: "Futtatás sikertelen",
     judgeFailed: "Értékelés sikertelen",
+    rateLimited: "Túl sok kérés. Várj egy percet, majd próbáld újra.",
     resetWorkspace: "Új munkaterület",
     resetConfirm:
       "Új munkaterületet indítasz — a jelenlegi szerkesztés elvész. Folytatod?",

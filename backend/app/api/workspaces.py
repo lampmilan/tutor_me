@@ -1,10 +1,18 @@
-from fastapi import APIRouter, Depends, HTTPException
+import secrets
+
+from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session, joinedload
 
+from app.config import get_settings
 from app.database import get_db
 from app.models import Exam, File, Workspace
 from app.schemas import FileOut, FileUpdate, StartExamRequest, WorkspaceOut
-from app.services.workspace import create_workspace, sync_workspace_to_disk
+from app.services.workspace import (
+    cleanup_expired_workspaces,
+    create_workspace,
+    sync_workspace_to_disk,
+    touch_workspace,
+)
 
 router = APIRouter(tags=["workspaces"])
 
@@ -40,6 +48,7 @@ def get_workspace(workspace_id: int, db: Session = Depends(get_db)):
     )
     if not workspace:
         raise HTTPException(status_code=404, detail="A munkaterület nem található.")
+    touch_workspace(db, workspace)
     return workspace
 
 
@@ -80,5 +89,19 @@ def save_file(
     file.content = body.content
     db.commit()
     sync_workspace_to_disk(workspace)
+    touch_workspace(db, workspace)
     db.refresh(file)
     return file
+
+
+@router.post("/internal/cleanup-workspaces")
+def cleanup_workspaces(request: Request, db: Session = Depends(get_db)):
+    """Delete workspaces older than WORKSPACE_TTL_DAYS. Requires X-Cleanup-Token."""
+    token = get_settings().cleanup_token
+    if not token:
+        raise HTTPException(status_code=404, detail="Not found")
+    provided = request.headers.get("x-cleanup-token") or ""
+    if not secrets.compare_digest(provided, token):
+        raise HTTPException(status_code=403, detail="Forbidden")
+    deleted = cleanup_expired_workspaces(db)
+    return {"deleted": deleted}

@@ -23,8 +23,10 @@ import {
   clearStoredWorkspaceId,
   getLastSeenDaysAgo,
   getOrCreateVisitorId,
+  getStoredPhaseStatus,
   getStoredWorkspaceId,
   recordLastSeen,
+  setStoredPhaseStatus,
   setStoredWorkspaceId,
 } from "@/lib/workspaceStorage";
 import posthog from "posthog-js";
@@ -166,7 +168,7 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
         setExam(examData);
         setWorkspace(ws);
         setFiles(map);
-        setPhaseStatus({});
+        setPhaseStatus(getStoredPhaseStatus(examId));
         setDirtyFiles(new Set());
         setJudge(null);
         setOutput("");
@@ -386,6 +388,7 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
       }
       setPhaseStatus((prev) => {
         const next = { ...prev, ...statusFromJudge(result) };
+        setStoredPhaseStatus(examId, next);
         const allPassed =
           exam.tasks.length > 0 && exam.tasks.every((t) => next[t.id] === "passed");
         if (allPassed && !celebratedRef.current) {

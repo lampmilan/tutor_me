@@ -1,4 +1,5 @@
 const KEY_PREFIX = "erettsegi-ws-";
+const STATUS_PREFIX = "erettsegi-status-";
 const VISITOR_KEY = "erettsegi-vid";
 const LAST_SEEN_KEY = "erettsegi-last-seen";
 
@@ -61,7 +62,32 @@ export function clearStoredWorkspaceId(examId: number): void {
   if (typeof window === "undefined") return;
   try {
     localStorage.removeItem(`${KEY_PREFIX}${examId}`);
+    localStorage.removeItem(`${STATUS_PREFIX}${examId}`);
   } catch {
     // ignore
+  }
+}
+
+export function getStoredPhaseStatus(examId: number): Record<number, "idle" | "passed" | "failed"> {
+  if (typeof window === "undefined") return {};
+  try {
+    const raw = localStorage.getItem(`${STATUS_PREFIX}${examId}`);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw) as Record<number, "idle" | "passed" | "failed">;
+    return typeof parsed === "object" && parsed !== null ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+
+export function setStoredPhaseStatus(
+  examId: number,
+  status: Record<number, "idle" | "passed" | "failed">,
+): void {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(`${STATUS_PREFIX}${examId}`, JSON.stringify(status));
+  } catch {
+    // ignore quota / private mode
   }
 }

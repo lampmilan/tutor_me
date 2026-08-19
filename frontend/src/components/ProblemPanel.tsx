@@ -84,7 +84,7 @@ export function ProblemPanel({
       {tab === "feladat" ? (
         <div className="flex-1 overflow-auto px-5 py-5">
           <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-            <h1 className="font-[family-name:var(--font-display)] text-2xl font-semibold tracking-tight text-[var(--fg)]">
+            <h1 className="font-[family-name:var(--font-ibm-plex-mono)] text-2xl font-bold tracking-tight text-[var(--fg)]">
               {title}
             </h1>
             <span className="text-sm text-[var(--muted-strong)]">

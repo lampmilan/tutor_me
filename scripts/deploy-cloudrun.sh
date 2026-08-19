@@ -9,8 +9,24 @@ PROJECT="${GCP_PROJECT:-project-3809701b-6b98-4468-890}"
 REGION="${GCP_REGION:-europe-west1}"
 SERVICE="${CLOUD_RUN_SERVICE:-erettsegi-api}"
 DATABASE_SECRET="${DATABASE_SECRET:-DATABASE_URL}"
-CORS_ORIGINS="${CORS_ORIGINS:-*}"
+CORS_ORIGINS="${CORS_ORIGINS:-}"
+ALLOW_OPEN_CORS="${ALLOW_OPEN_CORS:-0}"
 MEMORY="${CLOUD_RUN_MEMORY:-512Mi}"
+WORKSPACE_TTL_DAYS="${WORKSPACE_TTL_DAYS:-7}"
+RATE_LIMIT_EXECUTE_PER_MINUTE="${RATE_LIMIT_EXECUTE_PER_MINUTE:-30}"
+RATE_LIMIT_JUDGE_PER_MINUTE="${RATE_LIMIT_JUDGE_PER_MINUTE:-12}"
+CLEANUP_TOKEN="${CLEANUP_TOKEN:-}"
+CORS_ORIGIN_REGEX="${CORS_ORIGIN_REGEX:-}"
+
+if [[ -z "${CORS_ORIGINS}" || "${CORS_ORIGINS}" == "*" ]]; then
+  if [[ "${ALLOW_OPEN_CORS}" != "1" ]]; then
+    echo "CORS_ORIGINS must be the Vercel production origin (not *)." >&2
+    echo "  export CORS_ORIGINS='https://YOUR-APP.vercel.app'" >&2
+    echo "Emergency escape hatch: ALLOW_OPEN_CORS=1 (do not use for public beta)." >&2
+    exit 1
+  fi
+  CORS_ORIGINS="*"
+fi
 
 echo "Enabling required APIs on ${PROJECT}..."
 gcloud services enable \
@@ -57,7 +73,7 @@ gcloud run deploy "${SERVICE}" \
   --timeout 60 \
   --memory "${MEMORY}" \
   --cpu 1 \
-  --update-env-vars "^@^EXECUTION_BACKEND=subprocess@WORKSPACES_ROOT=/tmp/erettsegi-workspaces@CORS_ORIGINS=${CORS_ORIGINS}" \
+  --update-env-vars "^@^EXECUTION_BACKEND=subprocess@WORKSPACES_ROOT=/tmp/erettsegi-workspaces@CORS_ORIGINS=${CORS_ORIGINS}@CORS_ORIGIN_REGEX=${CORS_ORIGIN_REGEX}@AI_GENERATION_ENABLED=false@WORKSPACE_TTL_DAYS=${WORKSPACE_TTL_DAYS}@RATE_LIMIT_EXECUTE_PER_MINUTE=${RATE_LIMIT_EXECUTE_PER_MINUTE}@RATE_LIMIT_JUDGE_PER_MINUTE=${RATE_LIMIT_JUDGE_PER_MINUTE}@CLEANUP_TOKEN=${CLEANUP_TOKEN}" \
   --set-secrets "DATABASE_URL=${DATABASE_SECRET}:latest"
 
 URL="$(gcloud run services describe "${SERVICE}" --project "${PROJECT}" --region "${REGION}" --format='value(status.url)')"
@@ -68,3 +84,6 @@ echo "  API_URL=${URL}"
 echo "  BACKEND_URL=${URL}"
 echo
 echo "Health: ${URL}/health"
+echo
+echo "Workspace cleanup (Cloud Scheduler daily POST):"
+echo "  curl -X POST ${URL}/internal/cleanup-workspaces -H \"X-Cleanup-Token: \$CLEANUP_TOKEN\""

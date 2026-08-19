@@ -120,6 +120,8 @@ Each exam issue checklist: `template.json`, `builders.py` if needed, visible + 3
 
 **Deferred:** Docker executor on Cloud Run, full auth.
 
+Launch checklist (CORS, rate limits, TTL, smoke): [BETA_LAUNCH.md](BETA_LAUNCH.md)
+
 ---
 
 ## Dependency graph

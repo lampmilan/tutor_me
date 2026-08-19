@@ -72,6 +72,7 @@ class CatalogStructureTests(unittest.TestCase):
         self.assertTrue((root / "mrz-kod" / "builders.py").is_file())
         self.assertTrue((root / "fogasok" / "builders.py").is_file())
         self.assertTrue((root / "hutohaz" / "builders.py").is_file())
+        self.assertTrue((root / "golya" / "builders.py").is_file())
         self.assertFalse((root / "cities" / "builders.py").is_file())
 
 
@@ -450,6 +451,43 @@ class EmeltOracleTests(unittest.TestCase):
             "1 19 0\n2 19 3\n3 13 3\n4 13 2\n5 23 2\n6 23 4\n7 20 4\n8 20 0",
         )
 
+    def test_golya_visible_and_hidden(self) -> None:
+        self._check("golya", "golya_count", "A meresek szama: 14")
+        self._check(
+            "golya",
+            "golya_orszagok",
+            "A vonulas kezdete: Magyarorszag\nA vonulas vege: Egyiptom\nAz erintett orszagok szama: 7",
+        )
+        self._check(
+            "golya",
+            "golya_orszag",
+            "Adja meg az orszag nevet!\nZsiga ebben az orszagban 3 napot toltott.\nEloszor: 8.22\nUtoljara: 8.24",
+        )
+        self._check(
+            "golya",
+            "golya_max_hop",
+            "A legnagyobb napi tavolsag: 5.385\nA repules napja: 8.26",
+        )
+        self._check("golya", "golya_max_orszag", "A legtobb nap: Szerbia, 3 nap")
+        self._check(
+            "golya",
+            "golya_hatar",
+            "8 22 Magyarorszag Szerbia\n"
+            "8 25 Szerbia Bulgaria\n"
+            "8 27 Bulgaria Torokorszag\n"
+            "8 29 Torokorszag Sziria\n"
+            "8 30 Sziria Izrael\n"
+            "8 31 Izrael Egyiptom",
+        )
+        loaded = load_exam_by_id("golya")
+        tmpl = loaded.template
+        spec = next(t.model_dump() for t in tmpl.tasks if t.type == "golya_orszag")
+        hidden = parse_dataset(tmpl.dataset_type, loaded.hidden_contents[1], plugin=loaded.plugin)
+        self.assertIn(
+            "Zsiga nem jart ebben az orszagban.",
+            expected_for_task(hidden, spec, plugin=loaded.plugin),
+        )
+
 
 class HiddenOutputDiversityTests(unittest.TestCase):
     """Verify that hidden datasets produce different outputs from visible for exams where they should."""
@@ -466,6 +504,7 @@ class HiddenOutputDiversityTests(unittest.TestCase):
         ("hulladekudvar", "hulladekudvar_count"),
         ("tuzoltosag", "tuzoltosag_count"),
         ("rakododaru", "rakododaru_count"),
+        ("golya", "golya_count"),
     ]
 
     def test_hidden_datasets_produce_varied_outputs(self) -> None:

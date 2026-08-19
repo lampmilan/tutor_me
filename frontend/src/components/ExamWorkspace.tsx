@@ -450,7 +450,7 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
           href="/"
           className="font-[family-name:var(--font-display)] text-lg tracking-tight text-[var(--accent)]"
         >
-          Érettségi Lab
+          VizsgaGO
         </Link>
         <div className="min-w-0 flex-1">
           <h1 className="truncate text-sm font-medium">{exam.title}</h1>

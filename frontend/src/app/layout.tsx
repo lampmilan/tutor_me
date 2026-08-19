@@ -22,7 +22,7 @@ const mono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Érettségi Lab",
+  title: "VizsgaGO",
   description: "Online coding practice for the Hungarian programming érettségi",
 };
 

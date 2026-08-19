@@ -24,16 +24,35 @@ class Settings(BaseSettings):
     openai_api_key: str = ""
     openai_model: str = "gpt-4o-mini"
     ai_generation_enabled: bool = False
-    # Comma-separated origins, or * for any (Vercel preview URLs vary).
-    cors_origins: str = "*"
+    # Comma-separated browser origins allowed to call the API directly.
+    # Local default is localhost; production Cloud Run must set the Vercel origin (not *).
+    cors_origins: str = "http://localhost:3000,http://127.0.0.1:3000"
+    # Optional extra regex (e.g. https://.*\\.vercel\\.app for preview URLs). Empty = off.
+    cors_origin_regex: str = ""
+    rate_limit_execute_per_minute: int = 30
+    rate_limit_judge_per_minute: int = 12
+    rate_limit_window_seconds: int = 60
+    workspace_ttl_days: int = 7
+    cleanup_token: str = ""
     posthog_api_key: str = ""
     posthog_host: str = "https://eu.i.posthog.com"
 
     def cors_origin_list(self) -> list[str]:
-        raw = (self.cors_origins or "*").strip()
-        if raw == "*":
+        raw = (self.cors_origins or "").strip()
+        if not raw or raw == "*":
             return ["*"]
         return [part.strip() for part in raw.split(",") if part.strip()]
+
+    def cors_middleware_kwargs(self) -> dict:
+        origins = self.cors_origin_list()
+        regex = (self.cors_origin_regex or "").strip() or None
+        return {
+            "allow_origins": origins,
+            "allow_origin_regex": regex,
+            "allow_credentials": False,
+            "allow_methods": ["*"],
+            "allow_headers": ["*"],
+        }
 
 
 @lru_cache

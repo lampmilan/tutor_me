@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Response
 from sqlalchemy.orm import Session, joinedload
 
 from app.database import get_db
@@ -9,9 +9,13 @@ from app.services.templates import create_exam_from_template
 
 router = APIRouter(prefix="/exams", tags=["exams"])
 
+# Catalog is static between deploys/seeds — safe to cache at CDN/browser.
+_CATALOG_CACHE = "public, max-age=60, s-maxage=300, stale-while-revalidate=600"
+
 
 @router.get("", response_model=list[ExamListItem])
-def list_exams(db: Session = Depends(get_db)):
+def list_exams(response: Response, db: Session = Depends(get_db)):
+    response.headers["Cache-Control"] = _CATALOG_CACHE
     return db.query(Exam).order_by(Exam.id).all()
 
 
@@ -41,7 +45,7 @@ def generate_from_template(
 
 
 @router.get("/{exam_id}", response_model=ExamOut)
-def get_exam(exam_id: int, db: Session = Depends(get_db)):
+def get_exam(exam_id: int, response: Response, db: Session = Depends(get_db)):
     exam = (
         db.query(Exam)
         .options(
@@ -53,4 +57,5 @@ def get_exam(exam_id: int, db: Session = Depends(get_db)):
     )
     if not exam:
         raise HTTPException(status_code=404, detail="Exam not found")
+    response.headers["Cache-Control"] = _CATALOG_CACHE
     return exam

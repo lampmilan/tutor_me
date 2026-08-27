@@ -1,22 +1,12 @@
 import { ExamList } from "@/components/ExamList";
 import { hu } from "@/lib/messages/hu";
-import type { ExamListItem } from "@/lib/api";
+import { fetchExamList } from "@/lib/exams";
 
-const API_URL =
-  process.env.API_URL || process.env.BACKEND_URL || "http://localhost:8000";
-
-async function getExams(): Promise<ExamListItem[]> {
-  try {
-    const res = await fetch(`${API_URL}/exams`, { cache: "no-store" });
-    if (!res.ok) return [];
-    return res.json();
-  } catch {
-    return [];
-  }
-}
+/** Must be a numeric literal — Next.js segment config is statically analyzed. */
+export const revalidate = 60;
 
 export default async function HomePage() {
-  const exams = await getExams();
+  const exams = await fetchExamList();
 
   return (
     <main className="relative min-h-screen overflow-hidden">

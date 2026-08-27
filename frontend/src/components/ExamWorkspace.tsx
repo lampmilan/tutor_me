@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
 import { confetti } from "@tsparticles/confetti";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { CodeEditor } from "@/components/CodeEditor";
 import { FeedbackButton } from "@/components/FeedbackModal";
 import { FileExplorer } from "@/components/FileExplorer";
 import { OutputPanel } from "@/components/OutputPanel";
@@ -31,8 +31,22 @@ import {
 } from "@/lib/workspaceStorage";
 import posthog from "posthog-js";
 
+const CodeEditor = dynamic(
+  () => import("@/components/CodeEditor").then((m) => m.CodeEditor),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex h-full min-w-0 flex-1 items-center justify-center bg-[var(--editor)] text-sm text-[var(--muted)]">
+        {hu.workspace.loading}
+      </div>
+    ),
+  },
+);
+
 type ExamWorkspaceProps = {
   examId: number;
+  /** Prefetched on the server so the workspace can start in parallel. */
+  initialExam?: Exam | null;
 };
 
 type PhaseStatus = "idle" | "passed" | "failed";
@@ -125,7 +139,7 @@ async function resolveWorkspace(
   return ws;
 }
 
-export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
+export function ExamWorkspace({ examId, initialExam = null }: ExamWorkspaceProps) {
   const searchParams = useSearchParams();
   const urlWorkspaceId = useMemo(() => {
     const raw = searchParams.get("ws");
@@ -134,7 +148,7 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
     return Number.isFinite(id) && id > 0 ? id : null;
   }, [searchParams]);
 
-  const [exam, setExam] = useState<Exam | null>(null);
+  const [exam, setExam] = useState<Exam | null>(initialExam);
   const [workspace, setWorkspace] = useState<Workspace | null>(null);
   const [files, setFiles] = useState<Record<string, WorkspaceFile>>({});
   const [activeFile, setActiveFile] = useState("");
@@ -154,6 +168,7 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
   const dragging = useRef(false);
   const celebratedRef = useRef(false);
   const loadGen = useRef(0);
+  const initialExamRef = useRef(initialExam);
 
   const bootstrap = useCallback(
     async (preferredWsId?: number | null) => {
@@ -161,8 +176,16 @@ export function ExamWorkspace({ examId }: ExamWorkspaceProps) {
       celebratedRef.current = false;
       setLoadError(null);
       try {
-        const examData = await api.getExam(examId);
-        const ws = await resolveWorkspace(examId, preferredWsId);
+        // Exam catalog + workspace are independent — fetch in parallel.
+        // Prefer SSR-prefetched exam on first paint to skip a round-trip.
+        const cachedExam = initialExamRef.current;
+        initialExamRef.current = null;
+        const [examData, ws] = await Promise.all([
+          cachedExam && cachedExam.id === examId
+            ? Promise.resolve(cachedExam)
+            : api.getExam(examId),
+          resolveWorkspace(examId, preferredWsId),
+        ]);
         if (gen !== loadGen.current) return;
         const { map, starter, firstTask } = applyWorkspaceFiles(ws, examData);
         setExam(examData);

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { TagChip } from "@/components/TagChip";
 import { hu } from "@/lib/messages/hu";
 import { sortTagsForDisplay } from "@/lib/tags";
@@ -36,8 +37,9 @@ export function ExamCard({ exam }: ExamCardProps) {
   const tags = exam.tags ?? [];
   const difficulty = exam.difficulty ?? 2;
   return (
-    <a
+    <Link
       href={`/exam/${exam.id}`}
+      prefetch
       className="group flex items-center justify-between gap-4 border-b border-[var(--border)] py-4 transition hover:border-[var(--accent)]"
     >
       <div>
@@ -60,6 +62,6 @@ export function ExamCard({ exam }: ExamCardProps) {
       <span className="shrink-0 text-sm text-[var(--accent)] opacity-0 transition group-hover:opacity-100">
         {hu.examCard.start}
       </span>
-    </a>
+    </Link>
   );
 }

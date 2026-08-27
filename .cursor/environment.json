@@ -9,7 +9,7 @@
     {
       "name": "backend",
       "description": "FastAPI API on http://localhost:8000 (SQLite + subprocess executor). Seeds exams on startup.",
-      "command": "cd backend && . .venv/bin/activate && exec uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
+      "command": "cd backend && mkdir -p data && . .venv/bin/activate && exec uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
     },
     {
       "name": "frontend",

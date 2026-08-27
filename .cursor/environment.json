@@ -1,0 +1,20 @@
+{
+  "name": "VizsgaGO",
+  "install": "bash .cursor/install.sh",
+  "ports": [
+    { "name": "frontend", "port": 3000 },
+    { "name": "backend", "port": 8000 }
+  ],
+  "terminals": [
+    {
+      "name": "backend",
+      "description": "FastAPI API on http://localhost:8000 (SQLite + subprocess executor). Seeds exams on startup.",
+      "command": "cd backend && . .venv/bin/activate && exec uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
+    },
+    {
+      "name": "frontend",
+      "description": "Next.js dev server on http://localhost:3000. Proxies /api/* to the backend on :8000.",
+      "command": "cd frontend && exec npm run dev"
+    }
+  ]
+}

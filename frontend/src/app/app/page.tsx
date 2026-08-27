@@ -9,19 +9,8 @@ export default async function HomePage() {
   const exams = await fetchExamList();
 
   return (
-    <main className="relative min-h-screen overflow-hidden">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-[0.35]"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(62,207,142,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(62,207,142,0.06) 1px, transparent 1px)",
-          backgroundSize: "48px 48px",
-          maskImage: "radial-gradient(ellipse at center, black 30%, transparent 75%)",
-        }}
-      />
-
-      <div className="relative mx-auto flex min-h-screen max-w-5xl flex-col px-6 pb-16 pt-16">
+    <main className="min-h-screen">
+      <div className="mx-auto flex min-h-screen max-w-5xl flex-col px-6 pb-16 pt-16">
         <p className="mb-3 font-[family-name:var(--font-ibm-plex-mono)] text-5xl font-bold tracking-tight text-[var(--accent)] md:text-6xl">
           VizsgaGO
         </p>

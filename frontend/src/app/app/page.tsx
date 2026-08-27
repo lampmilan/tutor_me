@@ -1,8 +1,9 @@
 import { ExamList } from "@/components/ExamList";
 import { hu } from "@/lib/messages/hu";
-import { EXAMS_REVALIDATE_SECONDS, fetchExamList } from "@/lib/exams";
+import { fetchExamList } from "@/lib/exams";
 
-export const revalidate = EXAMS_REVALIDATE_SECONDS;
+/** Must be a numeric literal — Next.js segment config is statically analyzed. */
+export const revalidate = 60;
 
 export default async function HomePage() {
   const exams = await fetchExamList();

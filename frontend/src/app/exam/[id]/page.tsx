@@ -1,9 +1,10 @@
 import { Suspense } from "react";
 import { ExamWorkspace } from "@/components/ExamWorkspace";
 import { hu } from "@/lib/messages/hu";
-import { EXAMS_REVALIDATE_SECONDS, fetchExam } from "@/lib/exams";
+import { fetchExam } from "@/lib/exams";
 
-export const revalidate = EXAMS_REVALIDATE_SECONDS;
+/** Must be a numeric literal — Next.js segment config is statically analyzed. */
+export const revalidate = 60;
 
 type PageProps = {
   params: Promise<{ id: string }>;

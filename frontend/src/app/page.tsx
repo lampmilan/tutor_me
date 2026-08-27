@@ -63,10 +63,8 @@ export default function LandingPage() {
               Fókuszálj arra, ami még nem megy
             </h2>
             <p className="max-w-2xl text-base leading-relaxed text-[var(--muted-strong)]">
-              Ne vesztegesd az idődet arra, amit már tudsz. Az{" "}
-              <span className="font-semibold text-[var(--fg)]">címkerendszer</span> segítségével témakörök
-              szerint szűrhetsz: gyakorold célzottan a fájlbeolvasást, a bejárást vagy a rendezési
-              algoritmusokat!
+              Ne vesztegesd az idődet arra, amit már tudsz. Szűrj feladat típusok szerint, és gyakorold
+              célzottan a fájlbeolvasást, a bejárást vagy a rendezési algoritmusokat!
             </p>
           </section>
         </div>
@@ -75,9 +73,9 @@ export default function LandingPage() {
         <div className="mt-20 flex flex-col items-start gap-3">
           <Link
             href="/app"
-            className="inline-flex items-center rounded-lg bg-[var(--accent)] px-7 py-3.5 text-base font-semibold text-[var(--bg)] shadow-md transition-opacity hover:opacity-90 active:opacity-75"
+            className="inline-flex items-center rounded-lg bg-[var(--accent)] px-7 py-3.5 text-base font-semibold text-black shadow-md transition-opacity hover:opacity-90 active:opacity-75"
           >
-            Próbáld ki ingyen az első feladatot →
+            Ingyenes próba
           </Link>
           <p className="text-sm text-[var(--muted)]">
             Regisztráció nélkül, azonnal a böngésződben.

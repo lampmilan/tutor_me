@@ -4,7 +4,7 @@ export const hu = {
   home: {
     tagline: "Magyar programozás érettségi felkészülés valódi kódoló környezetben.",
     subtitle:
-      "Válassz feladatsort, szerkeszd a Python kódot, futtasd izolált környezetben, majd ellenőrizd rejtett teszteken.",
+      "Válassz feladatsort, írd meg a kódot, majd ellenőrizd a megoldásod helyességét.",
     examsHeading: "Feladatsorok",
     noExams: "Még nincs feladatsor. Indítsd el a backendet a katalógus betöltéséhez.",
     filterLevel: "Szint",

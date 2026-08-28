@@ -3,6 +3,7 @@
 import posthog from "posthog-js";
 import { PostHogProvider as PHProvider } from "posthog-js/react";
 import { useEffect } from "react";
+import { applyStoredCookieConsent } from "@/lib/cookieConsent";
 import { getOrCreateVisitorId } from "@/lib/workspaceStorage";
 
 export function PostHogProvider({ children }: { children: React.ReactNode }) {
@@ -15,7 +16,10 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
       autocapture: false,
       capture_pageview: true,
       capture_pageleave: true,
+      // No tracking cookies until the visitor accepts (or cookieless if they decline).
+      cookieless_mode: "on_reject",
       loaded: (ph) => {
+        applyStoredCookieConsent(ph);
         ph.identify(getOrCreateVisitorId());
       },
     });

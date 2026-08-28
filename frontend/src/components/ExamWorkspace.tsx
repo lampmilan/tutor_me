@@ -29,7 +29,7 @@ import {
   setStoredPhaseStatus,
   setStoredWorkspaceId,
 } from "@/lib/workspaceStorage";
-import posthog from "posthog-js";
+import { captureIfConsented } from "@/lib/cookieConsent";
 
 const CodeEditor = dynamic(
   () => import("@/components/CodeEditor").then((m) => m.CodeEditor),
@@ -201,7 +201,7 @@ export function ExamWorkspace({ examId, initialExam = null }: ExamWorkspaceProps
 
         // Analytics: share link open detection
         if (preferredWsId != null) {
-          posthog.capture("share_link_opened", {
+          captureIfConsented("share_link_opened", {
             exam_id: examId,
             workspace_id: ws.id,
             distinct_id: getOrCreateVisitorId(),
@@ -210,7 +210,7 @@ export function ExamWorkspace({ examId, initialExam = null }: ExamWorkspaceProps
         // Analytics: return visit detection
         const daysAgo = getLastSeenDaysAgo();
         if (daysAgo !== null && daysAgo <= 7) {
-          posthog.capture("return_visit", {
+          captureIfConsented("return_visit", {
             days_since_last_visit: Math.floor(daysAgo),
             distinct_id: getOrCreateVisitorId(),
           });
@@ -298,7 +298,7 @@ export function ExamWorkspace({ examId, initialExam = null }: ExamWorkspaceProps
       setJudge(null);
       setOutput("");
       setError("");
-      posthog.capture("task_opened", {
+      captureIfConsented("task_opened", {
         exam_id: examId,
         task_index: task.order_index,
         distinct_id: getOrCreateVisitorId(),
@@ -367,7 +367,7 @@ export function ExamWorkspace({ examId, initialExam = null }: ExamWorkspaceProps
       setError(translateError(result.error));
       setRuntime(result.runtime);
       setExitCode(result.exit_code);
-      posthog.capture("code_executed", {
+      captureIfConsented("code_executed", {
         exam_id: examId,
         task_index: activeTask.order_index,
         distinct_id: getOrCreateVisitorId(),
@@ -395,13 +395,13 @@ export function ExamWorkspace({ examId, initialExam = null }: ExamWorkspaceProps
       setJudge(result);
       setRuntime(null);
       setExitCode(null);
-      posthog.capture("judge_submitted", {
+      captureIfConsented("judge_submitted", {
         exam_id: examId,
         task_index: activeTask.order_index,
         distinct_id: getOrCreateVisitorId(),
       });
       if (result.points_earned === result.points_possible && result.points_possible > 0) {
-        posthog.capture("task_completed", {
+        captureIfConsented("task_completed", {
           exam_id: examId,
           task_index: activeTask.order_index,
           score: result.points_earned,
@@ -417,7 +417,7 @@ export function ExamWorkspace({ examId, initialExam = null }: ExamWorkspaceProps
         if (allPassed && !celebratedRef.current) {
           celebratedRef.current = true;
           fireExamCompleteConfetti();
-          posthog.capture("exam_completed", {
+          captureIfConsented("exam_completed", {
             exam_id: examId,
             total_score: exam.tasks.reduce(
               (sum, t) => sum + (next[t.id] === "passed" ? t.points : 0),

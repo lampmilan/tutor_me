@@ -8,7 +8,8 @@ export function CookieConsentBanner() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    // Only show after mount so SSR/hydration stay in sync, and only on first visit.
+    // Only show after mount so SSR/hydration stay in sync.
+    // No stored choice (including visitors who never pressed a button): keep asking.
     if (getCookieConsent() === null) {
       setVisible(true);
     }

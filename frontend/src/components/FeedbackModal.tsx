@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useRef, useEffect, useState } from "react";
-import posthog from "posthog-js";
+import { captureIfConsented } from "@/lib/cookieConsent";
 import { hu } from "@/lib/messages/hu";
 import { getOrCreateVisitorId } from "@/lib/workspaceStorage";
 
@@ -55,7 +55,7 @@ export function FeedbackButton({ examTitle, taskTitles }: Props) {
 
   const submitProblem = useCallback(() => {
     if (!problemText.trim()) return;
-    posthog.capture("feedback_submitted", {
+    captureIfConsented("feedback_submitted", {
       feedback_type: "problem",
       exam_title: examTitle,
       task_title: problemTask.trim() || null,
@@ -68,7 +68,7 @@ export function FeedbackButton({ examTitle, taskTitles }: Props) {
 
   const submitIdea = useCallback(() => {
     if (!ideaText.trim()) return;
-    posthog.capture("feedback_submitted", {
+    captureIfConsented("feedback_submitted", {
       feedback_type: "idea",
       feedback: ideaText.trim(),
       distinct_id: getOrCreateVisitorId(),

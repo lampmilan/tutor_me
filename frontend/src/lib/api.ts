@@ -1,3 +1,4 @@
+import { getCookieConsent } from "./cookieConsent";
 import { hu } from "@/lib/messages/hu";
 import { getOrCreateVisitorId } from "./workspaceStorage";
 
@@ -114,7 +115,9 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     ...init,
     headers: {
       "Content-Type": "application/json",
-      "X-Visitor-Id": getOrCreateVisitorId(),
+      ...(getCookieConsent() === "granted"
+        ? { "X-Visitor-Id": getOrCreateVisitorId() }
+        : {}),
       ...(init?.headers || {}),
     },
   });

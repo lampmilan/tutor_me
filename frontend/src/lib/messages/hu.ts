@@ -68,7 +68,7 @@ export const hu = {
   },
   cookieConsent: {
     title: "Sütik",
-    body: "Analitikai sütiket használunk, hogy megértsük, hogyan használod a VizsgaGO-t, és javítsunk rajta. A választásodat elmentjük ezen az eszközön.",
+    body: "A használatot csak akkor mérjük, ha elfogadod. Elutasítás vagy döntés nélkül nem küldünk analitikai adatot. A választásodat elmentjük ezen az eszközön.",
     accept: "Elfogadom",
     decline: "Elutasítom",
   },

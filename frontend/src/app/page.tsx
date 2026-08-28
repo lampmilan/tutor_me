@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { hu } from "@/lib/messages/hu";
 
-const TOTAL_EXAMS = 27;
+const TOTAL_EXAMS = 19;
 
 export default function LandingPage() {
   return (

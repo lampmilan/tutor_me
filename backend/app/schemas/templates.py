@@ -33,6 +33,8 @@ class TaskTemplate(BaseModel):
 class ExamTemplate(BaseModel):
     id: str
     title: str
+    # False = keep the catalog folder (oracles/tests) but omit from GET /exams
+    listed: bool = True
     description: str = ""
     story: str = ""
     data_file: str

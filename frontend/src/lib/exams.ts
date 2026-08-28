@@ -6,13 +6,28 @@ const API_URL =
 /** Shared revalidate window for catalog data (list + detail). */
 export const EXAMS_REVALIDATE_SECONDS = 60;
 
+/** Kept in the catalog for oracles/tests, but omitted from the public exam list. */
+export const HIDDEN_EXAM_TITLES = new Set([
+  "Virágágyások",
+  "Trains",
+  "Temperatures",
+  "Students",
+  "MRZ kód",
+  "Cities",
+]);
+
+export function isExamListed(exam: Pick<ExamListItem, "title">): boolean {
+  return !HIDDEN_EXAM_TITLES.has(exam.title);
+}
+
 export async function fetchExamList(): Promise<ExamListItem[]> {
   try {
     const res = await fetch(`${API_URL}/exams`, {
       next: { revalidate: EXAMS_REVALIDATE_SECONDS, tags: ["exams"] },
     });
     if (!res.ok) return [];
-    return res.json();
+    const exams: ExamListItem[] = await res.json();
+    return exams.filter(isExamListed);
   } catch {
     return [];
   }

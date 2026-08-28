@@ -5,13 +5,16 @@ from __future__ import annotations
 import random
 import unittest
 
+from fastapi import FastAPI
+from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
-from app.database import Base
+from app.api import exams as exams_api
+from app.database import Base, get_db
 from app.exams.builders import build_exam_preamble, expected_for_task
-from app.exams.loader import discover_exams, load_exam_by_id
-from app.models import ExamFile, Task, TestCase
+from app.exams.loader import discover_exams, load_exam_by_id, unlisted_catalog_ids
+from app.models import Exam, ExamFile, Task, TestCase
 from app.schemas.templates import AuxFileTemplate, ExamTemplate, TaskTemplate
 from app.services.templates import materialize_loaded_exam
 
@@ -152,6 +155,57 @@ class MaterializeAllCatalogTests(unittest.TestCase):
                     self.assertEqual(exam.template_type, loaded.template.id)
                 finally:
                     db.close()
+
+
+class UnlistedCatalogTests(unittest.TestCase):
+    def test_named_exams_are_unlisted_from_the_public_catalog(self) -> None:
+        hidden = unlisted_catalog_ids()
+        self.assertEqual(
+            hidden,
+            frozenset(
+                {
+                    "viragagyasok",
+                    "trains",
+                    "temperatures",
+                    "students",
+                    "mrz-kod",
+                    "cities",
+                }
+            ),
+        )
+        self.assertNotIn("fogasok", hidden)
+        self.assertNotIn("versenyido", hidden)
+
+    def test_list_exams_omits_unlisted_but_detail_still_loads(self) -> None:
+        engine = create_engine("sqlite:///:memory:", connect_args={"check_same_thread": False})
+        Base.metadata.create_all(engine)
+        db = sessionmaker(bind=engine)()
+        hidden = Exam(title="Cities", description="", template_type="cities")
+        visible = Exam(title="Fogások", description="", template_type="fogasok")
+        db.add_all([hidden, visible])
+        db.commit()
+        db.refresh(hidden)
+        db.refresh(visible)
+
+        app = FastAPI()
+        app.include_router(exams_api.router)
+
+        def _override_db():
+            try:
+                yield db
+            finally:
+                pass
+
+        app.dependency_overrides[get_db] = _override_db
+        client = TestClient(app)
+
+        titles = [row["title"] for row in client.get("/exams").json()]
+        self.assertEqual(titles, ["Fogások"])
+
+        detail = client.get(f"/exams/{hidden.id}")
+        self.assertEqual(detail.status_code, 200)
+        self.assertEqual(detail.json()["title"], "Cities")
+        db.close()
 
 
 if __name__ == "__main__":

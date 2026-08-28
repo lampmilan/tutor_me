@@ -1,6 +1,7 @@
 {
   "id": "trains",
   "title": "Trains",
+  "listed": false,
   "level": "kozep",
   "difficulty": 2,
   "tags": ["list", "loops", "store", "counting", "search"],

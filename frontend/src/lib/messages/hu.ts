@@ -66,6 +66,12 @@ export const hu = {
   editor: {
     readOnly: "csak olvasható",
   },
+  cookieConsent: {
+    title: "Sütik",
+    body: "Analitikai sütiket használunk, hogy megértsük, hogyan használod a VizsgaGO-t, és javítsunk rajta. A választásodat elmentjük ezen az eszközön.",
+    accept: "Elfogadom",
+    decline: "Elutasítom",
+  },
   output: {
     title: "Eredmény",
     running: "Futtatás…",

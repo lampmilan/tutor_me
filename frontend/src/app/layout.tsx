@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, Montserrat } from "next/font/google";
 import "./globals.css";
+import { CookieConsentBanner } from "@/components/CookieConsentBanner";
 import { PostHogProvider } from "@/components/PostHogProvider";
 
 const sans = Montserrat({
@@ -28,7 +29,10 @@ export default function RootLayout({
   return (
     <html lang="hu">
       <body className={`${sans.variable} ${mono.variable} antialiased`}>
-        <PostHogProvider>{children}</PostHogProvider>
+        <PostHogProvider>
+          {children}
+          <CookieConsentBanner />
+        </PostHogProvider>
       </body>
     </html>
   );

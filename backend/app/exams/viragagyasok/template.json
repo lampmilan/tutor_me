@@ -1,6 +1,7 @@
 {
   "id": "viragagyasok",
   "title": "Virágágyások",
+  "listed": false,
   "level": "emelt",
   "difficulty": 4,
   "tags": ["IO", "count", "search", "validate", "simulation"],

@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, Response
 from sqlalchemy.orm import Session, joinedload
 
 from app.database import get_db
+from app.exams.loader import unlisted_catalog_ids
 from app.models import Exam, Task
 from app.schemas import ExamListItem, ExamOut
 from app.schemas.templates import TemplateGenerateBody
@@ -16,7 +17,9 @@ _CATALOG_CACHE = "public, max-age=60, s-maxage=300, stale-while-revalidate=600"
 @router.get("", response_model=list[ExamListItem])
 def list_exams(response: Response, db: Session = Depends(get_db)):
     response.headers["Cache-Control"] = _CATALOG_CACHE
-    return db.query(Exam).order_by(Exam.id).all()
+    hidden = unlisted_catalog_ids()
+    exams = db.query(Exam).order_by(Exam.id).all()
+    return [exam for exam in exams if (exam.template_type or "") not in hidden]
 
 
 @router.post("/from-template", response_model=ExamOut)

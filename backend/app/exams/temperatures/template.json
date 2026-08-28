@@ -1,6 +1,7 @@
 {
   "id": "temperatures",
   "title": "Temperatures",
+  "listed": false,
   "level": "kozep",
   "difficulty": 2,
   "tags": ["list", "loops", "store", "counting", "search"],

@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from app.database import Base
 from app.exams.builders import build_exam_preamble, expected_for_task
-from app.exams.loader import discover_exams, load_exam_by_id
+from app.exams.loader import discover_exams, load_exam_by_id, unlisted_catalog_ids
 from app.models import ExamFile, Task, TestCase
 from app.schemas.templates import AuxFileTemplate, ExamTemplate, TaskTemplate
 from app.services.templates import materialize_loaded_exam
@@ -152,6 +152,26 @@ class MaterializeAllCatalogTests(unittest.TestCase):
                     self.assertEqual(exam.template_type, loaded.template.id)
                 finally:
                     db.close()
+
+
+class UnlistedCatalogTests(unittest.TestCase):
+    def test_named_exams_are_unlisted_from_the_public_catalog(self) -> None:
+        hidden = unlisted_catalog_ids()
+        self.assertEqual(
+            hidden,
+            frozenset(
+                {
+                    "viragagyasok",
+                    "trains",
+                    "temperatures",
+                    "students",
+                    "mrz-kod",
+                    "cities",
+                }
+            ),
+        )
+        self.assertNotIn("fogasok", hidden)
+        self.assertNotIn("versenyido", hidden)
 
 
 if __name__ == "__main__":

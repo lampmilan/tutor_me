@@ -31,9 +31,23 @@ def list_exam_dirs() -> list[Path]:
     return dirs
 
 
-def load_exam_dir(exam_dir: Path) -> LoadedExam:
+def load_exam_template(exam_dir: Path) -> ExamTemplate:
     raw = json.loads((exam_dir / "template.json").read_text(encoding="utf-8"))
-    template = ExamTemplate.model_validate(raw)
+    return ExamTemplate.model_validate(raw)
+
+
+def unlisted_catalog_ids() -> frozenset[str]:
+    """Catalog ids with listed=false — omit from the public exam list only."""
+    ids: set[str] = set()
+    for path in list_exam_dirs():
+        template = load_exam_template(path)
+        if not template.listed:
+            ids.add(template.id)
+    return frozenset(ids)
+
+
+def load_exam_dir(exam_dir: Path) -> LoadedExam:
+    template = load_exam_template(exam_dir)
 
     visible_path = exam_dir / template.visible
     if not visible_path.is_file():

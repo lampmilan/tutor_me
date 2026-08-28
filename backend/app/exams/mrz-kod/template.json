@@ -1,6 +1,7 @@
 {
   "id": "mrz-kod",
   "title": "MRZ kód",
+  "listed": false,
   "level": "emelt",
   "difficulty": 4,
   "tags": ["list", "loops", "store", "search", "validate"],

@@ -45,7 +45,7 @@ Create a project at [neon.tech](https://neon.tech) (or claim a temporary DB from
 postgresql://USER:PASSWORD@ep-xxx-pooler.REGION.aws.neon.tech/neondb?sslmode=require
 ```
 
-Schema + exam seed run automatically when the API starts.
+Schema is created on API start. Missing catalog exams are inserted then; rematerialize stale templates with `POST /internal/seed-exams`.
 
 ### 2. Cloud Run
 
@@ -224,7 +224,9 @@ Public beta (Cloud Run) additionally:
 
 - `CORS_ORIGINS` locked to the Vercel production origin (deploy script rejects `*`)
 - `/execute` and `/judge` rate-limited per client IP (429 + Hungarian message)
-- Idle workspaces deleted after `WORKSPACE_TTL_DAYS` (startup sweep + `POST /internal/cleanup-workspaces`)
+- Idle workspaces deleted after `WORKSPACE_TTL_DAYS` (`POST /internal/cleanup-workspaces`; not on API startup)
+- Catalog rematerialize: `POST /internal/seed-exams` (same `CLEANUP_TOKEN`); startup only inserts **missing** exams
+- Cloud Run `--min-instances=1` so exam start is not a cold-start wait
 - `AI_GENERATION_ENABLED=false`
 
 ## Example exam: Cities

@@ -13,6 +13,7 @@ POSTHOG_SECRET="${POSTHOG_SECRET:-posthog-api-key}"
 CORS_ORIGINS="${CORS_ORIGINS:-}"
 ALLOW_OPEN_CORS="${ALLOW_OPEN_CORS:-0}"
 MEMORY="${CLOUD_RUN_MEMORY:-512Mi}"
+MIN_INSTANCES="${CLOUD_RUN_MIN_INSTANCES:-1}"
 WORKSPACE_TTL_DAYS="${WORKSPACE_TTL_DAYS:-7}"
 RATE_LIMIT_EXECUTE_PER_MINUTE="${RATE_LIMIT_EXECUTE_PER_MINUTE:-30}"
 RATE_LIMIT_JUDGE_PER_MINUTE="${RATE_LIMIT_JUDGE_PER_MINUTE:-12}"
@@ -86,6 +87,7 @@ gcloud run deploy "${SERVICE}" \
   --timeout 60 \
   --memory "${MEMORY}" \
   --cpu 1 \
+  --min-instances "${MIN_INSTANCES:-1}" \
   --update-env-vars "^@^EXECUTION_BACKEND=subprocess@WORKSPACES_ROOT=/tmp/erettsegi-workspaces@CORS_ORIGINS=${CORS_ORIGINS}@CORS_ORIGIN_REGEX=${CORS_ORIGIN_REGEX}@AI_GENERATION_ENABLED=false@WORKSPACE_TTL_DAYS=${WORKSPACE_TTL_DAYS}@RATE_LIMIT_EXECUTE_PER_MINUTE=${RATE_LIMIT_EXECUTE_PER_MINUTE}@RATE_LIMIT_JUDGE_PER_MINUTE=${RATE_LIMIT_JUDGE_PER_MINUTE}@CLEANUP_TOKEN=${CLEANUP_TOKEN}" \
   --set-secrets "DATABASE_URL=${DATABASE_SECRET}:latest${POSTHOG_SECRET:+,POSTHOG_API_KEY=${POSTHOG_SECRET}:latest}"
 
@@ -100,3 +102,5 @@ echo "Health: ${URL}/health"
 echo
 echo "Workspace cleanup (Cloud Scheduler daily POST):"
 echo "  curl -X POST ${URL}/internal/cleanup-workspaces -H \"X-Cleanup-Token: \$CLEANUP_TOKEN\""
+echo "Catalog rematerialize (after template changes):"
+echo "  API_URL=${URL} CLEANUP_TOKEN=\$CLEANUP_TOKEN ./scripts/seed-exams.sh"

@@ -109,32 +109,55 @@ export type JudgeResponse = {
   results: TestResult[];
 };
 
-async function request<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`${API_URL}${path}`, {
-    ...init,
-    headers: {
-      "Content-Type": "application/json",
-      "X-Visitor-Id": getOrCreateVisitorId(),
-      ...(init?.headers || {}),
-    },
-  });
-  if (!res.ok) {
-    const text = await res.text();
-    if (res.status === 429) {
-      let detail: string = hu.workspace.rateLimited;
-      try {
-        const parsed = JSON.parse(text) as { detail?: string };
-        if (typeof parsed.detail === "string" && parsed.detail.trim()) {
-          detail = parsed.detail;
+async function request<T>(
+  path: string,
+  init?: RequestInit,
+  timeoutMs = 45_000,
+): Promise<T> {
+  const timeout =
+    typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function"
+      ? AbortSignal.timeout(timeoutMs)
+      : (() => {
+          const controller = new AbortController();
+          setTimeout(() => controller.abort(), timeoutMs);
+          return controller.signal;
+        })();
+  try {
+    const res = await fetch(`${API_URL}${path}`, {
+      ...init,
+      signal: init?.signal ?? timeout,
+      headers: {
+        "Content-Type": "application/json",
+        "X-Visitor-Id": getOrCreateVisitorId(),
+        ...(init?.headers || {}),
+      },
+    });
+    if (!res.ok) {
+      const text = await res.text();
+      if (res.status === 429) {
+        let detail: string = hu.workspace.rateLimited;
+        try {
+          const parsed = JSON.parse(text) as { detail?: string };
+          if (typeof parsed.detail === "string" && parsed.detail.trim()) {
+            detail = parsed.detail;
+          }
+        } catch {
+          // keep default Hungarian copy
         }
-      } catch {
-        // keep default Hungarian copy
+        throw new Error(detail);
       }
-      throw new Error(detail);
+      throw new Error(text || `Request failed: ${res.status}`);
     }
-    throw new Error(text || `Request failed: ${res.status}`);
+    return res.json() as Promise<T>;
+  } catch (err) {
+    if (
+      (err instanceof DOMException && err.name === "AbortError") ||
+      (err instanceof Error && err.name === "AbortError")
+    ) {
+      throw new Error(hu.workspace.loadTimeout);
+    }
+    throw err;
   }
-  return res.json() as Promise<T>;
 }
 
 export const api = {
@@ -152,22 +175,30 @@ export const api = {
       body: JSON.stringify({ content }),
     }),
   execute: (workspaceId: number, code?: string, stdin = "", taskId?: number) =>
-    request<ExecuteResponse>("/execute", {
-      method: "POST",
-      body: JSON.stringify({
-        workspace_id: workspaceId,
-        code,
-        stdin,
-        task_id: taskId ?? null,
-      }),
-    }),
+    request<ExecuteResponse>(
+      "/execute",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          workspace_id: workspaceId,
+          code,
+          stdin,
+          task_id: taskId ?? null,
+        }),
+      },
+      55_000,
+    ),
   judge: (workspaceId: number, code?: string, taskId?: number) =>
-    request<JudgeResponse>("/judge", {
-      method: "POST",
-      body: JSON.stringify({
-        workspace_id: workspaceId,
-        code,
-        task_id: taskId ?? null,
-      }),
-    }),
+    request<JudgeResponse>(
+      "/judge",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          workspace_id: workspaceId,
+          code,
+          task_id: taskId ?? null,
+        }),
+      },
+      55_000,
+    ),
 };

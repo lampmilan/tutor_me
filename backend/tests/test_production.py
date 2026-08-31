@@ -11,7 +11,7 @@ from unittest.mock import patch
 
 from fastapi import Depends, FastAPI, Request
 from fastapi.testclient import TestClient
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, inspect, text
 from sqlalchemy.orm import Session, sessionmaker
 
 from app.config import Settings
@@ -250,6 +250,46 @@ class OpsTokenTests(unittest.TestCase):
             res = client.post("/internal/seed-exams", headers={"X-Cleanup-Token": "secret"}, json={})
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.json(), {"ok": True})
+
+
+class EnsureSchemaTests(unittest.TestCase):
+    def test_adds_missing_last_accessed_at_column(self) -> None:
+        """Postgres production DBs created before this column skip create_all."""
+        engine = create_engine("sqlite:///:memory:", connect_args={"check_same_thread": False})
+        with engine.begin() as conn:
+            conn.execute(
+                text(
+                    "CREATE TABLE workspaces ("
+                    "id INTEGER PRIMARY KEY, exam_id INTEGER, "
+                    "user_id VARCHAR, path VARCHAR)"
+                )
+            )
+        with patch("app.database.engine", engine):
+            from app.database import ensure_schema
+
+            ensure_schema()
+        cols = {c["name"] for c in inspect(engine).get_columns("workspaces")}
+        self.assertIn("last_accessed_at", cols)
+
+    def test_ensure_schema_ddl_includes_column_names(self) -> None:
+        import ast
+        from pathlib import Path
+
+        src = Path(__file__).resolve().parents[1] / "app" / "database.py"
+        tree = ast.parse(src.read_text(encoding="utf-8"))
+        for node in ast.walk(tree):
+            if not isinstance(node, ast.Call):
+                continue
+            if not isinstance(node.func, ast.Name) or node.func.id != "_add_column_if_missing":
+                continue
+            args = node.args
+            self.assertGreaterEqual(len(args), 3)
+            column = ast.literal_eval(args[1])
+            ddl = ast.literal_eval(args[2])
+            self.assertTrue(
+                str(ddl).startswith(str(column) + " "),
+                f"ddl {ddl!r} must start with column name {column!r}",
+            )
 
 
 def _utcnow() -> datetime:

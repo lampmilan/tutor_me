@@ -59,6 +59,8 @@ export const hu = {
     ideaLabel: "Visszajelzés / Ötlet",
     ideaPlaceholder: "Írd le gondolataidat…",
     send: "Küldés",
+    sending: "Küldés…",
+    sendFailed: "Nem sikerült elküldeni. Próbáld újra.",
     thanks: "Köszönjük a visszajelzést!",
   },
   explorer: {

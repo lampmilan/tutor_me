@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 
-from app.api import exams, execution, workspaces
+from app.api import exams, execution, feedback, workspaces
 from app.config import get_settings
 from app.database import Base, SessionLocal, engine, ensure_schema
 from app.seed import seed_all_exams
@@ -63,6 +63,7 @@ app.add_middleware(
 app.include_router(exams.router)
 app.include_router(workspaces.router)
 app.include_router(execution.router)
+app.include_router(feedback.router)
 
 
 @app.get("/health")

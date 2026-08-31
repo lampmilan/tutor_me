@@ -137,19 +137,19 @@ async function request<T>(
     });
     if (!res.ok) {
       const text = await res.text();
-      if (res.status === 429) {
-        let detail: string = hu.workspace.rateLimited;
-        try {
-          const parsed = JSON.parse(text) as { detail?: string };
-          if (typeof parsed.detail === "string" && parsed.detail.trim()) {
-            detail = parsed.detail;
-          }
-        } catch {
-          // keep default Hungarian copy
+      let detail = text || `Request failed: ${res.status}`;
+      try {
+        const parsed = JSON.parse(text) as { detail?: unknown };
+        if (typeof parsed.detail === "string" && parsed.detail.trim()) {
+          detail = parsed.detail;
         }
-        throw new Error(detail);
+      } catch {
+        // keep raw body
       }
-      throw new Error(text || `Request failed: ${res.status}`);
+      if (res.status === 429) {
+        throw new Error(detail.trim() ? detail : hu.workspace.rateLimited);
+      }
+      throw new Error(detail);
     }
     return res.json() as Promise<T>;
   } catch (err) {
@@ -204,4 +204,14 @@ export const api = {
       },
       55_000,
     ),
+  submitFeedback: (body: {
+    feedback_type: "problem" | "idea";
+    exam_title?: string | null;
+    task_title?: string | null;
+    message: string;
+  }) =>
+    request<{ id: number }>("/feedback", {
+      method: "POST",
+      body: JSON.stringify(body),
+    }),
 };

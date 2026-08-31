@@ -31,6 +31,7 @@ class Settings(BaseSettings):
     cors_origin_regex: str = ""
     rate_limit_execute_per_minute: int = 30
     rate_limit_judge_per_minute: int = 12
+    rate_limit_feedback_per_minute: int = 8
     rate_limit_window_seconds: int = 60
     workspace_ttl_days: int = 7
     cleanup_token: str = ""

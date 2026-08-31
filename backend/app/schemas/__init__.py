@@ -1,6 +1,7 @@
 from datetime import datetime
+from typing import Literal
 
-from pydantic import BaseModel, model_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 
 class ExamFileOut(BaseModel):
@@ -158,3 +159,44 @@ class JudgeResponse(BaseModel):
 
 class GenerateExamResponse(BaseModel):
     exam: ExamOut
+
+
+FEEDBACK_MESSAGE_MAX = 4000
+
+
+class FeedbackIn(BaseModel):
+    feedback_type: Literal["problem", "idea"]
+    exam_title: str | None = None
+    task_title: str | None = None
+    message: str = Field(min_length=1, max_length=FEEDBACK_MESSAGE_MAX)
+
+    @field_validator("exam_title", "task_title", mode="before")
+    @classmethod
+    def blank_title_to_none(cls, value: object) -> str | None:
+        if value is None:
+            return None
+        text = str(value).strip()
+        return text[:255] if text else None
+
+    @field_validator("message")
+    @classmethod
+    def strip_message(cls, value: str) -> str:
+        text = value.strip()
+        if not text:
+            raise ValueError("message required")
+        return text
+
+
+class FeedbackOut(BaseModel):
+    id: int
+    feedback_type: str
+    exam_title: str
+    task_title: str
+    message: str
+    created_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
+class FeedbackCreated(BaseModel):
+    id: int

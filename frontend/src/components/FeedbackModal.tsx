@@ -1,9 +1,8 @@
 "use client";
 
 import { useCallback, useRef, useEffect, useState } from "react";
-import { captureIfConsented } from "@/lib/cookieConsent";
+import { api } from "@/lib/api";
 import { hu } from "@/lib/messages/hu";
-import { getOrCreateVisitorId } from "@/lib/workspaceStorage";
 
 type FeedbackType = "problem" | "idea" | null;
 
@@ -12,10 +11,18 @@ type Props = {
   taskTitles: string[];
 };
 
+function displayError(err: unknown): string {
+  const msg = err instanceof Error ? err.message.trim() : "";
+  if (msg && !msg.startsWith("{") && !msg.startsWith("[")) return msg;
+  return hu.feedback.sendFailed;
+}
+
 export function FeedbackButton({ examTitle, taskTitles }: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [type, setType] = useState<FeedbackType>(null);
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Problem form fields
   const [problemTask, setProblemTask] = useState("");
@@ -25,6 +32,17 @@ export function FeedbackButton({ examTitle, taskTitles }: Props) {
   const [ideaText, setIdeaText] = useState("");
 
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const close = useCallback(() => {
+    setMenuOpen(false);
+    setType(null);
+    setSubmitted(false);
+    setSubmitting(false);
+    setError(null);
+    setProblemTask("");
+    setProblemText("");
+    setIdeaText("");
+  }, []);
 
   // Close menu/form on outside click
   useEffect(() => {
@@ -36,46 +54,53 @@ export function FeedbackButton({ examTitle, taskTitles }: Props) {
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
-  }, [menuOpen, type]);
-
-  const close = useCallback(() => {
-    setMenuOpen(false);
-    setType(null);
-    setSubmitted(false);
-    setProblemTask("");
-    setProblemText("");
-    setIdeaText("");
-  }, []);
+  }, [menuOpen, type, close]);
 
   const selectType = useCallback((t: FeedbackType) => {
     setMenuOpen(false);
     setType(t);
     setSubmitted(false);
+    setError(null);
   }, []);
 
-  const submitProblem = useCallback(() => {
-    if (!problemText.trim()) return;
-    captureIfConsented("feedback_submitted", {
-      feedback_type: "problem",
-      exam_title: examTitle,
-      task_title: problemTask.trim() || null,
-      problem: problemText.trim(),
-      distinct_id: getOrCreateVisitorId(),
-    });
-    setSubmitted(true);
-    setTimeout(close, 1600);
-  }, [examTitle, problemTask, problemText, close]);
+  const submitProblem = useCallback(async () => {
+    if (!problemText.trim() || submitting) return;
+    setSubmitting(true);
+    setError(null);
+    try {
+      await api.submitFeedback({
+        feedback_type: "problem",
+        exam_title: examTitle,
+        task_title: problemTask.trim() || null,
+        message: problemText.trim(),
+      });
+      setSubmitted(true);
+      setTimeout(close, 1600);
+    } catch (err) {
+      setError(displayError(err));
+    } finally {
+      setSubmitting(false);
+    }
+  }, [examTitle, problemTask, problemText, submitting, close]);
 
-  const submitIdea = useCallback(() => {
-    if (!ideaText.trim()) return;
-    captureIfConsented("feedback_submitted", {
-      feedback_type: "idea",
-      feedback: ideaText.trim(),
-      distinct_id: getOrCreateVisitorId(),
-    });
-    setSubmitted(true);
-    setTimeout(close, 1600);
-  }, [ideaText, close]);
+  const submitIdea = useCallback(async () => {
+    if (!ideaText.trim() || submitting) return;
+    setSubmitting(true);
+    setError(null);
+    try {
+      await api.submitFeedback({
+        feedback_type: "idea",
+        exam_title: examTitle,
+        message: ideaText.trim(),
+      });
+      setSubmitted(true);
+      setTimeout(close, 1600);
+    } catch (err) {
+      setError(displayError(err));
+    } finally {
+      setSubmitting(false);
+    }
+  }, [examTitle, ideaText, submitting, close]);
 
   const isOpen = menuOpen || type !== null;
 
@@ -111,8 +136,10 @@ export function FeedbackButton({ examTitle, taskTitles }: Props) {
           title={hu.feedback.typeProblem}
           onClose={close}
           submitted={submitted}
+          submitting={submitting}
+          error={error}
           onSubmit={submitProblem}
-          submitDisabled={!problemText.trim()}
+          submitDisabled={!problemText.trim() || submitting}
         >
           <label className="block text-xs text-[var(--muted)] mb-1">{hu.feedback.examName}</label>
           <input
@@ -154,8 +181,10 @@ export function FeedbackButton({ examTitle, taskTitles }: Props) {
           title={hu.feedback.typeIdea}
           onClose={close}
           submitted={submitted}
+          submitting={submitting}
+          error={error}
           onSubmit={submitIdea}
-          submitDisabled={!ideaText.trim()}
+          submitDisabled={!ideaText.trim() || submitting}
         >
           <label className="block text-xs text-[var(--muted)] mb-1">{hu.feedback.ideaLabel}</label>
           <textarea
@@ -192,6 +221,8 @@ function FeedbackPanel({
   title,
   onClose,
   submitted,
+  submitting,
+  error,
   onSubmit,
   submitDisabled,
   children,
@@ -199,6 +230,8 @@ function FeedbackPanel({
   title: string;
   onClose: () => void;
   submitted: boolean;
+  submitting: boolean;
+  error: string | null;
   onSubmit: () => void;
   submitDisabled: boolean;
   children: React.ReactNode;
@@ -223,13 +256,16 @@ function FeedbackPanel({
             </button>
           </div>
           {children}
+          {error ? (
+            <p className="mt-2 text-xs text-red-400">{error}</p>
+          ) : null}
           <button
             type="button"
             onClick={onSubmit}
             disabled={submitDisabled}
             className="mt-3 w-full rounded bg-[var(--accent)] py-2 text-sm font-medium text-[var(--bg)] transition hover:brightness-110 disabled:opacity-40"
           >
-            {hu.feedback.send}
+            {submitting ? hu.feedback.sending : hu.feedback.send}
           </button>
         </>
       )}

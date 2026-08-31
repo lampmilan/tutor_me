@@ -79,3 +79,7 @@ def limit_execute(request: Request) -> None:
 
 def limit_judge(request: Request) -> None:
     _enforce(request, "judge", get_settings().rate_limit_judge_per_minute)
+
+
+def limit_feedback(request: Request) -> None:
+    _enforce(request, "feedback", get_settings().rate_limit_feedback_per_minute)

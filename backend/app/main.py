@@ -9,7 +9,7 @@ from app.api import exams, execution, workspaces
 from app.config import get_settings
 from app.database import Base, SessionLocal, engine, ensure_schema
 from app.seed import seed_all_exams
-from app.services.workspace import cleanup_expired_workspaces, ensure_workspaces_root
+from app.services.workspace import ensure_workspaces_root
 
 _SEED_LOCK_ID = 872341
 
@@ -26,6 +26,8 @@ async def lifespan(_: FastAPI):
     ensure_schema()
     db = SessionLocal()
     try:
+        # Missing catalog folders only — do not rematerialize or TTL-sweep here.
+        # Full reseed: POST /internal/seed-exams. Cleanup: POST /internal/cleanup-workspaces.
         use_lock = (
             engine.dialect.name == "postgresql"
             and "-pooler." not in settings.database_url
@@ -34,17 +36,12 @@ async def lifespan(_: FastAPI):
             db.execute(text("SELECT pg_advisory_lock(:id)"), {"id": _SEED_LOCK_ID})
             db.commit()
             try:
-                seed_all_exams(db)
+                seed_all_exams(db, rematerialize=False)
             finally:
                 db.execute(text("SELECT pg_advisory_unlock(:id)"), {"id": _SEED_LOCK_ID})
                 db.commit()
         else:
-            seed_all_exams(db)
-        try:
-            cleanup_expired_workspaces(db)
-        except Exception:
-            # TTL sweep must not block API startup.
-            pass
+            seed_all_exams(db, rematerialize=False)
     finally:
         db.close()
     yield

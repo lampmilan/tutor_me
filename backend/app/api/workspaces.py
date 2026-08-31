@@ -1,12 +1,11 @@
-import secrets
-
 from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session, joinedload
 
-from app.config import get_settings
+from app.api.ops_auth import require_ops_token
 from app.database import get_db
 from app.models import Exam, File, Workspace
 from app.schemas import FileOut, FileUpdate, StartExamRequest, WorkspaceOut
+from app.seed import seed_all_exams
 from app.services.workspace import (
     cleanup_expired_workspaces,
     create_workspace,
@@ -97,11 +96,14 @@ def save_file(
 @router.post("/internal/cleanup-workspaces")
 def cleanup_workspaces(request: Request, db: Session = Depends(get_db)):
     """Delete workspaces older than WORKSPACE_TTL_DAYS. Requires X-Cleanup-Token."""
-    token = get_settings().cleanup_token
-    if not token:
-        raise HTTPException(status_code=404, detail="Not found")
-    provided = request.headers.get("x-cleanup-token") or ""
-    if not secrets.compare_digest(provided, token):
-        raise HTTPException(status_code=403, detail="Forbidden")
+    require_ops_token(request)
     deleted = cleanup_expired_workspaces(db)
     return {"deleted": deleted}
+
+
+@router.post("/internal/seed-exams")
+def seed_exams(request: Request, db: Session = Depends(get_db)):
+    """Rematerialize the catalog (new + stale exams). Requires X-Cleanup-Token."""
+    require_ops_token(request)
+    exams = seed_all_exams(db, rematerialize=True)
+    return {"count": len(exams), "ids": [exam.template_type for exam in exams]}

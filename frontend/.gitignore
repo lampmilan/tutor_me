@@ -17,6 +17,9 @@
 /.next/
 /out/
 
+# copied from node_modules on install / build
+/public/monaco/
+
 # production
 /build
 

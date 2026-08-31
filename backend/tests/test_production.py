@@ -9,7 +9,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from unittest.mock import patch
 
-from fastapi import Depends, FastAPI
+from fastapi import Depends, FastAPI, Request
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
@@ -17,6 +17,7 @@ from sqlalchemy.orm import Session, sessionmaker
 from app.config import Settings
 from app.database import Base
 from app.models import Exam, File, Submission, Workspace
+from app.api.ops_auth import require_ops_token
 from app.services.rate_limit import RATE_LIMIT_DETAIL, SlidingWindowLimiter, limit_execute, limiter
 from app.services.workspace import cleanup_expired_workspaces, delete_workspace, touch_workspace
 
@@ -195,6 +196,60 @@ class WorkspaceTtlTests(unittest.TestCase):
         delete_workspace(self.db, ws)
         self.db.commit()
         self.assertEqual(self.db.query(Workspace).count(), 0)
+
+
+class OpsTokenTests(unittest.TestCase):
+    def test_missing_token_is_hidden_404(self) -> None:
+        from fastapi.testclient import TestClient
+
+        app = FastAPI()
+
+        @app.post("/internal/seed-exams")
+        def seed(request: Request):
+            require_ops_token(request)
+            return {"ok": True}
+
+        client = TestClient(app)
+        with patch("app.api.ops_auth.get_settings", return_value=Settings(cleanup_token="")):
+            res = client.post("/internal/seed-exams", json={})
+        self.assertEqual(res.status_code, 404, res.text)
+
+    def test_wrong_token_is_403(self) -> None:
+        from fastapi.testclient import TestClient
+
+        app = FastAPI()
+
+        @app.post("/internal/seed-exams")
+        def seed(request: Request):
+            require_ops_token(request)
+            return {"ok": True}
+
+        client = TestClient(app)
+        with patch(
+            "app.api.ops_auth.get_settings",
+            return_value=Settings(cleanup_token="secret"),
+        ):
+            res = client.post("/internal/seed-exams", headers={"X-Cleanup-Token": "nope"}, json={})
+        self.assertEqual(res.status_code, 403, res.text)
+
+    def test_matching_token_passes(self) -> None:
+        from fastapi.testclient import TestClient
+
+        app = FastAPI()
+
+        @app.post("/internal/seed-exams")
+        def seed(request: Request):
+            require_ops_token(request)
+            return {"ok": True}
+
+        client = TestClient(app)
+        with patch(
+            "app.api.ops_auth.get_settings",
+            return_value=Settings(cleanup_token="secret"),
+        ):
+            res = client.post("/internal/seed-exams", headers={"X-Cleanup-Token": "secret"}, json={})
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.json(), {"ok": True})
 
 
 def _utcnow() -> datetime:

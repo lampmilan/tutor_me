@@ -1,7 +1,12 @@
 "use client";
 
-import Editor from "@monaco-editor/react";
+import Editor, { loader } from "@monaco-editor/react";
 import { hu } from "@/lib/messages/hu";
+
+if (typeof window !== "undefined") {
+  // Same-origin copy of monaco-editor/min/vs (see scripts/copy-monaco.mjs).
+  loader.config({ paths: { vs: "/monaco/vs" } });
+}
 
 type CodeEditorProps = {
   filename: string;

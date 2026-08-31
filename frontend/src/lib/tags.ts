@@ -81,9 +81,9 @@ export function collectTagsFromExams(exams: { tags?: string[] }[]): string[] {
   return sortTagsForDisplay([...set]);
 }
 
-/** Exam matches when it has at least one of the selected tags (OR). */
+/** Exam matches when it has every selected tag (AND). */
 export function examMatchesTagFilter(examTags: string[] | undefined, selected: string[]): boolean {
   if (selected.length === 0) return true;
   const have = new Set((examTags ?? []).map((t) => t.toLowerCase()));
-  return selected.some((t) => have.has(t.toLowerCase()));
+  return selected.every((t) => have.has(t.toLowerCase()));
 }

@@ -76,7 +76,7 @@ def ensure_schema() -> None:
     _add_column_if_missing("tasks", "tags_json", "tags_json TEXT DEFAULT '[]'")
     _add_column_if_missing("tasks", "stdin", "stdin TEXT DEFAULT ''")
     _add_column_if_missing("tasks", "expected_file", "expected_file VARCHAR(255) DEFAULT ''")
-    _add_column_if_missing("workspaces", "last_accessed_at", "TIMESTAMP")
+    _add_column_if_missing("workspaces", "last_accessed_at", "last_accessed_at TIMESTAMP")
 
 
 def get_db() -> Generator[Session, None, None]:

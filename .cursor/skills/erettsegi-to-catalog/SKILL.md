@@ -202,8 +202,8 @@ Do not register this exam in the global `PARSERS` / `TASK_BUILDERS` dicts.
 - [ ] Task 1 `uses_preamble: false`; later file-using tasks `true`
 - [ ] `stdin` / `expected_file` set when the MD has input / output files
 - [ ] Separate `.py` per feladat; existing `exams/{id}/` not overwritten unless asked
-- [ ] API seed rematerializes after catalog edits (preamble/starter change is detected)
+- [ ] API seed rematerializes after catalog edits (`POST /internal/seed-exams` / `./scripts/seed-exams.sh`; startup only inserts missing exams)
 
 ## Wrap-up
 
-Tell the user the new `exam_id`, folder path, which tasks used custom vs generic types, and any platform gaps (second input file, `[random]`, stdin identical on hidden tests). Restart the API (or wait for startup seed) so the exam is materialized.
+Tell the user the new `exam_id`, folder path, which tasks used custom vs generic types, and any platform gaps (second input file, `[random]`, stdin identical on hidden tests). Rematerialize with `./scripts/seed-exams.sh` (or `POST /internal/seed-exams`) so the exam is live; API startup only inserts **missing** catalog ids.

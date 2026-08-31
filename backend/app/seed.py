@@ -80,23 +80,36 @@ def _needs_rematerialize(exam: Exam, loaded, expected_hidden: int) -> bool:
     return False
 
 
-def seed_all_exams(db: Session) -> list[Exam]:
-    """Materialize each catalog exam once (rematerialize if outdated)."""
+def seed_all_exams(db: Session, *, rematerialize: bool = True) -> list[Exam]:
+    """Materialize each catalog exam once.
+
+    ``rematerialize=False`` (API startup): insert missing catalog ids only.
+    Skip the joinedload + stale-check so a warm Neon DB does not block
+    Cloud Run from serving the first student request.
+    """
     created: list[Exam] = []
+    known = db.query(Exam.id, Exam.template_type, Exam.title).all()
+    by_type = {template_type: exam_id for exam_id, template_type, _ in known if template_type}
+    by_title = {title: exam_id for exam_id, _, title in known}
+
     for loaded in discover_exams():
+        existing_id = by_type.get(loaded.template.id) or by_title.get(loaded.template.title)
+        if existing_id is not None and not rematerialize:
+            continue
+
+        existing = None
+        if existing_id is not None:
+            existing = (
+                db.query(Exam)
+                .options(
+                    joinedload(Exam.files),
+                    joinedload(Exam.tasks).joinedload(Task.test_cases),
+                )
+                .filter(Exam.id == existing_id)
+                .first()
+            )
+
         expected_hidden = len(loaded.hidden_contents) * len(loaded.template.tasks)
-        existing = (
-            db.query(Exam)
-            .options(
-                joinedload(Exam.files),
-                joinedload(Exam.tasks).joinedload(Task.test_cases),
-            )
-            .filter(
-                (Exam.template_type == loaded.template.id)
-                | (Exam.title == loaded.template.title)
-            )
-            .first()
-        )
         if existing and not _needs_rematerialize(existing, loaded, expected_hidden):
             created.append(existing)
             continue
@@ -106,6 +119,8 @@ def seed_all_exams(db: Session) -> list[Exam]:
 
         exam = materialize_loaded_exam(db, loaded, use_ai=False)
         created.append(exam)
+        by_type[loaded.template.id] = exam.id
+        by_title[loaded.template.title] = exam.id
     return created
 
 

@@ -27,7 +27,9 @@ export const hu = {
     submit: "Beküldés",
     submitTitle: "Aktuális feladat beküldése",
     loading: "Munkaterület betöltése…",
+    waking: "A szerver ébred, egy pillanat…",
     loadFailed: "Nem sikerült betölteni a feladatsort",
+    loadTimeout: "A betöltés túl sokáig tartott. Frissítsd az oldalt.",
     saveFailed: "Mentés sikertelen",
     runFailed: "Futtatás sikertelen",
     judgeFailed: "Értékelés sikertelen",
@@ -65,6 +67,7 @@ export const hu = {
   },
   editor: {
     readOnly: "csak olvasható",
+    loading: "Szerkesztő betöltése…",
   },
   cookieConsent: {
     title: "Sütik",

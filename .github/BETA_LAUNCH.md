@@ -42,7 +42,13 @@ Sign off in this order. Do not skip CORS / rate limits / TTL before opening the 
 
 **Emelt:** `viragagyasok`, `hutohaz`, `kompatkelo`, `muhely`, `arapaly`, `adagolo`, `hulladekudvar`, `zsilip`, `tuzoltosag`, `rakododaru`
 
-After deploy, seed runs on API startup into Neon. Confirm `/exams` lists all 20.
+After deploy, startup inserts any **missing** catalog exams. To rematerialize stale templates:
+
+```bash
+API_URL=https://erettsegi-api-….run.app CLEANUP_TOKEN=… ./scripts/seed-exams.sh
+```
+
+Confirm `/exams` lists all 20.
 
 ## Smoke sign-off
 

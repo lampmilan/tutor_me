@@ -9,6 +9,7 @@ import { FeedbackButton } from "@/components/FeedbackModal";
 import { FileExplorer } from "@/components/FileExplorer";
 import { OutputPanel } from "@/components/OutputPanel";
 import { ProblemPanel } from "@/components/ProblemPanel";
+import { WorkspaceLoading } from "@/components/WorkspaceLoading";
 import { translateError } from "@/lib/errors";
 import { hu } from "@/lib/messages/hu";
 import {
@@ -37,7 +38,7 @@ const CodeEditor = dynamic(
     ssr: false,
     loading: () => (
       <div className="flex h-full min-w-0 flex-1 items-center justify-center bg-[var(--editor)] text-sm text-[var(--muted)]">
-        {hu.workspace.loading}
+        {hu.editor.loading}
       </div>
     ),
   },
@@ -163,6 +164,7 @@ export function ExamWorkspace({ examId, initialExam = null }: ExamWorkspaceProps
   const [judge, setJudge] = useState<JudgeResponse | null>(null);
   const [phaseStatus, setPhaseStatus] = useState<Record<number, PhaseStatus>>({});
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [slowLoad, setSlowLoad] = useState(false);
   const [leftPct, setLeftPct] = useState(42);
   const splitRef = useRef<HTMLDivElement>(null);
   const dragging = useRef(false);
@@ -228,6 +230,12 @@ export function ExamWorkspace({ examId, initialExam = null }: ExamWorkspaceProps
   useEffect(() => {
     void bootstrap(urlWorkspaceId);
   }, [bootstrap, urlWorkspaceId]);
+
+  useEffect(() => {
+    setSlowLoad(false);
+    const id = window.setTimeout(() => setSlowLoad(true), 2500);
+    return () => window.clearTimeout(id);
+  }, [examId, urlWorkspaceId]);
 
   const resetWorkspace = useCallback(async () => {
     if (!window.confirm(hu.workspace.resetConfirm)) return;
@@ -461,11 +469,7 @@ export function ExamWorkspace({ examId, initialExam = null }: ExamWorkspaceProps
   }
 
   if (!exam || !workspace || !current || !activeTask) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-[var(--bg)] text-[var(--muted)]">
-        {hu.workspace.loading}
-      </div>
-    );
+    return <WorkspaceLoading slow={slowLoad} />;
   }
 
   const activePhaseNumber = (activeTask.order_index ?? 0) + 1;

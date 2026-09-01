@@ -77,6 +77,10 @@ def ensure_schema() -> None:
     _add_column_if_missing("tasks", "stdin", "stdin TEXT DEFAULT ''")
     _add_column_if_missing("tasks", "expected_file", "expected_file VARCHAR(255) DEFAULT ''")
     _add_column_if_missing("workspaces", "last_accessed_at", "last_accessed_at TIMESTAMP")
+    _add_column_if_missing("feedback", "rating", "rating INTEGER")
+    _add_column_if_missing(
+        "feedback", "would_pay_for_json", "would_pay_for_json TEXT DEFAULT '[]'"
+    )
 
 
 def get_db() -> Generator[Session, None, None]:

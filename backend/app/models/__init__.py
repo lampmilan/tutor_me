@@ -155,4 +155,10 @@ class Feedback(Base):
     exam_title: Mapped[str] = mapped_column(String(255), default="")
     task_title: Mapped[str] = mapped_column(String(255), default="")
     message: Mapped[str] = mapped_column(Text, nullable=False)
+    rating: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    would_pay_for_json: Mapped[str] = mapped_column(Text, default="[]")
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+    @property
+    def would_pay_for(self) -> list[str]:
+        return _parse_json_list(self.would_pay_for_json)

@@ -63,6 +63,18 @@ export const hu = {
     sendFailed: "Nem sikerült elküldeni. Próbáld újra.",
     thanks: "Köszönjük a visszajelzést!",
   },
+  productSurvey: {
+    title: "Egy gyors kérdés",
+    skip: "Kihagyás",
+    ratingLabel: "Mennyire volt hasznos és érthető ez a feladatsor?",
+    payLabel: "Mi hiányzik a platformból a leginkább, amiért akár fizetnél is?",
+    payGuides: "Részletes megoldási útmutatók",
+    payMoreExams: "Több vizsgafeladat",
+    payVideos: "Videós magyarázatok",
+    payNothing: "Nem fizetnék semmiért",
+    frictionLabel: "Van bármi, ami zavart a kódolás/megoldás közben?",
+    frictionPlaceholder: "Hibás teszt, lassú futtatás, zavaró UI…",
+  },
   explorer: {
     title: "Fájlok",
     readOnly: "csak olv.",

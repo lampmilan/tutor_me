@@ -217,11 +217,16 @@ class UnlistedCatalogTests(unittest.TestCase):
 
 class ExamOriginTests(unittest.TestCase):
     def test_catalog_origins_are_official_or_synthetic(self) -> None:
+        official = {"viragagyasok", "szolanc", "befozes"}
         origins = {loaded.template.id: loaded.template.origin for loaded in discover_exams()}
         self.assertEqual(origins["viragagyasok"], "official")
+        self.assertEqual(origins["szolanc"], "official")
+        self.assertEqual(origins["befozes"], "official")
         for exam_id, origin in origins.items():
             self.assertIn(origin, ("official", "synthetic"), exam_id)
-            if exam_id != "viragagyasok":
+            if exam_id in official:
+                self.assertEqual(origin, "official", exam_id)
+            else:
                 self.assertEqual(origin, "synthetic", exam_id)
 
     def test_invalid_origin_is_rejected(self) -> None:

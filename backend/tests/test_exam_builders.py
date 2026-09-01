@@ -73,6 +73,8 @@ class CatalogStructureTests(unittest.TestCase):
         self.assertTrue((root / "fogasok" / "builders.py").is_file())
         self.assertTrue((root / "hutohaz" / "builders.py").is_file())
         self.assertTrue((root / "golya" / "builders.py").is_file())
+        self.assertTrue((root / "befozes" / "builders.py").is_file())
+        self.assertTrue((root / "szolanc" / "builders.py").is_file())
         self.assertFalse((root / "cities" / "builders.py").is_file())
 
 
@@ -297,6 +299,65 @@ class KozepOracleTests(unittest.TestCase):
         )
         self._check("madareteto", "madareteto_max", "A legnagyobb adag: 72 g, 6. nap.")
         self._check("madareteto", "madareteto_jutalom", "Jutalom jar.")
+
+    def test_befozes_visible_and_hidden(self) -> None:
+        self._check(
+            "befozes",
+            "befozes_beker",
+            "Mari néni lekvárja (dl):",
+        )
+        self._check(
+            "befozes",
+            "befozes_max",
+            "A legnagyobb üveg: 10 dl és 8. a sorban.",
+            hidden_idx=0,
+            hidden_expected="A legnagyobb üveg: 10 dl és 1. a sorban.",
+        )
+        self._check(
+            "befozes",
+            "befozes_elegendo",
+            "Mari néni lekvárja (dl):\nElegendő üveg volt.",
+            hidden_idx=1,
+            hidden_expected="Mari néni lekvárja (dl):\nMaradt lekvár.",
+        )
+        loaded = load_exam_by_id("befozes")
+        tmpl = loaded.template
+        spec = next(t.model_dump() for t in tmpl.tasks if t.type == "befozes_max")
+        hidden3 = parse_dataset(tmpl.dataset_type, loaded.hidden_contents[2], plugin=loaded.plugin)
+        self.assertEqual(
+            expected_for_task(hidden3, spec, plugin=loaded.plugin),
+            "A legnagyobb üveg: 8 dl és 15. a sorban.",
+        )
+
+    def test_szolanc_visible_and_hidden_stdin(self) -> None:
+        loaded = load_exam_by_id("szolanc")
+        tmpl = loaded.template
+        rows = parse_dataset(tmpl.dataset_type, loaded.visible_content, plugin=loaded.plugin)
+        spec = next(t.model_dump() for t in tmpl.tasks if t.type == "szolanc_teljes")
+        self.assertEqual(
+            expected_for_task(rows, spec, plugin=loaded.plugin),
+            "1. szó:\n"
+            "2. szó:\n"
+            "3. szó:\n"
+            "4. szó:\n"
+            "A karakterek száma téves!\n"
+            "Helyes lépések száma: 3\n"
+            "Szint: közepes",
+        )
+        hidden_stdin = list(spec["hidden_stdin"])
+        mismatch = expected_for_task(rows, {**spec, "stdin": hidden_stdin[0]}, plugin=loaded.plugin)
+        short = expected_for_task(rows, {**spec, "stdin": hidden_stdin[1]}, plugin=loaded.plugin)
+        long_chain = expected_for_task(rows, {**spec, "stdin": hidden_stdin[2]}, plugin=loaded.plugin)
+        self.assertIn("Nem illeszkedett!", mismatch)
+        self.assertIn("Helyes lépések száma: 2", mismatch)
+        self.assertIn("Szint: kezdő", mismatch)
+        self.assertIn("A karakterek száma téves!", short)
+        self.assertIn("Helyes lépések száma: 1", short)
+        self.assertIn("Szint: kezdő", short)
+        self.assertIn("Helyes lépések száma: 7", long_chain)
+        self.assertIn("Szint: haladó", long_chain)
+        self.assertNotEqual(mismatch, short)
+        self.assertNotEqual(short, long_chain)
 
 
 class EmeltOracleTests(unittest.TestCase):

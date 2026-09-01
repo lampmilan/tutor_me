@@ -29,6 +29,7 @@ class Exam(Base):
     preamble: Mapped[str] = mapped_column(Text, default="")
     shared_variable: Mapped[str] = mapped_column(String(100), default="data")
     level: Mapped[str] = mapped_column(String(20), default="kozep")
+    origin: Mapped[str] = mapped_column(String(20), default="synthetic")
     difficulty: Mapped[int] = mapped_column(Integer, default=2)
     tags_json: Mapped[str] = mapped_column(Text, default="[]")
     constraints_json: Mapped[str] = mapped_column(Text, default="[]")

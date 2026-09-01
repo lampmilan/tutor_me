@@ -3,6 +3,7 @@
   "title": "Cities",
   "listed": false,
   "level": "kozep",
+  "origin": "synthetic",
   "difficulty": 2,
   "tags": ["IO", "count", "min_max"],
   "description": "Értékelje ki a cities.txt fájlban tárolt városok népességadatait!",

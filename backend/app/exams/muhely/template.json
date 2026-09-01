@@ -2,6 +2,7 @@
   "id": "muhely",
   "title": "Műhely",
   "level": "emelt",
+  "origin": "synthetic",
   "difficulty": 4,
   "tags": [
     "IO",

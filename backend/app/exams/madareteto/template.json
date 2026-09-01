@@ -2,6 +2,7 @@
   "id": "madareteto",
   "title": "Madáretető",
   "level": "kozep",
+  "origin": "synthetic",
   "difficulty": 2,
   "tags": [
     "IO",

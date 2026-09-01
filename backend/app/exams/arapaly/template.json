@@ -2,6 +2,7 @@
   "id": "arapaly",
   "title": "Árapály",
   "level": "emelt",
+  "origin": "synthetic",
   "difficulty": 4,
   "tags": [
     "IO",

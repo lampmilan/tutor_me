@@ -59,6 +59,20 @@ class SeedMissingOnlyTests(unittest.TestCase):
         self.assertEqual(db.query(Exam).count(), 1)
         self.assertFalse((created[0].preamble or "").startswith("# stale"))
 
+    def test_full_seed_rematerializes_when_origin_changes(self) -> None:
+        db = _session()
+        loaded = load_exam_by_id("fogasok")
+        first = materialize_loaded_exam(db, loaded, use_ai=False)
+        first.origin = "official"
+        db.commit()
+
+        with patch("app.seed.discover_exams", return_value=[loaded]):
+            created = seed_all_exams(db, rematerialize=True)
+
+        self.assertEqual(len(created), 1)
+        self.assertEqual(created[0].origin, "synthetic")
+        self.assertEqual(db.query(Exam).count(), 1)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -11,6 +11,7 @@ export type ExamListItem = {
   description: string;
   created_at: string;
   level?: string;
+  origin?: string;
   difficulty?: number;
   tags?: string[];
 };
@@ -53,6 +54,7 @@ export type Exam = {
   preamble: string;
   shared_variable: string;
   level?: string;
+  origin?: string;
   difficulty?: number;
   tags?: string[];
   constraints?: string[];

@@ -153,6 +153,8 @@ class MaterializeAllCatalogTests(unittest.TestCase):
                     exam = materialize_loaded_exam(db, loaded)
                     self.assertIsNotNone(exam.id)
                     self.assertEqual(exam.template_type, loaded.template.id)
+                    self.assertEqual(exam.origin, loaded.template.origin)
+                    self.assertIn(exam.origin, ("official", "synthetic"))
                 finally:
                     db.close()
 
@@ -205,6 +207,65 @@ class UnlistedCatalogTests(unittest.TestCase):
         detail = client.get(f"/exams/{hidden.id}")
         self.assertEqual(detail.status_code, 200)
         self.assertEqual(detail.json()["title"], "Cities")
+        db.close()
+
+
+class ExamOriginTests(unittest.TestCase):
+    def test_catalog_origins_are_official_or_synthetic(self) -> None:
+        origins = {loaded.template.id: loaded.template.origin for loaded in discover_exams()}
+        self.assertEqual(origins["viragagyasok"], "official")
+        for exam_id, origin in origins.items():
+            self.assertIn(origin, ("official", "synthetic"), exam_id)
+            if exam_id != "viragagyasok":
+                self.assertEqual(origin, "synthetic", exam_id)
+
+    def test_invalid_origin_is_rejected(self) -> None:
+        from pydantic import ValidationError
+
+        with self.assertRaises(ValidationError):
+            ExamTemplate(
+                id="demo",
+                title="Demo",
+                data_file="data.txt",
+                dataset_type="lines",
+                visible="datasets/visible.txt",
+                origin="practice",  # type: ignore[arg-type]
+            )
+
+    def test_list_exams_includes_origin(self) -> None:
+        engine = create_engine("sqlite:///:memory:", connect_args={"check_same_thread": False})
+        Base.metadata.create_all(engine)
+        db = sessionmaker(bind=engine)()
+        official = Exam(
+            title="Létra",
+            description="",
+            template_type="letra",
+            origin="official",
+        )
+        synthetic = Exam(
+            title="Fogások",
+            description="",
+            template_type="fogasok",
+            origin="synthetic",
+        )
+        db.add_all([official, synthetic])
+        db.commit()
+
+        app = FastAPI()
+        app.include_router(exams_api.router)
+
+        def _override_db():
+            try:
+                yield db
+            finally:
+                pass
+
+        app.dependency_overrides[get_db] = _override_db
+        client = TestClient(app)
+
+        by_title = {row["title"]: row for row in client.get("/exams").json()}
+        self.assertEqual(by_title["Létra"]["origin"], "official")
+        self.assertEqual(by_title["Fogások"]["origin"], "synthetic")
         db.close()
 
 

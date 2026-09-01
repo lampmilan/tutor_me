@@ -2,6 +2,7 @@
   "id": "adagolo",
   "title": "Adagoló",
   "level": "emelt",
+  "origin": "synthetic",
   "difficulty": 3,
   "tags": [
     "IO",

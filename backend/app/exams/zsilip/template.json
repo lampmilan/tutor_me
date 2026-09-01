@@ -2,6 +2,7 @@
   "id": "zsilip",
   "title": "Zsilip",
   "level": "emelt",
+  "origin": "synthetic",
   "difficulty": 4,
   "tags": [
     "IO",

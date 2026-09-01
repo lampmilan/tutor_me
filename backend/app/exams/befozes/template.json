@@ -1,26 +1,22 @@
 {
   "id": "befozes",
   "title": "Befőzés",
-  "level": "emelt",
+  "level": "kozep",
   "origin": "official",
   "difficulty": 2,
-  "tags": [
-    "IO",
-    "min_max",
-    "sum",
-    "search"
-  ],
-  "description": "Készítsen programot, amely elemzi a befőzött lekvár mennyiségének és az adott sorrendű üvegek térfogatának ismertében a lekvártöltési adatokat!",
-  "story": "Mari néni eperlekvárt főz be. Sorba állította a kamrából előhozott, elmosott üres üvegeket, hogy megtöltse őket. Tudja, hogy az egyes üvegek hány deciliteresek. A feladat a rendelkezésre álló üvegek adatainak és a befőzött lekvár mennyiségének feldolgozása.",
+  "tags": ["IO", "sum", "min_max", "validate"],
+  "description": "Értékelje ki az uvegek.txt állományban tárolt üvegűrtartalmakat, és döntse el, elfér-e Mari néni lekváros befőttje!",
+  "story": "Mari néni eperlekvárt főz be. Sorba állította a kamrából előhozott, elmosott üres üvegeket, hogy megtöltse őket. Tudja, hogy az egyes üvegek hány deciliteresek.",
   "constraints": [
-    "Az üvegek száma: 15.",
-    "Befőzött lekvár (L) mennyisége: 0 < L <= 200 (egész szám)."
+    "15 üvegűrtartalom; cserélhető adatokkal is működnie kell.",
+    "L bekérés: 0 < L <= 200.",
+    "Több azonos max esetén az első előfordulás."
   ],
-  "data_explanation": "Az uvegek.txt állomány 15 dcl-ben megadott egész számot tartalmaz, az üvegek űrtartalmát a sorrendjüknek megfelelően.",
+  "data_explanation": "Az uvegek.txt állomány 15 egész számot tartalmaz, az üvegek űrtartalmát deciliterben, a sorrendjüknek megfelelően. A program ezeket a forrásában tárolja, nem fájlból olvassa; a platform a cserélhető adatok miatt fájlként adja át.",
   "data_file": "uvegek.txt",
   "dataset_type": "befozes",
-  "shared_variable": "uvegek_szoveg",
-  "preamble": "with open(\"uvegek.txt\", encoding=\"utf-8\") as f:\n    uvegek_szoveg = f.read()\n",
+  "shared_variable": "uvegek",
+  "preamble": "with open(\"uvegek.txt\", encoding=\"utf-8\") as f:\n    uvegek = f.read()\n",
   "visible": "datasets/visible.txt",
   "hidden": [
     "datasets/hidden/01.txt",
@@ -30,67 +26,58 @@
   "tasks": [
     {
       "type": "store",
-      "tags": [
-        "IO"
-      ],
-      "title": "1. feladat: Adatok eltárolása",
-      "description": "Olvassa be és tárolja el az `uvegek.txt` tartalmát a `uvegek_szoveg` változóban stringként!",
+      "tags": ["IO"],
+      "title": "Tárolás",
+      "description": "A megadott 15 számot tárolja el a programban egy megfelelő adatszerkezetben!",
       "points": 1,
       "solution_file": "befozes_beolvasas.py",
       "uses_preamble": false,
-      "starter": "# 1. feladat: olvassa be az uvegek.txt tartalmát.\n# Tárolja az állomány tartalmát az 'uvegek_szoveg' változóban mint string (szöveg).\n\nuvegek_szoveg = \"\"\n",
+      "starter": "# 1. feladat: olvassa be az uvegek.txt tartalmát.\n# Tárolja a teljes szöveget a `uvegek` változóban.\n# A fájl 15 egész űrtartalmat tartalmaz deciliterben, vesszővel elválasztva.\n\nuvegek = \"\"\n",
       "hints": [
-        "Használja az 'open' metódust az 'uvegek.txt' megnyitásához, majd a 'read' metódust a szöveges tartalom beolvasásához."
+        "Read uvegek.txt into the uvegek string — do not hard-code the fifteen sample sizes."
       ]
     },
     {
       "type": "befozes_beker",
-      "tags": [
-        "IO"
-      ],
-      "title": "2. feladat: Lekvár mennyisége",
-      "description": "Kérje be a felhasználótól, hogy Mari néni hány deciliter lekvárt főz be!",
+      "tags": ["IO"],
+      "title": "Lekvár mennyisége",
+      "description": "Kérje be a mintának megfelelően, és tárolja el, hogy Mari néni hány deciliter lekvárt (L) főz be! A bekéréskor jelenjen meg a `Mari néni lekvárja (dl):` szöveg.",
       "points": 1,
       "solution_file": "befozes_beker.py",
       "uses_preamble": true,
-      "starter": "# Az uvegek.txt tartalma az 'uvegek_szoveg' változóban van szöveges formában.\n\nlekvar =  \"))\n",
+      "starter": "# Az uvegek.txt tartalma a `uvegek` változóban van (str).\n# 2. feladat: kérje be a lekvár mennyiségét deciliterben.\n\nprint(\"Mari néni lekvárja (dl):\")\nL = int(input())\n",
       "hints": [
-        "Használja az input() függvényt a beéréshez, és konvertálja int típusúvá."
+        "Print the prompt on its own line, then read L with int(input())."
       ],
-      "stdin": "45\n"
+      "stdin": "35\n"
     },
     {
       "type": "befozes_max",
-      "tags": [
-        "min_max",
-        "search"
-      ],
-      "title": "3. feladat: Legnagyobb üveg",
-      "description": "Az üvegek űrtartalma alapján határozza meg, hogy a legnagyobb üveg hány deciliteres és hányadik a sorban! Ha több ilyen van, az elsőt adja meg! Írja ki az eredményt a mintának megfelelően!",
+      "tags": ["min_max"],
+      "title": "Legnagyobb üveg",
+      "description": "Az üvegek űrtartalma alapján határozza meg, hogy a legnagyobb üveg hány deciliteres és hányadik a sorban! Ha több ilyen van, akkor az elsőt adja meg!",
       "points": 2,
       "solution_file": "befozes_legnagyobb.py",
       "uses_preamble": true,
-      "starter": "# Az uvegek.txt tartalma az 'uvegek_szoveg' változóban van szöveges formában.\n# Elvárt kimenet példa: 'A legnagyobb uveg x dl-es es a y. a sorban.'\n",
+      "starter": "# Az uvegek.txt tartalma a `uvegek` változóban van (str).\n# 15 egész űrtartalom deciliterben, vesszővel elválasztva.\n#\n# 3. feladat: a legnagyobb üveg mérete és első sorszáma (1-től).\n\nprint(\"A legnagyobb üveg: \")\n",
       "hints": [
-        "Alakítsa az uvegek_szoveg tartalmát egész számok listájává, majd keresse meg a max értéket és annak 1-alapú indexét."
+        "On a tie for the maximum size, report the earliest jar in file order."
       ]
     },
     {
       "type": "befozes_elegendo",
-      "tags": [
-        "sum",
-        "IO"
-      ],
-      "title": "4. feladat: Üvegek elegendősége",
-      "description": "Kérje be a lekvár mennyiségét, majd írassa ki a képernyőre, hogy az L deciliter befőzött lekvár elfér-e az üvegekben! Ha az üveg mennyiség elegendő, akkor írja ki, hogy „Elegendő üveg volt.”, különben azt, hogy „Maradt lekvár.”!",
+      "tags": ["sum", "validate"],
+      "title": "Üvegek elegendősége",
+      "description": "Írassa ki, hogy Mari néni L deciliter befőzött lekvárja elfér-e az üvegekben! Ha az üvegek össztérfogata legalább L, írja ki: `Elegendő üveg volt.` Különben írja ki: `Maradt lekvár.` A lekvár mennyiségét a billentyűzetről olvassa be; a bekéréskor jelenjen meg a `Mari néni lekvárja (dl):` szöveg.",
       "points": 2,
       "solution_file": "befozes_elegendo.py",
       "uses_preamble": true,
-      "starter": "# Az uvegek.txt tartalma az 'uvegek_szoveg' változóban van szöveges formában.\n# Elvárt kimenetek:\n# 'Elegendő üveg volt.'/'Maradt lekvár.'\n",
+      "starter": "# Az uvegek.txt tartalma a `uvegek` változóban van (str).\n# 4. feladat: kérje be L-t, majd döntse el, elfér-e a lekvár.\n\nprint(\"Mari néni lekvárja (dl):\")\nL = int(input())\n",
       "hints": [
-        "Adja össze az üvegek űrtartalmát (sum). Ha ez az összeg nagyobb vagy egyenlő, mint a lekvár mennyisége, akkor 'Elegendo uveg volt.', különben 'Maradt lekvar.'."
+        "Print the prompt, read L, then compare it with the sum of the jar sizes.",
+        "Equal sum and L still counts as enough glass."
       ],
-      "stdin": "45\n"
+      "stdin": "35\n"
     }
   ]
 }

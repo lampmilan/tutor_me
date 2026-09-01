@@ -1,50 +1,52 @@
 {
   "id": "szolanc",
   "title": "Szólánc",
-  "level": "kozephalado",
+  "level": "kozep",
   "origin": "official",
-  "difficulty": 3,
-  "tags": [
-    "IO",
-    "loop",
-    "string",
-    "condition"
-  ],
-  "description": "Készítsen programot szolanc néven, amely egy 6 betűs szavakból álló szólánc játékot szimulál!",
-  "story": "A szólánc kedvelt nyelvi játék. A játék során úgy kell 6 betűs szavakat egymás után megadni, hogy az előző szó utolsó betűjével kezdődjön a következő szó. A játék addig tart, amíg a felhasználó szabályos szavakat ad meg.",
+  "difficulty": 4,
+  "tags": ["IO", "count", "validate", "simulation", "table"],
+  "description": "Készítsen programot szolanc néven, amely egy szólánc játékot szimulál a billentyűzetről érkező szavakból!",
+  "story": "A szólánc kedvelt nyelvi játék. A játék során úgy kell szavakat egymás után mondani, hogy az előző szó utolsó betűjével kezdődjön a következő szó.",
   "constraints": [
-    "Minden megadott szó csupa kisbetűs angol karakterekből áll.",
-    "A szavak hossza a szabály szerint pontosan 6 karakter.",
-    "A játék minimum 1 szótól a szabályszegésig tart."
+    "Minden szónak (az elsőt kivéve) hatbetűsnek kell lennie.",
+    "Az új szó első karaktere = előző szó utolsó karaktere (első szónál nincs megelőző).",
+    "Ha mindkét hiba fennáll, elegendő az egyik hibaüzenet.",
+    "Lépésszám = szabályos szavak száma a hibás előtt.",
+    "Értékelés: 0–2 kezdő, 3–5 közepes, 6 és felette haladó."
   ],
-  "data_explanation": "Ez a feladat tisztán interaktív bemenettel (standard input) dolgozik, nem igényel külső adatfájlt.",
-  "data_file": "",
+  "data_explanation": "A feladat tisztán interaktív: a szavak a billentyűzetről érkeznek. A szolanc.txt állomány üres helyőrző; a rejtett tesztek a begépelt szósort cserélik.",
+  "data_file": "szolanc.txt",
   "dataset_type": "szolanc",
-  "shared_variable": "",
-  "preamble": "",
+  "shared_variable": "szavak",
+  "preamble": "with open(\"szolanc.txt\", encoding=\"utf-8\") as f:\n    szavak = f.read()\n",
   "visible": "datasets/visible.txt",
   "hidden": [
     "datasets/hidden/01.txt",
-    "datasets/hidden/02.txt"
+    "datasets/hidden/02.txt",
+    "datasets/hidden/03.txt"
   ],
   "tasks": [
     {
       "type": "szolanc_teljes",
-      "tags": [
-        "IO",
-        "loop",
-        "string",
-        "condition"
-      ],
-      "title": "Szólánc játék teljes megvalósítása",
-      "description": "Készítse el a teljes `szolanc.py` programot a megadott starter kód kommentjeiben leírt lépések alapján!",
-      "points": 10,
-      "solution_file": "szolanc.py",
+      "tags": ["IO", "count", "validate", "simulation", "table"],
+      "title": "Szólánc játék",
+      "description": "A játék során a szavakat egyenként olvassa be a program, és minden lépésnél írja ki, hogy hányadik szót kéri!\nAddig kérje a program a szavakat, ameddig a megadott új szó hatbetűs, és az első karaktere megegyezik az előző szó utolsó karakterével! Az első szó kivétel. Ha a szabályok nem teljesülnek, a játéknak vége.\nA játék végén írja ki a befejezés okát: `Nem illeszkedett!` vagy `A karakterek száma téves!`\nÍrja ki, hogy a szólánc hány, a szabályoknak megfelelő szóval folytatódott (helyes lépések száma)!\nAz elért helyes lépésszám alapján jelenjen meg a szint: 0–2 `kezdő`, 3–5 `közepes`, 6 és felette `haladó`.",
+      "points": 3,
+      "solution_file": "szolanc_teljes.py",
       "uses_preamble": false,
-      "starter": "# 1. feladat: Szavak beolvasása folyamatosan, kiírva a sorszámot (pl. '1. szó: ')\n# 2. feladat: Ciklus feltétel megvalósítása (6 betűs szó, és az első betű megegyezik az előző utolsó betűjével)\n# 3. feladat: Befejezés okának kiírása ('A karakterek száma téves!' vagy 'Nem illeszkedett!')\n# 4. feladat: Helyes lépések számának kiírása ('Helyes lépések száma: X')\n# 5. feladat: Szint értékelése lépésszám alapján ('Szint: kezdő', 'közepes' vagy 'haladó')\n",
+      "starter": "# Szólánc: szavak beolvasása a billentyűzetről, amíg a lánc szabályos.\n# Minden lépésnél írja ki: N. szó:\n# Az első szó mindig elfogadott.\n# A további szavak 6 betűsek, és az előző utolsó betűjével kezdődnek.\n# Először a hosszt ellenőrizze, aztán az illeszkedést.\n# Végén: hiba oka, helyes lépések száma, szint (kezdő / közepes / haladó).\n\nprint(\"1. szó:\")\nszo = input()\n",
       "hints": [
+        "Print each numbered prompt on its own line, then call input().",
+        "Stop at the first illegal word. The first word is always accepted, even if it is not 6 letters.",
+        "Check length before the chain-letter rule so a short matching word prints the length error.",
+        "Step count is the number of legal words before the failing one. Levels: 0–2 kezdő, 3–5 közepes, 6+ haladó."
       ],
-      "stdin": "villan\nnegyed\ndiadal\nlista\n"
+      "stdin": "villan\nnegyed\ndiadal\nlista\n",
+      "hidden_stdin": [
+        "zsilip\npislog\nhomlok\n",
+        "villan\nnap\n",
+        "villan\nnegyed\ndiadal\nlankad\ndurrog\ngondos\nsurran\nnoven\n"
+      ]
     }
   ]
 }

@@ -139,6 +139,39 @@ class MaterializationTests(unittest.TestCase):
         self.assertEqual(stdins, ["1\n", "100\n", "50\n"])
         self.assertEqual(len(set(stdins)), 3)
 
+    def test_szolanc_materializes_one_shared_solution_file(self) -> None:
+        db = _session()
+        exam = materialize_loaded_exam(db, load_exam_by_id("szolanc"))
+        py_files = (
+            db.query(ExamFile)
+            .filter(ExamFile.exam_id == exam.id, ExamFile.filename.endswith(".py"))
+            .all()
+        )
+        self.assertEqual([f.filename for f in py_files], ["szolanc_teljes.py"])
+        self.assertIn("print(\"1. szó:\")", py_files[0].content)
+        tasks = (
+            db.query(Task)
+            .filter(Task.exam_id == exam.id)
+            .order_by(Task.order_index)
+            .all()
+        )
+        self.assertEqual(len(tasks), 5)
+        self.assertTrue(all(t.solution_file == "szolanc_teljes.py" for t in tasks))
+        for spec_task in tasks[:-1]:
+            n = db.query(TestCase).filter(TestCase.task_id == spec_task.id).count()
+            self.assertEqual(n, 0, spec_task.title)
+        cases = (
+            db.query(TestCase)
+            .filter(TestCase.task_id == tasks[-1].id)
+            .order_by(TestCase.is_hidden, TestCase.name)
+            .all()
+        )
+        self.assertEqual(len(cases), 4)
+        self.assertFalse(cases[0].is_hidden)
+        self.assertIn("Szint: közepes", cases[0].expected_output)
+        hidden_stdins = [tc.stdin for tc in cases[1:]]
+        self.assertEqual(len(set(hidden_stdins)), 3)
+
 
 class MaterializeAllCatalogTests(unittest.TestCase):
     """Verify that every catalog exam can be materialized without error (M5 CI gate)."""

@@ -77,6 +77,11 @@ export const hu = {
     accept: "Elfogadom",
     decline: "Elutasítom",
   },
+  mobileNotice: {
+    title: "Számítógépen a legjobb",
+    body: "A VizsgaGO kódszerkesztője asztali gépen vagy laptopon működik a legjobban. Mobilon is megnyithatod, de a feladatok megoldása kényelmesebb nagyobb képernyőn.",
+    dismiss: "Értem",
+  },
   output: {
     title: "Eredmény",
     running: "Futtatás…",

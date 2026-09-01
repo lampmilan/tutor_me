@@ -112,6 +112,13 @@ def materialize_loaded_exam(
     hidden_rows_list = [
         parse_dataset(dataset_type, content, plugin=plugin) for content in loaded.hidden_contents
     ]
+    created_solution_files: set[str] = set()
+    # Store feladats that share a later graded .py are spec-only (no own tests).
+    gradeable_files: set[str] = set()
+    for i, t in enumerate(template.tasks):
+        s = _task_spec_dict(t)
+        if s.get("type") != "store":
+            gradeable_files.add(s.get("solution_file") or f"feladat{i + 1}.py")
 
     for idx, task_tmpl in enumerate(template.tasks):
         spec = _task_spec_dict(task_tmpl)
@@ -146,14 +153,20 @@ def materialize_loaded_exam(
         db.add(task)
         db.flush()
 
-        db.add(
-            ExamFile(
-                exam_id=exam.id,
-                filename=solution_file,
-                content=starter,
-                read_only=False,
+        # One workspace file per name: later feladats may share a monolith .py.
+        if solution_file not in created_solution_files:
+            db.add(
+                ExamFile(
+                    exam_id=exam.id,
+                    filename=solution_file,
+                    content=starter,
+                    read_only=False,
+                )
             )
-        )
+            created_solution_files.add(solution_file)
+
+        if spec.get("type") == "store" and solution_file in gradeable_files:
+            continue
 
         db.add(
             TestCase(

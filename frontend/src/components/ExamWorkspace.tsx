@@ -107,6 +107,40 @@ function statusFromJudge(result: JudgeResponse): Record<number, PhaseStatus> {
   return next;
 }
 
+/** Feladats that share a .py are one program; judge the last one that has sample output. */
+function tasksSharingFile(exam: Exam, task: Task): Task[] {
+  return exam.tasks
+    .filter((t) => t.solution_file === task.solution_file)
+    .sort((a, b) => a.order_index - b.order_index);
+}
+
+function gradingTask(exam: Exam, task: Task): Task {
+  const group = tasksSharingFile(exam, task);
+  const withSample = [...group]
+    .reverse()
+    .find((t) =>
+      (t.test_cases ?? []).some(
+        (tc) => !tc.is_hidden && (tc.expected_output || "").trim(),
+      ),
+    );
+  return withSample ?? group[group.length - 1] ?? task;
+}
+
+function fanOutSharedFileStatus(
+  exam: Exam,
+  graded: Task,
+  result: JudgeResponse,
+): Record<number, PhaseStatus> {
+  const passed =
+    result.total_count > 0 && result.passed_count === result.total_count;
+  const status: PhaseStatus = passed ? "passed" : "failed";
+  const next: Record<number, PhaseStatus> = { ...statusFromJudge(result) };
+  for (const sibling of tasksSharingFile(exam, graded)) {
+    next[sibling.id] = status;
+  }
+  return next;
+}
+
 function applyWorkspaceFiles(
   ws: Workspace,
   examData: Exam,
@@ -391,7 +425,7 @@ export function ExamWorkspace({ examId, initialExam = null }: ExamWorkspaceProps
   }, [workspace, dirtyFiles, files]);
 
   const run = useCallback(async () => {
-    if (!workspace || !activeTask || !current) return;
+    if (!workspace || !activeTask || !current || !exam) return;
     setBusy(true);
     setJudge(null);
     setOutput("");
@@ -400,8 +434,14 @@ export function ExamWorkspace({ examId, initialExam = null }: ExamWorkspaceProps
       if (dirtyFiles.size > 0) {
         await saveAllDirty();
       }
-      const code = files[activeTask.solution_file]?.content ?? current.content;
-      const result = await api.execute(workspace.id, code, activeTask.stdin || "", activeTask.id);
+      const grader = gradingTask(exam, activeTask);
+      const code = files[grader.solution_file]?.content ?? current.content;
+      const result = await api.execute(
+        workspace.id,
+        code,
+        grader.stdin || activeTask.stdin || "",
+        grader.id,
+      );
       setOutput(result.output);
       setError(translateError(result.error));
       setRuntime(result.runtime);
@@ -418,7 +458,7 @@ export function ExamWorkspace({ examId, initialExam = null }: ExamWorkspaceProps
     } finally {
       setBusy(false);
     }
-  }, [workspace, activeTask, current, dirtyFiles, saveAllDirty, files]);
+  }, [workspace, activeTask, current, dirtyFiles, saveAllDirty, files, exam, examId]);
 
   const submit = useCallback(async () => {
     if (!workspace || !activeTask || !exam) return;
@@ -429,8 +469,9 @@ export function ExamWorkspace({ examId, initialExam = null }: ExamWorkspaceProps
       if (dirtyFiles.size > 0) {
         await saveAllDirty();
       }
-      const code = files[activeTask.solution_file]?.content;
-      const result = await api.judge(workspace.id, code, activeTask.id);
+      const grader = gradingTask(exam, activeTask);
+      const code = files[grader.solution_file]?.content;
+      const result = await api.judge(workspace.id, code, grader.id);
       setJudge(result);
       setRuntime(null);
       setExitCode(null);
@@ -449,7 +490,7 @@ export function ExamWorkspace({ examId, initialExam = null }: ExamWorkspaceProps
         });
       }
       setPhaseStatus((prev) => {
-        const next = { ...prev, ...statusFromJudge(result) };
+        const next = { ...prev, ...fanOutSharedFileStatus(exam, grader, result) };
         setStoredPhaseStatus(examId, next);
         const allPassed =
           exam.tasks.length > 0 && exam.tasks.every((t) => next[t.id] === "passed");
@@ -560,7 +601,11 @@ export function ExamWorkspace({ examId, initialExam = null }: ExamWorkspaceProps
             type="button"
             onClick={() => void submit()}
             disabled={busy}
-            title={hu.workspace.submitTitle}
+            title={
+              tasksSharingFile(exam, activeTask).length > 1
+                ? hu.workspace.submitTitleShared
+                : hu.workspace.submitTitle
+            }
             className="rounded border border-[var(--accent)] px-3 py-1.5 text-sm text-[var(--accent)] transition hover:bg-[var(--accent-soft)] disabled:opacity-50"
           >
             {hu.workspace.submit}

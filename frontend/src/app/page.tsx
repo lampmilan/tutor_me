@@ -27,7 +27,7 @@ export default function LandingPage() {
               <span className="text-[var(--accent)]">{TOTAL_EXAMS}+</span> Eredeti, érettségi-szintű feladat
             </h2>
             <p className="max-w-2xl text-base leading-relaxed text-[var(--muted-strong)]">
-              Ne elégedj meg a régi, ezerszer megoldott feladatsorokkal. Platformunkon kizárólag saját
+              Ne elégedj meg a régi, ezerszer megoldott feladatsorokkal. Platformunkon a hivatalos feladatsorok mellett, saját
               fejlesztésű feladatokat találsz, amelyek stílusukban és nehézségükben pontosan követik a
               hivatalos érettségi követelményeket.
             </p>

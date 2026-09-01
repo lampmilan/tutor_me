@@ -162,13 +162,16 @@ class GenerateExamResponse(BaseModel):
 
 
 FEEDBACK_MESSAGE_MAX = 4000
+PRODUCT_PAY_OPTIONS = ("guides", "more_exams", "videos", "nothing")
 
 
 class FeedbackIn(BaseModel):
-    feedback_type: Literal["problem", "idea"]
+    feedback_type: Literal["problem", "idea", "product"]
     exam_title: str | None = None
     task_title: str | None = None
-    message: str = Field(min_length=1, max_length=FEEDBACK_MESSAGE_MAX)
+    message: str = Field(default="", max_length=FEEDBACK_MESSAGE_MAX)
+    rating: int | None = None
+    would_pay_for: list[str] | None = None
 
     @field_validator("exam_title", "task_title", mode="before")
     @classmethod
@@ -178,13 +181,33 @@ class FeedbackIn(BaseModel):
         text = str(value).strip()
         return text[:255] if text else None
 
-    @field_validator("message")
+    @field_validator("message", mode="before")
     @classmethod
-    def strip_message(cls, value: str) -> str:
-        text = value.strip()
-        if not text:
-            raise ValueError("message required")
-        return text
+    def strip_message(cls, value: object) -> str:
+        if value is None:
+            return ""
+        return str(value).strip()
+
+    @model_validator(mode="after")
+    def validate_by_type(self) -> "FeedbackIn":
+        if self.feedback_type in ("problem", "idea"):
+            if not self.message:
+                raise ValueError("message required")
+            self.rating = None
+            self.would_pay_for = None
+            return self
+        if self.rating is None or self.rating < 1 or self.rating > 5:
+            raise ValueError("rating must be 1-5")
+        opts = list(dict.fromkeys(self.would_pay_for or []))
+        allowed = set(PRODUCT_PAY_OPTIONS)
+        if not opts:
+            raise ValueError("would_pay_for required")
+        if any(item not in allowed for item in opts):
+            raise ValueError("invalid would_pay_for")
+        if "nothing" in opts and opts != ["nothing"]:
+            raise ValueError("nothing is exclusive")
+        self.would_pay_for = opts
+        return self
 
 
 class FeedbackOut(BaseModel):
@@ -193,6 +216,8 @@ class FeedbackOut(BaseModel):
     exam_title: str
     task_title: str
     message: str
+    rating: int | None = None
+    would_pay_for: list[str] = Field(default_factory=list)
     created_at: datetime
 
     model_config = {"from_attributes": True}

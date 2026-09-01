@@ -205,10 +205,12 @@ export const api = {
       55_000,
     ),
   submitFeedback: (body: {
-    feedback_type: "problem" | "idea";
+    feedback_type: "problem" | "idea" | "product";
     exam_title?: string | null;
     task_title?: string | null;
-    message: string;
+    message?: string;
+    rating?: number;
+    would_pay_for?: string[];
   }) =>
     request<{ id: number }>("/feedback", {
       method: "POST",

@@ -63,6 +63,18 @@ export const hu = {
     sendFailed: "Nem sikerült elküldeni. Próbáld újra.",
     thanks: "Köszönjük a visszajelzést!",
   },
+  productSurvey: {
+    title: "Egy gyors kérdés",
+    skip: "Kihagyás",
+    ratingLabel: "Mennyire volt hasznos és érthető ez a feladatsor?",
+    payLabel: "Mi hiányzik a platformból a leginkább, amiért akár fizetnél is?",
+    payGuides: "Részletes megoldási útmutatók",
+    payMoreExams: "Több vizsgafeladat",
+    payVideos: "Videós magyarázatok",
+    payNothing: "Nem fizetnék semmiért",
+    frictionLabel: "Van bármi, ami zavart a kódolás/megoldás közben?",
+    frictionPlaceholder: "Hibás teszt, lassú futtatás, zavaró UI…",
+  },
   explorer: {
     title: "Fájlok",
     readOnly: "csak olv.",
@@ -76,6 +88,11 @@ export const hu = {
     body: "A használatot csak akkor mérjük, ha elfogadod. Elutasítás vagy döntés nélkül nem küldünk analitikai adatot. A választásodat elmentjük ezen az eszközön.",
     accept: "Elfogadom",
     decline: "Elutasítom",
+  },
+  mobileNotice: {
+    title: "Számítógépen a legjobb",
+    body: "A VizsgaGO kódszerkesztője asztali gépen vagy laptopon működik a legjobban. Mobilon is megnyithatod, de a feladatok megoldása kényelmesebb nagyobb képernyőn.",
+    dismiss: "Értem",
   },
   output: {
     title: "Eredmény",

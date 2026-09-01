@@ -9,6 +9,7 @@ import { FeedbackButton } from "@/components/FeedbackModal";
 import { FileExplorer } from "@/components/FileExplorer";
 import { OutputPanel } from "@/components/OutputPanel";
 import { ProblemPanel } from "@/components/ProblemPanel";
+import { ProductSurveyModal } from "@/components/ProductSurveyModal";
 import { WorkspaceLoading } from "@/components/WorkspaceLoading";
 import { translateError } from "@/lib/errors";
 import { hu } from "@/lib/messages/hu";
@@ -31,6 +32,13 @@ import {
   setStoredWorkspaceId,
 } from "@/lib/workspaceStorage";
 import { captureIfConsented } from "@/lib/cookieConsent";
+import {
+  SURVEY_DELAY_AFTER_CONFETTI_MS,
+  hasProductSurveyBeenSeen,
+  markProductSurvey,
+  sleep,
+  waitForBlockingNotices,
+} from "@/lib/productSurvey";
 
 const CodeEditor = dynamic(
   () => import("@/components/CodeEditor").then((m) => m.CodeEditor),
@@ -53,11 +61,13 @@ type ExamWorkspaceProps = {
 type PhaseStatus = "idle" | "passed" | "failed";
 
 function fireExamCompleteConfetti() {
-  void confetti({
-    particleCount: 100,
-    spread: 70,
-    origin: { x: 0.5, y: 1 },
-  });
+  return Promise.resolve(
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { x: 0.5, y: 1 },
+    }),
+  );
 }
 
 function sortPythonFiles(
@@ -169,13 +179,34 @@ export function ExamWorkspace({ examId, initialExam = null }: ExamWorkspaceProps
   const splitRef = useRef<HTMLDivElement>(null);
   const dragging = useRef(false);
   const celebratedRef = useRef(false);
+  const surveyAbortRef = useRef<AbortController | null>(null);
+  const [productSurveyOpen, setProductSurveyOpen] = useState(false);
   const loadGen = useRef(0);
   const initialExamRef = useRef(initialExam);
+
+  const scheduleProductSurvey = useCallback(() => {
+    surveyAbortRef.current?.abort();
+    const ac = new AbortController();
+    surveyAbortRef.current = ac;
+    void (async () => {
+      try {
+        await fireExamCompleteConfetti();
+        await sleep(SURVEY_DELAY_AFTER_CONFETTI_MS, ac.signal);
+        await waitForBlockingNotices(ac.signal);
+        if (hasProductSurveyBeenSeen()) return;
+        setProductSurveyOpen(true);
+      } catch (err) {
+        if (err instanceof DOMException && err.name === "AbortError") return;
+      }
+    })();
+  }, []);
 
   const bootstrap = useCallback(
     async (preferredWsId?: number | null) => {
       const gen = ++loadGen.current;
       celebratedRef.current = false;
+      surveyAbortRef.current?.abort();
+      setProductSurveyOpen(false);
       setLoadError(null);
       try {
         // Exam catalog + workspace are independent — fetch in parallel.
@@ -424,7 +455,11 @@ export function ExamWorkspace({ examId, initialExam = null }: ExamWorkspaceProps
           exam.tasks.length > 0 && exam.tasks.every((t) => next[t.id] === "passed");
         if (allPassed && !celebratedRef.current) {
           celebratedRef.current = true;
-          fireExamCompleteConfetti();
+          if (!hasProductSurveyBeenSeen()) {
+            scheduleProductSurvey();
+          } else {
+            void fireExamCompleteConfetti();
+          }
           captureIfConsented("exam_completed", {
             exam_id: examId,
             total_score: exam.tasks.reduce(
@@ -443,7 +478,13 @@ export function ExamWorkspace({ examId, initialExam = null }: ExamWorkspaceProps
     } finally {
       setBusy(false);
     }
-  }, [examId, workspace, activeTask, exam, dirtyFiles, saveAllDirty, files]);
+  }, [examId, workspace, activeTask, exam, dirtyFiles, saveAllDirty, files, scheduleProductSurvey]);
+
+  useEffect(() => {
+    return () => {
+      surveyAbortRef.current?.abort();
+    };
+  }, []);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -589,13 +630,27 @@ export function ExamWorkspace({ examId, initialExam = null }: ExamWorkspaceProps
         </div>
       </div>
 
-      <FeedbackButton
-        examTitle={exam.title}
-        taskTitles={exam.tasks
-          .slice()
-          .sort((a, b) => a.order_index - b.order_index)
-          .map((t) => t.title)}
-      />
+      {productSurveyOpen ? (
+        <ProductSurveyModal
+          examTitle={exam.title}
+          onClose={() => {
+            markProductSurvey("dismissed");
+            setProductSurveyOpen(false);
+          }}
+          onSubmitted={() => {
+            markProductSurvey("submitted");
+            setProductSurveyOpen(false);
+          }}
+        />
+      ) : (
+        <FeedbackButton
+          examTitle={exam.title}
+          taskTitles={exam.tasks
+            .slice()
+            .sort((a, b) => a.order_index - b.order_index)
+            .map((t) => t.title)}
+        />
+      )}
     </div>
   );
 }

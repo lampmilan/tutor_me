@@ -198,6 +198,122 @@ class FeedbackApiTests(unittest.TestCase):
         messages = [row["message"] for row in res.json()]
         self.assertEqual(messages, ["második", "első"])
 
+    def test_product_survey_is_stored(self) -> None:
+        res = self.client.post(
+            "/feedback",
+            json={
+                "feedback_type": "product",
+                "exam_title": "Városok",
+                "rating": 4,
+                "would_pay_for": ["guides", "videos"],
+                "message": "A futtatás lassú volt.",
+            },
+        )
+        self.assertEqual(res.status_code, 200, res.text)
+        row = self.db.query(Feedback).one()
+        self.assertEqual(row.feedback_type, "product")
+        self.assertEqual(row.exam_title, "Városok")
+        self.assertEqual(row.rating, 4)
+        self.assertEqual(row.would_pay_for, ["guides", "videos"])
+        self.assertEqual(row.message, "A futtatás lassú volt.")
+
+    def test_product_survey_allows_empty_comment(self) -> None:
+        res = self.client.post(
+            "/feedback",
+            json={
+                "feedback_type": "product",
+                "rating": 5,
+                "would_pay_for": ["nothing"],
+            },
+        )
+        self.assertEqual(res.status_code, 200, res.text)
+        row = self.db.query(Feedback).one()
+        self.assertEqual(row.message, "")
+        self.assertEqual(row.would_pay_for, ["nothing"])
+        self.assertEqual(row.rating, 5)
+
+    def test_product_survey_requires_rating(self) -> None:
+        res = self.client.post(
+            "/feedback",
+            json={"feedback_type": "product", "would_pay_for": ["guides"]},
+        )
+        self.assertEqual(res.status_code, 422)
+
+    def test_product_survey_requires_pay_options(self) -> None:
+        res = self.client.post(
+            "/feedback",
+            json={"feedback_type": "product", "rating": 3},
+        )
+        self.assertEqual(res.status_code, 422)
+
+    def test_product_nothing_is_exclusive(self) -> None:
+        res = self.client.post(
+            "/feedback",
+            json={
+                "feedback_type": "product",
+                "rating": 3,
+                "would_pay_for": ["guides", "nothing"],
+            },
+        )
+        self.assertEqual(res.status_code, 422)
+
+    def test_product_invalid_pay_option_rejected(self) -> None:
+        res = self.client.post(
+            "/feedback",
+            json={
+                "feedback_type": "product",
+                "rating": 3,
+                "would_pay_for": ["ai-tutor"],
+            },
+        )
+        self.assertEqual(res.status_code, 422)
+
+    def test_product_posthog_capture_includes_rating(self) -> None:
+        settings = Settings(posthog_api_key="phc_test")
+        with patch("app.api.feedback.get_settings", return_value=settings):
+            res = self.client.post(
+                "/feedback",
+                json={
+                    "feedback_type": "product",
+                    "exam_title": "Demo",
+                    "rating": 2,
+                    "would_pay_for": ["more_exams"],
+                    "message": "zavaró volt",
+                },
+            )
+        self.assertEqual(res.status_code, 200, res.text)
+        kwargs = self.capture.call_args.kwargs
+        self.assertEqual(kwargs["event"], "feedback_submitted")
+        self.assertEqual(kwargs["properties"]["feedback_type"], "product")
+        self.assertEqual(kwargs["properties"]["rating"], 2)
+        self.assertEqual(kwargs["properties"]["would_pay_for"], ["more_exams"])
+        self.assertEqual(kwargs["properties"]["feedback"], "zavaró volt")
+        self.assertFalse(kwargs["properties"]["$process_person_profile"])
+
+    def test_list_includes_product_fields(self) -> None:
+        self.client.post(
+            "/feedback",
+            json={
+                "feedback_type": "product",
+                "exam_title": "Fogások",
+                "rating": 1,
+                "would_pay_for": ["nothing"],
+            },
+        )
+        with patch(
+            "app.api.ops_auth.get_settings",
+            return_value=Settings(cleanup_token="secret"),
+        ):
+            res = self.client.get(
+                "/internal/feedback",
+                headers={"X-Cleanup-Token": "secret"},
+            )
+        self.assertEqual(res.status_code, 200, res.text)
+        row = res.json()[0]
+        self.assertEqual(row["feedback_type"], "product")
+        self.assertEqual(row["rating"], 1)
+        self.assertEqual(row["would_pay_for"], ["nothing"])
+
 
 class FeedbackRateLimitTests(unittest.TestCase):
     def setUp(self) -> None:

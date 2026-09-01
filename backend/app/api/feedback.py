@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import logging
 import uuid
 from datetime import datetime, timezone
@@ -27,7 +28,9 @@ def submit_feedback(body: FeedbackIn, request: Request, db: Session = Depends(ge
         feedback_type=body.feedback_type,
         exam_title=body.exam_title or "",
         task_title=body.task_title or "",
-        message=body.message,
+        message=body.message or "",
+        rating=body.rating,
+        would_pay_for_json=json.dumps(body.would_pay_for or []),
         created_at=datetime.now(timezone.utc),
     )
     db.add(row)
@@ -58,11 +61,16 @@ def _capture_posthog(row: Feedback, visitor_id: str | None) -> None:
         "feedback_type": row.feedback_type,
         "exam_title": row.exam_title or None,
         "task_title": row.task_title or None,
-        "message": row.message,
+        "message": row.message or None,
         "$process_person_profile": False,
     }
     if row.feedback_type == "problem":
         properties["problem"] = row.message
+    elif row.feedback_type == "product":
+        properties["rating"] = row.rating
+        properties["would_pay_for"] = row.would_pay_for
+        if row.message:
+            properties["feedback"] = row.message
     else:
         properties["feedback"] = row.message
     try:

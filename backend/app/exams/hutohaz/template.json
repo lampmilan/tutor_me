@@ -2,6 +2,7 @@
   "id": "hutohaz",
   "title": "Hűtőház",
   "level": "emelt",
+  "origin": "synthetic",
   "difficulty": 5,
   "tags": ["IO", "count", "sum", "min_max", "lookup", "validate", "simulation", "function"],
   "description": "Értékelje ki a rakodas.txt hűtőházi rakodási naplóját!",

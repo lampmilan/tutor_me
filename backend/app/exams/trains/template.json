@@ -3,6 +3,7 @@
   "title": "Trains",
   "listed": false,
   "level": "kozep",
+  "origin": "synthetic",
   "difficulty": 2,
   "tags": ["list", "loops", "store", "counting", "search"],
   "description": "Olvasd be a trains.txt fájlt, és oldd meg a feladatokat!",

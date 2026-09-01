@@ -153,6 +153,8 @@ class MaterializeAllCatalogTests(unittest.TestCase):
                     exam = materialize_loaded_exam(db, loaded)
                     self.assertIsNotNone(exam.id)
                     self.assertEqual(exam.template_type, loaded.template.id)
+                    self.assertEqual(exam.origin, loaded.template.origin)
+                    self.assertIn(exam.origin, ("official", "synthetic"))
                 finally:
                     db.close()
 
@@ -180,12 +182,14 @@ class UnlistedCatalogTests(unittest.TestCase):
         engine = create_engine("sqlite:///:memory:", connect_args={"check_same_thread": False})
         Base.metadata.create_all(engine)
         db = sessionmaker(bind=engine)()
-        hidden = Exam(title="Cities", description="", template_type="cities")
-        visible = Exam(title="Fogások", description="", template_type="fogasok")
-        db.add_all([hidden, visible])
+        hidden = Exam(title="Cities", description="", template_type="cities", origin="synthetic")
+        visible = Exam(title="Fogások", description="", template_type="fogasok", origin="synthetic")
+        official = Exam(title="Létra", description="", template_type="letra", origin="official")
+        db.add_all([hidden, visible, official])
         db.commit()
         db.refresh(hidden)
         db.refresh(visible)
+        db.refresh(official)
 
         app = FastAPI()
         app.include_router(exams_api.router)
@@ -199,13 +203,46 @@ class UnlistedCatalogTests(unittest.TestCase):
         app.dependency_overrides[get_db] = _override_db
         client = TestClient(app)
 
-        titles = [row["title"] for row in client.get("/exams").json()]
-        self.assertEqual(titles, ["Fogások"])
+        rows = {row["title"]: row for row in client.get("/exams").json()}
+        self.assertEqual(set(rows), {"Fogások", "Létra"})
+        self.assertEqual(rows["Fogások"]["origin"], "synthetic")
+        self.assertEqual(rows["Létra"]["origin"], "official")
 
         detail = client.get(f"/exams/{hidden.id}")
         self.assertEqual(detail.status_code, 200)
         self.assertEqual(detail.json()["title"], "Cities")
+        self.assertEqual(detail.json()["origin"], "synthetic")
         db.close()
+
+
+class ExamOriginTests(unittest.TestCase):
+    def test_catalog_origins_are_official_or_synthetic(self) -> None:
+        origins = {loaded.template.id: loaded.template.origin for loaded in discover_exams()}
+        self.assertEqual(origins["viragagyasok"], "official")
+        for exam_id, origin in origins.items():
+            self.assertIn(origin, ("official", "synthetic"), exam_id)
+            if exam_id != "viragagyasok":
+                self.assertEqual(origin, "synthetic", exam_id)
+
+    def test_invalid_origin_is_rejected(self) -> None:
+        from pydantic import ValidationError
+
+        with self.assertRaises(ValidationError):
+            ExamTemplate(
+                id="demo",
+                title="Demo",
+                data_file="data.txt",
+                dataset_type="lines",
+                visible="datasets/visible.txt",
+                origin="practice",  # type: ignore[arg-type]
+            )
+
+    def test_materialize_copies_origin(self) -> None:
+        db = _session()
+        official = materialize_loaded_exam(db, load_exam_by_id("viragagyasok"))
+        self.assertEqual(official.origin, "official")
+        synthetic = materialize_loaded_exam(db, load_exam_by_id("fogasok"))
+        self.assertEqual(synthetic.origin, "synthetic")
 
 
 if __name__ == "__main__":

@@ -582,6 +582,7 @@ export function ExamWorkspace({ examId, initialExam = null }: ExamWorkspaceProps
             title={exam.title}
             story={exam.story}
             level={exam.level ?? "kozep"}
+            origin={exam.origin}
             difficulty={exam.difficulty ?? 2}
             tags={exam.tags ?? []}
             constraints={exam.constraints ?? []}

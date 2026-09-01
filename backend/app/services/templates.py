@@ -79,6 +79,7 @@ def materialize_loaded_exam(
         preamble=preamble,
         shared_variable=shared_variable,
         level=template.level or "kozep",
+        origin=template.origin or "synthetic",
         difficulty=int(template.difficulty or 2),
         tags_json=json.dumps(list(template.tags or []), ensure_ascii=False),
         constraints_json=json.dumps(list(template.constraints or []), ensure_ascii=False),

@@ -36,6 +36,7 @@ Gold reference (read before writing): `backend/app/exams/viragagyasok/` (folder 
    `"id": "toronyepites"` ← same name as the exam, but only `a-z` and `_`
    `"title": "Toronyépítés"` ← same as the exam in the MD
    `"difficulty"` ← from the MD, integer 1–5
+   `"origin"` ← `official` for real OH papers (`official/`), `synthetic` for generated papers
    `"tags"` ← copy the exam-level MD tags as-is (`IO`, `count`, …). Do **not** translate to the old live-exam vocabulary (`list`, `loops`, `counting`)
    `"story"` ← copy the Scenario section from the MD
    `"constraints"` ← copy from Constraints; also use this when generating datasets
@@ -97,6 +98,7 @@ Schema: `backend/app/schemas/templates.py`. Details: [reference.md](reference.md
 | Field | Rule |
 |---|---|
 | `level` | `közép` → `kozep`, `emelt` → `emelt` |
+| `origin` | `official` (real OH paper) or `synthetic` (generated). Required on every catalog exam. |
 | `description` | One Hungarian imperative line (title + data file) |
 | `data_file` | First filename under **files:** (else `{id}.txt`) |
 | `dataset_type` | `{id}` (this exam's `parse`; do not reuse `cities` / `temperatures`) |
@@ -191,7 +193,7 @@ Do not register this exam in the global `PARSERS` / `TASK_BUILDERS` dicts.
 ## Checklist
 
 - [ ] Source MD not modified
-- [ ] `id` is `[a-z_]+`; `title` / `difficulty` (1–5) / `tags` / `story` / `constraints` / `data_explanation` copied
+- [ ] `id` is `[a-z_]+`; `title` / `difficulty` (1–5) / `origin` (`official` \| `synthetic`) / `tags` / `story` / `constraints` / `data_explanation` copied
 - [ ] Every `solution_file` is `{id}_*.py`; every builder/parser function is `{id}`-prefixed
 - [ ] `dataset_type` == `{id}`; `parse` lives in `exams/{id}/builders.py` (not the global registry)
 - [ ] Each custom task `type` is a key in that file's `TASK_BUILDERS`; no `literal` for data-dependent answers

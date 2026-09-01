@@ -1,3 +1,5 @@
+from typing import Literal
+
 from pydantic import BaseModel, Field
 
 
@@ -50,6 +52,8 @@ class ExamTemplate(BaseModel):
     seed: int | None = None
     aux_files: list[AuxFileTemplate] = Field(default_factory=list)
     level: str = "kozep"
+    # official = real OH paper; synthetic = generated practice exam
+    origin: Literal["official", "synthetic"] = "synthetic"
     difficulty: int = 2
     tags: list[str] = Field(default_factory=list)
     constraints: list[str] = Field(default_factory=list)

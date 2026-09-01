@@ -3,6 +3,7 @@
   "title": "Students",
   "listed": false,
   "level": "kozep",
+  "origin": "synthetic",
   "difficulty": 2,
   "tags": ["list", "loops", "store", "counting"],
   "description": "Olvasd be a students.txt fájlt, és oldd meg a feladatokat!",

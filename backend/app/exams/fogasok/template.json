@@ -2,6 +2,7 @@
   "id": "fogasok",
   "title": "Fogások",
   "level": "kozep",
+  "origin": "synthetic",
   "difficulty": 1,
   "tags": ["IO", "count", "min_max"],
   "description": "Értékelje ki a fogasok.txt állományban tárolt versenyfogásokat!",

@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { ExamCard } from "@/components/ExamCard";
 import { TagToggleBar } from "@/components/TagToggleBar";
 import { hu } from "@/lib/messages/hu";
+import { normalizeOrigin, type ExamOrigin } from "@/lib/origin";
 import { collectTagsFromExams, examMatchesTagFilter } from "@/lib/tags";
 import type { ExamListItem } from "@/lib/api";
 
@@ -12,6 +13,7 @@ type ExamListProps = {
 };
 
 type LevelFilter = "all" | "kozep" | "emelt";
+type OriginFilter = "all" | ExamOrigin;
 
 function normalizeLevel(level?: string): string {
   const key = (level || "kozep").toLowerCase();
@@ -21,6 +23,7 @@ function normalizeLevel(level?: string): string {
 
 export function ExamList({ exams }: ExamListProps) {
   const [level, setLevel] = useState<LevelFilter>("all");
+  const [origin, setOrigin] = useState<OriginFilter>("all");
   const [difficulty, setDifficulty] = useState<number | "all">("all");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
@@ -29,14 +32,15 @@ export function ExamList({ exams }: ExamListProps) {
   const filtered = useMemo(() => {
     return exams.filter((exam) => {
       if (level !== "all" && normalizeLevel(exam.level) !== level) return false;
+      if (origin !== "all" && normalizeOrigin(exam.origin) !== origin) return false;
       if (difficulty !== "all" && (exam.difficulty ?? 2) !== difficulty) return false;
       if (!examMatchesTagFilter(exam.tags, selectedTags)) return false;
       return true;
     });
-  }, [exams, level, difficulty, selectedTags]);
+  }, [exams, level, origin, difficulty, selectedTags]);
 
   const hasFilters =
-    level !== "all" || difficulty !== "all" || selectedTags.length > 0;
+    level !== "all" || origin !== "all" || difficulty !== "all" || selectedTags.length > 0;
 
   return (
     <section>
@@ -52,6 +56,19 @@ export function ExamList({ exams }: ExamListProps) {
               <option value="all">{hu.home.filterAll}</option>
               <option value="kozep">{hu.home.levelKozep}</option>
               <option value="emelt">{hu.home.levelEmelt}</option>
+            </select>
+          </label>
+
+          <label className="flex flex-col gap-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
+            {hu.home.filterOrigin}
+            <select
+              value={origin}
+              onChange={(e) => setOrigin(e.target.value as OriginFilter)}
+              className="rounded border border-[var(--border)] bg-[var(--panel)] px-2 py-1.5 text-sm normal-case tracking-normal text-[var(--fg)]"
+            >
+              <option value="all">{hu.home.filterAll}</option>
+              <option value="official">{hu.home.originOfficial}</option>
+              <option value="synthetic">{hu.home.originSynthetic}</option>
             </select>
           </label>
 
@@ -80,6 +97,7 @@ export function ExamList({ exams }: ExamListProps) {
               type="button"
               onClick={() => {
                 setLevel("all");
+                setOrigin("all");
                 setDifficulty("all");
                 setSelectedTags([]);
               }}

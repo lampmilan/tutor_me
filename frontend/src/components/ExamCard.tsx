@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { TagChip } from "@/components/TagChip";
 import { hu } from "@/lib/messages/hu";
+import { originLabel } from "@/lib/origin";
 import { sortTagsForDisplay } from "@/lib/tags";
 
 type ExamCardProps = {
@@ -11,6 +12,7 @@ type ExamCardProps = {
     title: string;
     description: string;
     level?: string;
+    origin?: string;
     difficulty?: number;
     tags?: string[];
   };
@@ -48,7 +50,8 @@ export function ExamCard({ exam }: ExamCardProps) {
             {exam.title}
           </div>
           <span className="text-sm text-[var(--muted)]">
-            {levelLabel(exam.level)} <DifficultyDots value={difficulty} />
+            {levelLabel(exam.level)} · {originLabel(exam.origin)}{" "}
+            <DifficultyDots value={difficulty} />
           </span>
         </div>
         {tags.length > 0 ? (

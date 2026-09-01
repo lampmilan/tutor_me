@@ -3,6 +3,7 @@
   "title": "MRZ kód",
   "listed": false,
   "level": "emelt",
+  "origin": "synthetic",
   "difficulty": 4,
   "tags": ["list", "loops", "store", "search", "validate"],
   "description": "Headache demo — fájlnév/stdin, névparse, súlyozott ellenőrzőjegy. Auto-grade csak részben.",

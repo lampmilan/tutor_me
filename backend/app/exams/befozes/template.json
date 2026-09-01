@@ -1,0 +1,96 @@
+{
+  "id": "befozes",
+  "title": "Befőzés",
+  "level": "emelt",
+  "origin": "official",
+  "difficulty": 2,
+  "tags": [
+    "IO",
+    "min_max",
+    "sum",
+    "search"
+  ],
+  "description": "Készítsen programot, amely elemzi a befőzött lekvár mennyiségének és az adott sorrendű üvegek térfogatának ismertében a lekvártöltési adatokat!",
+  "story": "Mari néni eperlekvárt főz be. Sorba állította a kamrából előhozott, elmosott üres üvegeket, hogy megtöltse őket. Tudja, hogy az egyes üvegek hány deciliteresek. A feladat a rendelkezésre álló üvegek adatainak és a befőzött lekvár mennyiségének feldolgozása.",
+  "constraints": [
+    "Az üvegek száma: 15.",
+    "Befőzött lekvár (L) mennyisége: 0 < L <= 200 (egész szám)."
+  ],
+  "data_explanation": "Az uvegek.txt állomány 15 dcl-ben megadott egész számot tartalmaz, az üvegek űrtartalmát a sorrendjüknek megfelelően.",
+  "data_file": "uvegek.txt",
+  "dataset_type": "befozes",
+  "shared_variable": "uvegek_szoveg",
+  "preamble": "with open(\"uvegek.txt\", encoding=\"utf-8\") as f:\n    uvegek_szoveg = f.read()\n",
+  "visible": "datasets/visible.txt",
+  "hidden": [
+    "datasets/hidden/01.txt",
+    "datasets/hidden/02.txt",
+    "datasets/hidden/03.txt"
+  ],
+  "tasks": [
+    {
+      "type": "store",
+      "tags": [
+        "IO"
+      ],
+      "title": "1. feladat: Adatok eltárolása",
+      "description": "Olvassa be és tárolja el az `uvegek.txt` tartalmát a `uvegek_szoveg` változóban stringként!",
+      "points": 1,
+      "solution_file": "befozes_beolvasas.py",
+      "uses_preamble": false,
+      "starter": "# 1. feladat: olvassa be az uvegek.txt tartalmát.\n# Tárolja az állomány tartalmát az 'uvegek_szoveg' változóban mint string (szöveg).\n\nuvegek_szoveg = \"\"\n",
+      "hints": [
+        "Használja az 'open' metódust az 'uvegek.txt' megnyitásához, majd a 'read' metódust a szöveges tartalom beolvasásához."
+      ]
+    },
+    {
+      "type": "befozes_beker",
+      "tags": [
+        "IO"
+      ],
+      "title": "2. feladat: Lekvár mennyisége",
+      "description": "Kérje be a felhasználótól, hogy Mari néni hány deciliter lekvárt főz be!",
+      "points": 1,
+      "solution_file": "befozes_beker.py",
+      "uses_preamble": true,
+      "starter": "# Az uvegek.txt tartalma az 'uvegek_szoveg' változóban van szöveges formában.\n\nlekvar =  \"))\n",
+      "hints": [
+        "Használja az input() függvényt a beéréshez, és konvertálja int típusúvá."
+      ],
+      "stdin": "45\n"
+    },
+    {
+      "type": "befozes_max",
+      "tags": [
+        "min_max",
+        "search"
+      ],
+      "title": "3. feladat: Legnagyobb üveg",
+      "description": "Az üvegek űrtartalma alapján határozza meg, hogy a legnagyobb üveg hány deciliteres és hányadik a sorban! Ha több ilyen van, az elsőt adja meg! Írja ki az eredményt a mintának megfelelően!",
+      "points": 2,
+      "solution_file": "befozes_legnagyobb.py",
+      "uses_preamble": true,
+      "starter": "# Az uvegek.txt tartalma az 'uvegek_szoveg' változóban van szöveges formában.\n# Elvárt kimenet példa: 'A legnagyobb uveg x dl-es es a y. a sorban.'\n",
+      "hints": [
+        "Alakítsa az uvegek_szoveg tartalmát egész számok listájává, majd keresse meg a max értéket és annak 1-alapú indexét."
+      ]
+    },
+    {
+      "type": "befozes_elegendo",
+      "tags": [
+        "sum",
+        "IO"
+      ],
+      "title": "4. feladat: Üvegek elegendősége",
+      "description": "Kérje be a lekvár mennyiségét, majd írassa ki a képernyőre, hogy az L deciliter befőzött lekvár elfér-e az üvegekben! Ha az üveg mennyiség elegendő, akkor írja ki, hogy „Elegendő üveg volt.”, különben azt, hogy „Maradt lekvár.”!",
+      "points": 2,
+      "solution_file": "befozes_elegendo.py",
+      "uses_preamble": true,
+      "starter": "# Az uvegek.txt tartalma az 'uvegek_szoveg' változóban van szöveges formában.\n# Elvárt kimenetek:\n# 'Elegendő üveg volt.'/'Maradt lekvár.'\n",
+      "hints": [
+        "Adja össze az üvegek űrtartalmát (sum). Ha ez az összeg nagyobb vagy egyenlő, mint a lekvár mennyisége, akkor 'Elegendo uveg volt.', különben 'Maradt lekvar.'."
+      ],
+      "stdin": "45\n"
+    }
+  ]
+}

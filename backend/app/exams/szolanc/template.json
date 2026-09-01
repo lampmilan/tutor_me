@@ -1,0 +1,50 @@
+{
+  "id": "szolanc",
+  "title": "Szólánc",
+  "level": "kozephalado",
+  "origin": "official",
+  "difficulty": 3,
+  "tags": [
+    "IO",
+    "loop",
+    "string",
+    "condition"
+  ],
+  "description": "Készítsen programot szolanc néven, amely egy 6 betűs szavakból álló szólánc játékot szimulál!",
+  "story": "A szólánc kedvelt nyelvi játék. A játék során úgy kell 6 betűs szavakat egymás után megadni, hogy az előző szó utolsó betűjével kezdődjön a következő szó. A játék addig tart, amíg a felhasználó szabályos szavakat ad meg.",
+  "constraints": [
+    "Minden megadott szó csupa kisbetűs angol karakterekből áll.",
+    "A szavak hossza a szabály szerint pontosan 6 karakter.",
+    "A játék minimum 1 szótól a szabályszegésig tart."
+  ],
+  "data_explanation": "Ez a feladat tisztán interaktív bemenettel (standard input) dolgozik, nem igényel külső adatfájlt.",
+  "data_file": "",
+  "dataset_type": "szolanc",
+  "shared_variable": "",
+  "preamble": "",
+  "visible": "datasets/visible.txt",
+  "hidden": [
+    "datasets/hidden/01.txt",
+    "datasets/hidden/02.txt"
+  ],
+  "tasks": [
+    {
+      "type": "szolanc_teljes",
+      "tags": [
+        "IO",
+        "loop",
+        "string",
+        "condition"
+      ],
+      "title": "Szólánc játék teljes megvalósítása",
+      "description": "Készítse el a teljes `szolanc.py` programot a megadott starter kód kommentjeiben leírt lépések alapján!",
+      "points": 10,
+      "solution_file": "szolanc.py",
+      "uses_preamble": false,
+      "starter": "# 1. feladat: Szavak beolvasása folyamatosan, kiírva a sorszámot (pl. '1. szó: ')\n# 2. feladat: Ciklus feltétel megvalósítása (6 betűs szó, és az első betű megegyezik az előző utolsó betűjével)\n# 3. feladat: Befejezés okának kiírása ('A karakterek száma téves!' vagy 'Nem illeszkedett!')\n# 4. feladat: Helyes lépések számának kiírása ('Helyes lépések száma: X')\n# 5. feladat: Szint értékelése lépésszám alapján ('Szint: kezdő', 'közepes' vagy 'haladó')\n",
+      "hints": [
+      ],
+      "stdin": "villan\nnegyed\ndiadal\nlista\n"
+    }
+  ]
+}

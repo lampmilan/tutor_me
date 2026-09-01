@@ -135,6 +135,7 @@ MD `### Virágágyások` → folder `viragagyasok`.
 | `id` | `viragagyasok` |
 | `title` | `Virágágyások` |
 | `level` | `emelt` |
+| `origin` | `official` |
 | `difficulty` | `4` |
 | `tags` | `["IO","count","search","validate","simulation"]` |
 | `story` | full Scenario paragraph |

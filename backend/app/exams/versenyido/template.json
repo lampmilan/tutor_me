@@ -2,6 +2,7 @@
   "id": "versenyido",
   "title": "Versenyidő",
   "level": "kozep",
+  "origin": "synthetic",
   "difficulty": 2,
   "tags": ["IO", "sum", "min_max"],
   "description": "Trivial demo — hét napi edzésperc: összeg, átlag, maximum. (közép synthetic)",

@@ -58,6 +58,7 @@ class ExamOut(BaseModel):
     preamble: str = ""
     shared_variable: str = "data"
     level: str = "kozep"
+    origin: str = "synthetic"
     difficulty: int = 2
     tags: list[str] = []
     constraints: list[str] = []
@@ -75,6 +76,7 @@ class ExamListItem(BaseModel):
     description: str
     created_at: datetime
     level: str = "kozep"
+    origin: str = "synthetic"
     difficulty: int = 2
     tags: list[str] = []
 

@@ -43,6 +43,8 @@ def _needs_rematerialize(exam: Exam, loaded, expected_hidden: int) -> bool:
         return True
     if (getattr(exam, "level", None) or "kozep") != (loaded.template.level or "kozep"):
         return True
+    if (getattr(exam, "origin", None) or "synthetic") != (loaded.template.origin or "synthetic"):
+        return True
     if int(getattr(exam, "difficulty", 0) or 0) != int(loaded.template.difficulty or 0):
         return True
     if _json_list(getattr(exam, "tags_json", None)) != list(loaded.template.tags or []):

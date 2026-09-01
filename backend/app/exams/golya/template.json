@@ -2,6 +2,7 @@
   "id": "golya",
   "title": "Gólya",
   "level": "emelt",
+  "origin": "synthetic",
   "difficulty": 4,
   "tags": ["IO", "count", "search", "min_max", "group", "lookup", "validate", "function"],
   "description": "Értékelje ki Zsiga gólya őszi vonulását a golya.txt alapján!",

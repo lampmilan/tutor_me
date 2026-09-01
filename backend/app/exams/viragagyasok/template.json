@@ -3,6 +3,7 @@
   "title": "Virágágyások",
   "listed": false,
   "level": "emelt",
+  "origin": "official",
   "difficulty": 4,
   "tags": ["IO", "count", "search", "validate", "simulation"],
   "description": "Ültesse be a lakópark virágágyásait a felajanlas.txt felajánlásai alapján!",

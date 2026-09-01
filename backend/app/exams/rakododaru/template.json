@@ -2,6 +2,7 @@
   "id": "rakododaru",
   "title": "Rakodódaru",
   "level": "emelt",
+  "origin": "synthetic",
   "difficulty": 5,
   "tags": [
     "IO",

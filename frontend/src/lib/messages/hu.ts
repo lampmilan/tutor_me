@@ -8,6 +8,7 @@ export const hu = {
     examsHeading: "Feladatsorok",
     noExams: "Még nincs feladatsor. Indítsd el a backendet a katalógus betöltéséhez.",
     filterLevel: "Szint",
+    filterOrigin: "Forrás",
     filterDifficulty: "Nehézség",
     filterTags: "Témakör",
     filterAll: "Mind",
@@ -15,6 +16,8 @@ export const hu = {
     filterNoMatch: "Nincs a szűrőknek megfelelő feladatsor.",
     levelKozep: "Közép",
     levelEmelt: "Emelt",
+    originOfficial: "Hivatalos",
+    originSynthetic: "Szintetikus",
   },
   examCard: {
     start: "Megnyitás →",

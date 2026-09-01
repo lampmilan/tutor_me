@@ -2,6 +2,7 @@
   "id": "locsolo",
   "title": "Locsoló",
   "level": "kozep",
+  "origin": "synthetic",
   "difficulty": 4,
   "tags": [
     "IO",

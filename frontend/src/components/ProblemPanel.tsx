@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { TagChip } from "@/components/TagChip";
+import { originLabel } from "@/lib/origin";
 import { sortTagsForDisplay } from "@/lib/tags";
 import type { Task } from "@/lib/api";
 
@@ -14,6 +15,7 @@ type ProblemPanelProps = {
   title: string;
   story: string;
   level: string;
+  origin?: string;
   difficulty: number;
   tags: string[];
   constraints: string[];
@@ -42,6 +44,7 @@ export function ProblemPanel({
   title,
   story,
   level,
+  origin,
   difficulty,
   tags,
   constraints,
@@ -88,7 +91,7 @@ export function ProblemPanel({
               {title}
             </h1>
             <span className="text-sm text-[var(--muted-strong)]">
-              {levelLabel(level)}{" "}
+              {levelLabel(level)} · {originLabel(origin)}{" "}
               <DifficultyDots value={difficulty} />
             </span>
           </div>

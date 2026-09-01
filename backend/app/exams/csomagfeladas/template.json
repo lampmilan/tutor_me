@@ -2,6 +2,7 @@
   "id": "csomagfeladas",
   "title": "Csomagfeladás",
   "level": "kozep",
+  "origin": "synthetic",
   "difficulty": 3,
   "tags": [
     "IO",

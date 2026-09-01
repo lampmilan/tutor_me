@@ -2,6 +2,7 @@
   "id": "kerekparallomas",
   "title": "Kerékpárállomás",
   "level": "kozep",
+  "origin": "synthetic",
   "difficulty": 2,
   "tags": ["IO", "sum", "count", "min_max"],
   "description": "Caveats demo — 8 állomás max/sum/count; kölcsönzés state kihagyva. (közép synthetic)",

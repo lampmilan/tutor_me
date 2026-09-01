@@ -69,6 +69,7 @@ def ensure_schema() -> None:
     _add_column_if_missing("exams", "preamble", "preamble TEXT DEFAULT ''")
     _add_column_if_missing("exams", "shared_variable", "shared_variable VARCHAR(100) DEFAULT 'data'")
     _add_column_if_missing("exams", "level", "level VARCHAR(20) DEFAULT 'kozep'")
+    _add_column_if_missing("exams", "origin", "origin VARCHAR(20) DEFAULT 'synthetic'")
     _add_column_if_missing("exams", "difficulty", "difficulty INTEGER DEFAULT 2")
     _add_column_if_missing("exams", "tags_json", "tags_json TEXT DEFAULT '[]'")
     _add_column_if_missing("exams", "constraints_json", "constraints_json TEXT DEFAULT '[]'")

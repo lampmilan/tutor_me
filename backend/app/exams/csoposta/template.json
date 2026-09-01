@@ -2,6 +2,7 @@
   "id": "csoposta",
   "title": "Csőposta",
   "level": "kozep",
+  "origin": "synthetic",
   "difficulty": 5,
   "tags": [
     "IO",

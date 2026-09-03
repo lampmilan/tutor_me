@@ -1,0 +1,171 @@
+{
+  "id": "tatalberlet",
+  "title": "Tatalbérlet",
+  "level": "emelt",
+  "origin": "synthetic",
+  "difficulty": 4,
+  "tags": [
+    "IO",
+    "count",
+    "min_max",
+    "search",
+    "function",
+    "validate",
+    "weighted_sum"
+  ],
+  "description": "Segítsen Nolannak megtalálni a megfelelő tatai albérletet a berletek.txt alapján!",
+  "story": "Nolan hosszú ideje arról álmodik, hogy Tatán albérletbe költözik, hogy háziállatként élhessen – a saját feltételei szerint, békésen. Egy ingatlaniroda adatbázisát vizsgálta át, amelyben tatai albérletek adatai szerepelnek. Minden egyes lakáshoz feljegyezte a havi bérleti díjat (ezer forintban), az alapterületet (négyzetméterben), az épület típusát (`panel` vagy `tégla`), valamint azt, hogy engedélyezik-e a háziállatok tartását. Készítsen programot, amely segít Nolannak megtalálni az ideális otthont!",
+  "constraints": [
+    "Az állomány legalább 5 és legfeljebb 200 sort tartalmaz; sorszámok 1-től folyamatosan.",
+    "A bérleti díj 50 és 500 ezer forint közé esik (egész szám).",
+    "Az alapterület 20 és 200 m² közé esik (egész szám).",
+    "Típus értéke pontosan `panel` vagy `tégla`.",
+    "Háziállat értéke pontosan `igen` vagy `nem`.",
+    "Ha két albérlet pontszáma egyenlő, a kisebb sorszámút kell előnyben részesíteni.",
+    "4. feladat tesztjavaslat: létező sorszám (például 3) és nem létező sorszám.",
+    "6.–7. feladat: a 6. feladatban bekért büdzsét használja a 7. feladat is."
+  ],
+  "data_explanation": "Minden sor egy albérletet ír le: `sorszám bérleti_díj alapterület háziállat típus`. A bérleti díj ezer forintban értendő.",
+  "data_file": "berletek.txt",
+  "dataset_type": "tatalberlet",
+  "shared_variable": "berletek",
+  "preamble": "with open(\"berletek.txt\", encoding=\"utf-8\") as f:\n    berletek = f.read()\n",
+  "functions": "def pontszam(berleti_dij, alapterulet):\n    return alapterulet / berleti_dij * 10\n",
+  "visible": "datasets/visible.txt",
+  "hidden": [
+    "datasets/hidden/01.txt",
+    "datasets/hidden/02.txt",
+    "datasets/hidden/03.txt"
+  ],
+  "tasks": [
+    {
+      "type": "store",
+      "tags": [
+        "IO"
+      ],
+      "title": "Beolvasás",
+      "description": "Olvassa be és tárolja el a `berletek.txt` állomány tartalmát! Az állomány minden sora egy albérletet ír le a fenti mezők sorrendjében. A következő feladatok megoldásához ezeket az adatokat használja fel!",
+      "points": 1,
+      "solution_file": "tatalberlet_beolvasas.py",
+      "uses_preamble": false,
+      "starter": "# 1. feladat: olvassa be a berletek.txt tartalmát.\n# Tárolja az állomány tartalmát a 'berletek' változóban mint string (szöveg).\n\nberletek = \"\"\n",
+      "hints": [
+        "Használja az 'open' metódust a 'berletek.txt' megnyitásához, majd a 'read' metódust a szöveges tartalom beolvasásához."
+      ]
+    },
+    {
+      "type": "tatalberlet_haziallatos_szama",
+      "tags": [
+        "count"
+      ],
+      "title": "Háziállatos albérletek",
+      "description": "Határozza meg, hány olyan albérlet szerepel az állományban, ahol a háziállat-tartás engedélyezett, és írja ki az eredményt a képernyőre!",
+      "points": 1,
+      "solution_file": "tatalberlet_haziallatos.py",
+      "uses_preamble": true,
+      "starter": "# A berletek.txt tartalma a 'berletek' változóban van szöveges formában.\n# Elvárt kimenet: 'Haziallatos berletek szama: x'\n",
+      "hints": [
+        "Számolja meg a sorokat, ahol a háziállat mező értéke 'igen'."
+      ]
+    },
+    {
+      "type": "tatalberlet_legolcsobb",
+      "tags": [
+        "min_max",
+        "search"
+      ],
+      "title": "Legolcsóbb háziállatos",
+      "description": "Keresse meg a legolcsóbb háziállat-barát albérletet! Ha több azonos díjú ilyen albérlet is szerepel az állományban, a legkisebb sorszámút adja meg. Írja ki annak sorszámát, bérleti díját és alapterületét!",
+      "points": 2,
+      "solution_file": "tatalberlet_legolcsobb.py",
+      "uses_preamble": true,
+      "starter": "# A berletek.txt tartalma a 'berletek' változóban van szöveges formában.\n# Elvárt kimenet: 'Legolcsobb haziallatos: x. berleti dij: y eFt, alapterulet: z m2'\n",
+      "hints": [
+        "Csak a háziállatot engedélyező sorok közül keresse a legkisebb bérleti díjat. Döntetlennél a kisebb sorszámú albérletet adja meg."
+      ]
+    },
+    {
+      "type": "tatalberlet_kereses",
+      "tags": [
+        "IO",
+        "search"
+      ],
+      "title": "Albérlet keresése",
+      "description": "Kérje be a felhasználótól egy albérlet sorszámát! Ha a megadott sorszámú albérlet szerepel az állományban, írja ki annak összes adatát (bérleti díj, alapterület, típus, háziállat)! Ha nem szerepel, írja ki: `Nem talalhato ilyen berleti.`",
+      "points": 2,
+      "stdin": "3\n",
+      "hidden_stdin": [
+        "5\n",
+        "2\n",
+        "99\n"
+      ],
+      "solution_file": "tatalberlet_kereses.py",
+      "uses_preamble": true,
+      "starter": "# A berletek.txt tartalma a 'berletek' változóban van szöveges formában.\n# Elvárt kimenetek:\n# 'Berleti dij: x eFt'\n# 'Alapterulet: y m2'\n# 'Tipus: ...'\n# 'Haziallat: ...'\n# vagy 'Nem talalhato ilyen berleti.'\n\nprint(\"Adja meg a berleti sorszamat!\")\nsorszam = \n",
+      "hints": [
+        "Ha a bekért sorszám nem szerepel az állományban, írja ki: 'Nem talalhato ilyen berleti.'"
+      ]
+    },
+    {
+      "type": "store",
+      "tags": [
+        "function",
+        "weighted_sum"
+      ],
+      "title": "pontszam",
+      "description": "Készítsen függvényt `pontszam` néven, amely egy albérlet vonzerejét számolja ki! A függvény paraméterként kapja meg a bérleti díjat (egész szám, eFt-ban) és az alapterületet (egész szám, m²-ben); a visszaadott érték egy valós szám legyen. A pontszámot a következő képlettel kell kiszámítani: `pontszam = alapterület / bérleti_díj * 10`. Minél nagyobb a pontszám, annál kedvezőbb az albérlet. A függvényt a későbbi feladatok megoldásánál felhasználhatja.",
+      "points": 2,
+      "solution_file": "tatalberlet_pontszam.py",
+      "uses_preamble": true,
+      "starter": "# A későbbi feladatok a pontszam(berleti_dij, alapterulet) függvényt hívják.\n# pontszam = alapterulet / berleti_dij * 10\n\ndef pontszam(berleti_dij, alapterulet):\n    return 0\n",
+      "hints": [
+        "A pontszám a terület és díj hányadosának tízszerese. Ennek a feladatnak üres a képernyő-kimenete."
+      ]
+    },
+    {
+      "type": "tatalberlet_legjobb",
+      "tags": [
+        "IO",
+        "search",
+        "validate"
+      ],
+      "title": "Legjobb választás",
+      "description": "Kérje be a felhasználótól a havi büdzsét (ezer forintban)! Az 5. feladatban elkészített függvény segítségével határozza meg, hogy a megadott büdzsén belül elérhető, háziállatot is engedélyező albérletek közül melyiknek a legmagasabb a pontszáma! Ha több azonos pontszámú albérlet is van, a kisebb sorszámút adja meg. Írja ki a nyertes albérlet sorszámát és pontszámát egy tizedesjegyre kerekítve! Ha egyetlen megfelelő albérlet sem fér bele a büdzsébe, írja ki: `Sajnos egy haziallatos berletet sem engedhetsz meg magadnak, Nolan.`",
+      "points": 3,
+      "stdin": "100\n",
+      "hidden_stdin": [
+        "70\n",
+        "50\n",
+        "200\n"
+      ],
+      "solution_file": "tatalberlet_legjobb.py",
+      "uses_preamble": true,
+      "starter": "# A berletek.txt tartalma a 'berletek' változóban van szöveges formában.\n# A pontszam(berleti_dij, alapterulet) függvény már rendelkezésre áll.\n# Elvárt kimenet: 'Legjobb valasztas: x. pontszam: y.y'\n# vagy 'Sajnos egy haziallatos berletet sem engedhetsz meg magadnak, Nolan.'\n\nprint(\"Havi budzse (eFt)!\")\nbudzse = \n",
+      "hints": [
+        "Csak a háziállatot engedélyező és a büdzsén belül maradó albérleteket vegye figyelembe. Döntetlennél a kisebb sorszámú nyer."
+      ]
+    },
+    {
+      "type": "tatalberlet_megfizetheto",
+      "tags": [
+        "IO"
+      ],
+      "title": "megfizetheto.txt",
+      "description": "Írja a `megfizetheto.txt` állományba az összes olyan albérlet adatait (sorszám, bérleti díj, alapterület, típus, háziállat), amelyek bérleti díja nem haladja meg a 6. feladatban bekért büdzsét! Az adatokat pontszám szerint csökkenő sorrendbe rendezve írja ki; azonos pontszámú albérletek esetén a kisebb sorszámú kerüljön előre!",
+      "points": 3,
+      "stdin": "100\n",
+      "hidden_stdin": [
+        "70\n",
+        "50\n",
+        "200\n"
+      ],
+      "expected_file": "megfizetheto.txt",
+      "solution_file": "tatalberlet_megfizetheto.py",
+      "uses_preamble": true,
+      "starter": "# A berletek.txt tartalma a 'berletek' változóban van szöveges formában.\n# A pontszam(berleti_dij, alapterulet) függvény már rendelkezésre áll.\n# A 6. feladatban bekért büdzsét használja.\n# Elvárt kimenet a megfizetheto.txt-be: 'sorszam dij terulet tipus haziallat'\n\nprint(\"Havi budzse (eFt)!\")\nbudzse = \n\nwith open(\"megfizetheto.txt\", \"w\", encoding=\"utf-8\") as f:\n    pass\n",
+      "hints": [
+        "A 6. feladatban bekért büdzsén belül maradó albérleteket pontszám szerint csökkenő sorrendben írja a fájlba. Döntetlennél a kisebb sorszám kerüljön előre."
+      ]
+    }
+  ]
+}

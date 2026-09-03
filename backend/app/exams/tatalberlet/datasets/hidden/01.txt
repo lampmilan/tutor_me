@@ -1,0 +1,5 @@
+1 80 40 igen panel
+2 80 35 nem tegla
+3 90 45 igen tegla
+4 100 50 nem panel
+5 55 30 igen panel

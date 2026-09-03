@@ -1,0 +1,8 @@
+1 85 42 igen panel
+2 120 58 nem tegla
+3 75 35 igen tegla
+4 200 95 nem panel
+5 95 50 igen tegla
+6 140 67 nem tegla
+7 65 28 igen panel
+8 110 54 nem tegla

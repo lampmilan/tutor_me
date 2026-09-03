@@ -15,10 +15,10 @@
   "description": "Értékelje ki az uszoda napi jegyforgalmát a latogatok.txt alapján!",
   "story": "Egy uszoda a napi belépéseket a jegy típusával és a vásárolt darabszámmal jegyzi. Három jegyfajta van: NAPI, BERLET és GYEREK, mindegyikhez rögzített ár tartozik. A program a napi forgalmat állományból olvassa, az árakat pedig a feladatban megadott táblázatból veszi. A kiértékeléshez kell a látogatók száma, a legnépszerűbb jegy és a bevétel.",
   "constraints": [
-    "Forgalmi sorok száma 1–30; típus csak `NAPI`, `BERLET` vagy `GYEREK`.",
+    "Forgalmi sorok száma 1–30; típus csak 'NAPI', 'BERLET' vagy 'GYEREK'.",
     "Darabszám soronként 1–20.",
     "Több azonos legnagyobb darabszámú típus esetén az állományban előbb összeadódó, a táblázat sorrendje szerinti elsőt adja meg: NAPI, BERLET, GYEREK.",
-    "4. feladat tesztjavaslat: `NAPI` (szerepel a mintában)."
+    "4. feladat tesztjavaslat: 'NAPI' (szerepel a mintában)."
   ],
   "data_explanation": "Minden sor egy eladási tétel: a jegy típusa és a darabszám. Egy típus több sorban is előfordulhat; a napi összesítéshez a darabszámokat típusonként össze kell adni.",
   "data_file": "latogatok.txt",
@@ -38,13 +38,13 @@
         "IO"
       ],
       "title": "Beolvasás",
-      "description": "Olvassa be és tárolja el a `latogatok.txt` tartalmát!",
+      "description": "Olvassa be és tárolja el a 'latogatok.txt' tartalmát!",
       "points": 1,
       "solution_file": "uszoda_beolvasas.py",
       "uses_preamble": false,
-      "starter": "# 1. feladat: olvassa be a latogatok.txt tartalmát.\n# Tárolja a teljes szöveget a `latogatok` változóban.\n# Sorok: tipus darab\n\nlatogatok = \"\"\n",
+      "starter": "# 1. feladat: olvassa be a latogatok.txt tartalmát.\n# Tárolja az állomány tartalmát a 'latogatok' változóban mint string (szöveg).\n\nlatogatok = \"\"\n",
       "hints": [
-        "Read latogatok.txt into `latogatok` as a raw string."
+        "Használja az 'open' metódust a 'latogatok.txt' megnyitásához, majd a 'read' metódust a szöveges tartalom beolvasásához."
       ]
     },
     {
@@ -58,9 +58,9 @@
       "points": 1,
       "solution_file": "uszoda_forgalom.py",
       "uses_preamble": true,
-      "starter": "# A latogatok.txt tartalma a `latogatok` változóban van (str).\n# típus darab\n#\n# Forgalom\n",
+      "starter": "# A latogatok.txt tartalma a 'latogatok' változóban van szöveges formában.\n# Elvárt kimenetek:\n# 'A tetelsorok szama: x'\n# 'Az eladott jegyek szama: y'\n",
       "hints": [
-        "Derive the answer from the current file contents; do not hard-code the sample."
+        "A tételsorok a nem üres sorok száma. Az eladott jegyek a darabszámok összege."
       ]
     },
     {
@@ -74,9 +74,9 @@
       "points": 2,
       "solution_file": "uszoda_nepszeru.py",
       "uses_preamble": true,
-      "starter": "# A latogatok.txt tartalma a `latogatok` változóban van (str).\n# NAPI, BERLET, GYEREK sorrend döntetlennél.\n#\n# Legnépszerűbb\n",
+      "starter": "# A latogatok.txt tartalma a 'latogatok' változóban van szöveges formában.\n# Elvárt kimenet: 'A legnepszerubb jegy: x'\n",
       "hints": [
-        "Derive the answer from the current file contents; do not hard-code the sample."
+        "Típusonként adja össze a darabszámokat. Döntetlennél a NAPI, BERLET, GYEREK sorrendben az elsőt adja meg."
       ]
     },
     {
@@ -87,13 +87,13 @@
         "sum"
       ],
       "title": "Típus bevétele",
-      "description": "Kérje be a felhasználótól egy jegy típusát! A teszteléshez használhatja a `NAPI` nevet. Számítsa ki, mennyi bevétel származott ebből a típusból a táblázat árai szerint! A bekéréskor jelenjen meg az `Adja meg a jegy tipust!` szöveg.",
+      "description": "Kérje be a felhasználótól egy jegy típusát! A teszteléshez használhatja a 'NAPI' nevet. Számítsa ki, mennyi bevétel származott ebből a típusból a táblázat árai szerint! A bekéréskor jelenjen meg az 'Adja meg a jegy tipust!' szöveg.",
       "points": 2,
       "solution_file": "uszoda_bevetel.py",
       "uses_preamble": true,
-      "starter": "# A latogatok.txt tartalma a `latogatok` változóban van (str).\n# Árak: NAPI 2500, BERLET 1800, GYEREK 1200.\n#\n# Típus bevétele\n\nprint(\"Adja meg a jegy tipust!\")\ntipus = input().strip()\n",
+      "starter": "# A latogatok.txt tartalma a 'latogatok' változóban van szöveges formában.\n# Elvárt kimenet: 'A tipus bevetel: x Ft'\n\nprint(\"Adja meg a jegy tipust!\")\ntipus = \n",
       "hints": [
-        "Derive the answer from the current file contents; do not hard-code the sample."
+        "A bekért típus darabszámait adja össze, majd szorozza a táblázat szerinti árral."
       ],
       "stdin": "NAPI\n"
     }

@@ -17,7 +17,7 @@
     "A húzás sorrendje számít; a legkisebb és legnagyobb a kisorsolt értékek közül értendő.",
     "A játékos száma pozitív egész; a bemenet érvényességét nem kell ellenőrizni."
   ],
-  "data_explanation": "A program a nyerő számokat véletlenszerűen állítja elő; a sorsjegy.txt állomány üres helyőrző. A preambulum `random.seed(2027)` hívást tartalmaz.",
+  "data_explanation": "A program a nyerő számokat véletlenszerűen állítja elő; a sorsjegy.txt állomány üres helyőrző. A preambulum 'random.seed(2027)' hívást tartalmaz.",
   "data_file": "sorsjegy.txt",
   "dataset_type": "sorsjegy",
   "shared_variable": "sorsjegyek",
@@ -41,7 +41,7 @@
       "uses_preamble": true,
       "starter": "# 1. feladat: sorsoljon 8 különböző számot 1–50 között.\n# A random modul és a seed a preambulumban már be van állítva.\n\nszamok = []\n",
       "hints": [
-        "Use random.sample(range(1, 51), 8). This feladat has empty stdout."
+        "Használja a random.sample(range(1, 51), 8) hívást. Ennek a feladatnak üres a képernyő-kimenete."
       ]
     },
     {
@@ -54,9 +54,9 @@
       "points": 1,
       "solution_file": "sorsjegy_szamok.py",
       "uses_preamble": true,
-      "starter": "# A sorsjegy.txt tartalma a `sorsjegyek` változóban van (str).\n# Nyolc szám random.sample-lel.\n#\n# Nyerő számok\n",
+      "starter": "# A kisorsolt számok a 'szamok' változóban vannak.\n# Elvárt kimenet: 'A nyero szamok: x x x ...'\n",
       "hints": [
-        "Derive the answer from the current file contents; do not hard-code the sample."
+        "Írja ki a húzott számokat egy sorban, szóközzel elválasztva, a húzás sorrendjében."
       ]
     },
     {
@@ -69,9 +69,9 @@
       "points": 2,
       "solution_file": "sorsjegy_minmax.py",
       "uses_preamble": true,
-      "starter": "# A sorsjegy.txt tartalma a `sorsjegyek` változóban van (str).\n# min és max a húzott számokon.\n#\n# Szélső értékek\n",
+      "starter": "# A kisorsolt számok a 'szamok' változóban vannak.\n# Elvárt kimenetek:\n# 'A legkisebb nyero szam: x'\n# 'A legnagyobb nyero szam: y'\n",
       "hints": [
-        "Derive the answer from the current file contents; do not hard-code the sample."
+        "A min() és max() függvényekkel határozza meg a húzott számok szélső értékeit."
       ]
     },
     {
@@ -81,13 +81,13 @@
         "validate"
       ],
       "title": "Saját szelvény",
-      "description": "Kérje be a felhasználótól a saját sorsjegyének számát! Ha a szám szerepel a nyerők között, írja ki: `Nyert!` Ha nem szerepel, írja ki: `Nem nyert.` A bekéréskor jelenjen meg a `A sajat szelveny szama:` szöveg.",
+      "description": "Kérje be a felhasználótól a saját sorsjegyének számát! Ha a szám szerepel a nyerők között, írja ki: 'Nyert!' Ha nem szerepel, írja ki: 'Nem nyert.' A bekéréskor jelenjen meg a 'A sajat szelveny szama:' szöveg.",
       "points": 2,
       "solution_file": "sorsjegy_sajat.py",
       "uses_preamble": true,
-      "starter": "# A sorsjegy.txt tartalma a `sorsjegyek` változóban van (str).\n# stdin: saját szám.\n#\n# Saját szelvény\n\nprint(\"A sajat szelveny szama:\")\nsajat = int(input())\n",
+      "starter": "# A kisorsolt számok a 'szamok' változóban vannak.\n# Elvárt kimenet: 'Nyert!' vagy 'Nem nyert.'\n\nprint(\"A sajat szelveny szama:\")\nsajat = \n",
       "hints": [
-        "Derive the answer from the current file contents; do not hard-code the sample."
+        "Döntse el, szerepel-e a bekért szám a húzott számok között."
       ],
       "stdin": "21\n"
     }

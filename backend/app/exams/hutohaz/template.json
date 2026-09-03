@@ -4,18 +4,27 @@
   "level": "emelt",
   "origin": "synthetic",
   "difficulty": 5,
-  "tags": ["IO", "count", "sum", "min_max", "lookup", "validate", "simulation", "function"],
+  "tags": [
+    "IO",
+    "count",
+    "sum",
+    "min_max",
+    "lookup",
+    "validate",
+    "simulation",
+    "function"
+  ],
   "description": "Értékelje ki a rakodas.txt hűtőházi rakodási naplóját!",
   "story": "Egy gyümölcstermelő szövetkezet hűtőházában minden rakodást számítógép rögzít. A gyümölcs ládákban érkezik és ládákban távozik. Minden eseményhez feljegyzik az óra–perc időpontot, a művelet irányát, a termék nevét és a ládák számát. A sorok időrendben követik egymást. A hűtőház befogadóképessége korlátozott, ezért a nap során a futó készletet és a kapacitás esetleges túllépését is vizsgálni kell. Egy termékből több beszállítás és kiszállítás is előfordulhat.",
   "constraints": [
-    "Események ≤ 2000; óra 0–23, perc 0–59; az állomány időrendben van.",
-    "Művelet: `BE` (beszállítás) vagy `KI` (kiszállítás); termék: egy ékezetmentes nagybetűs szó.",
+    "Események <= 2000; óra 0–23, perc 0–59; az állomány időrendben van.",
+    "Művelet: 'BE' (beszállítás) vagy 'KI' (kiszállítás); termék: egy ékezetmentes nagybetűs szó.",
     "Ládák száma eseményenként 1–50; a hűtőház kapacitása 70 láda.",
-    "Feltételezheti, hogy `KI` soha nem kér többet, mint amennyi az adott termékből éppen bent van.",
+    "Feltételezheti, hogy 'KI' soha nem kér többet, mint amennyi az adott termékből éppen bent van.",
     "5. feladat: a bekért időpont a első és az utolsó esemény közé esik (a szélső értékek megengedettek).",
-    "6. feladat tesztjavaslat: `ALMA` (van a fájlban). Több azonos legnagyobb `BE` esetén az állományban első."
+    "6. feladat tesztjavaslat: 'ALMA' (van a fájlban). Több azonos legnagyobb 'BE' esetén az állományban első."
   ],
-  "data_explanation": "Minden sor egy rakodási esemény, szóközzel elválasztott mezőkkel: óra, perc, művelet (`BE` vagy `KI`), a termék neve, majd a ládák száma. A mintában a 6:12-kor 40 láda alma érkezik; 6:40-kor 15 ládát visznek ki belőle. A készlet az események sorrendjében változik, a kapacitás a bent lévő ládák összesen értendő.",
+  "data_explanation": "Minden sor egy rakodási esemény, szóközzel elválasztott mezőkkel: óra, perc, művelet ('BE' vagy 'KI'), a termék neve, majd a ládák száma. A mintában a 6:12-kor 40 láda alma érkezik; 6:40-kor 15 ládát visznek ki belőle. A készlet az események sorrendjében változik, a kapacitás a bent lévő ládák összesen értendő.",
   "data_file": "rakodas.txt",
   "dataset_type": "hutohaz",
   "shared_variable": "rakodasok",
@@ -29,112 +38,131 @@
   "tasks": [
     {
       "type": "store",
-      "tags": ["IO"],
+      "tags": [
+        "IO"
+      ],
       "title": "Beolvasás",
-      "description": "Olvassa be és tárolja el a `rakodas.txt` tartalmát!",
+      "description": "Olvassa be és tárolja el a 'rakodas.txt' tartalmát!",
       "points": 1,
       "solution_file": "hutohaz_beolvasas.py",
       "uses_preamble": false,
-      "starter": "# 1. feladat: olvassa be a rakodas.txt tartalmát.\n# Tárolja a teljes szöveget a `rakodasok` változóban.\n# Sorok: ora perc muvelet termek ladak\n\nrakodasok = \"\"\n",
+      "starter": "# 1. feladat: olvassa be a rakodas.txt tartalmát.\n# Tárolja az állomány tartalmát a 'rakodasok' változóban mint string (szöveg).\n\nrakodasok = \"\"\n",
       "hints": [
-        "Read the whole rakodas.txt file into the rakodasok string."
+        "Használja az 'open' metódust a 'rakodas.txt' megnyitásához, majd a 'read' metódust a szöveges tartalom beolvasásához."
       ]
     },
     {
       "type": "hutohaz_count",
-      "tags": ["count"],
+      "tags": [
+        "count"
+      ],
       "title": "Események száma",
       "description": "Határozza meg, hány rakodási eseményt tartalmaz az állomány, és írja a képernyőre az események számát! Az eredményt nevezze meg a kiírásban!",
       "points": 1,
       "solution_file": "hutohaz_esemenyek.py",
       "uses_preamble": true,
-      "starter": "# A rakodas.txt tartalma a `rakodasok` változóban van (str).\n# Minden sor: ora perc muvelet termek ladak\n#\n# 2. feladat: írja ki a rakodási események számát.\n\nprint(f\"A rakodasi esemenyek szama: \")\n",
+      "starter": "# A rakodas.txt tartalma a 'rakodasok' változóban van szöveges formában.\n# Elvárt kimenet: 'A rakodasi esemenyek szama: x'\n",
       "hints": [
-        "Count non-empty event lines — do not hard-code 12."
+        "Számolja meg a nem üres sorokat a splitlines() metódus segítségével."
       ]
     },
     {
       "type": "hutohaz_max_be",
-      "tags": ["min_max"],
+      "tags": [
+        "min_max"
+      ],
       "title": "Legnagyobb beszállítás",
-      "description": "A beszállítások (`BE`) közül keresse meg a legnagyobb ládaszámú tételt! Írja a képernyőre a ládák számát és a termék nevét! Ha több ilyen beszállítás is van, az állományban elsőként szereplőt adja meg!",
+      "description": "A beszállítások ('BE') közül keresse meg a legnagyobb ládaszámú tételt! Írja a képernyőre a ládák számát és a termék nevét! Ha több ilyen beszállítás is van, az állományban elsőként szereplőt adja meg!",
       "points": 2,
       "solution_file": "hutohaz_legnagyobb.py",
       "uses_preamble": true,
-      "starter": "# A rakodas.txt tartalma a `rakodasok` változóban van (str).\n#\n# 3. feladat: legnagyobb BE tétel ládaszáma és terméke.\n\nprint(f\"A legnagyobb beszallitas: \")\n",
+      "starter": "# A rakodas.txt tartalma a 'rakodasok' változóban van szöveges formában.\n# Elvárt kimenet: 'A legnagyobb beszallitas: x lada, termek: y'\n",
       "hints": [
-        "Ignore KI rows. On a tie, keep the earliest BE in the file."
+        "Csak a BE műveleteket vegye figyelembe. Döntetlennél az állományban első tételt adja meg."
       ]
     },
     {
       "type": "store",
-      "tags": ["function"],
+      "tags": [
+        "function"
+      ],
       "title": "percben",
       "description": "Készítsen függvényt percben néven, amely megadja, hogy a paraméterként kapott óra és perc a nap hányadik perce! A függvény két egész számot kapjon, a visszaadott érték egy egész szám legyen! Az éjfél a 0. perc, a 8 óra 30 perc a 510. perc. A függvényt a későbbi feladatok megoldásánál felhasználhatja.",
       "points": 2,
       "solution_file": "hutohaz_percben.py",
       "uses_preamble": true,
-      "starter": "# A későbbi feladatok a percben(ora, perc) függvényt hívják.\n# Írja meg a függvényt: éjfél = 0, 8:30 = 510.\n\ndef percben(ora, perc):\n    return 0\n",
+      "starter": "# A későbbi feladatok a percben(ora, perc) függvényt hívják.\n# Éjfél = 0, 8:30 = 510.\n\ndef percben(ora, perc):\n    return 0\n",
       "hints": [
-        "Convert hours to minutes and add the minute field. Midnight is 0."
+        "Szorozza meg az órát 60-nal, majd adja hozzá a percet. Az éjfél a 0. perc."
       ]
     },
     {
       "type": "hutohaz_keszlet",
-      "tags": ["IO", "simulation"],
+      "tags": [
+        "IO",
+        "simulation"
+      ],
       "title": "Készlet egy időpontban",
       "description": "Kérje be a felhasználótól egy időpont óra és perc értékét! A percben függvény segítségével határozza meg, hogy ebben az időpontban hány láda volt összesen a hűtőházban! Vegye figyelembe az összes, a bekért időpontnál nem későbbi eseményt! Feltételezheti, hogy a bekért időpont az első és az utolsó esemény közé esik.",
       "points": 3,
       "stdin": "8\n30\n",
       "solution_file": "hutohaz_idopont.py",
       "uses_preamble": true,
-      "starter": "# A rakodas.txt tartalma a `rakodasok` változóban van (str).\n# A percben(ora, perc) függvény már rendelkezésre áll.\n# 5. feladat: készlet a bekért időpontban (a nem későbbi események után).\n\nprint(\"Ora:\")\nora = int(input())\nprint(\"Perc:\")\nperc = int(input())\n\n",
+      "starter": "# A rakodas.txt tartalma a 'rakodasok' változóban van szöveges formában.\n# A percben(ora, perc) függvény már rendelkezésre áll.\n# Elvárt kimenet: 'A hutohazban ekkor x lada volt.'\n\nprint(\"Ora:\")\nora = \nprint(\"Perc:\")\nperc = \n",
       "hints": [
-        "Include events whose time is less than or equal to the typed clock time.",
-        "Use percben() so 8:30 and 8:05 compare as minute-of-day values."
+        "Vegye figyelembe az összes, a bekért időpontnál nem későbbi eseményt. Használja a percben() függvényt az összehasonlításhoz."
       ]
     },
     {
       "type": "hutohaz_termek",
-      "tags": ["IO", "lookup", "count", "sum"],
+      "tags": [
+        "IO",
+        "lookup",
+        "count",
+        "sum"
+      ],
       "title": "Egy termék",
-      "description": "Kérje be a felhasználótól egy termék nevét! A teszteléshez használhatja az `ALMA` nevet, amely szerepel az állományban. Ha a bekért név egyetlen eseményben sem fordul elő, írja ki a `Nincs ilyen termek.` szöveget, és ne végezze el a következő két részfeladatot!\n\n1. Adja meg, hány beszállítás (`BE`) történt ebből a termékből a nap során! A kiszállításokat ne számolja bele!\n2. Határozza meg, hány láda maradt ebből a termékből a nap utolsó eseménye után! A beszállított és a kiszállított mennyiség különbségét írja a képernyőre!",
+      "description": "Kérje be a felhasználótól egy termék nevét! A teszteléshez használhatja az 'ALMA' nevet, amely szerepel az állományban. Ha a bekért név egyetlen eseményben sem fordul elő, írja ki a 'Nincs ilyen termek.' szöveget, és ne végezze el a következő két részfeladatot!\n\n1. Adja meg, hány beszállítás ('BE') történt ebből a termékből a nap során! A kiszállításokat ne számolja bele!\n2. Határozza meg, hány láda maradt ebből a termékből a nap utolsó eseménye után! A beszállított és a kiszállított mennyiség különbségét írja a képernyőre!",
       "points": 3,
       "stdin": "ALMA\n",
       "solution_file": "hutohaz_termek.py",
       "uses_preamble": true,
-      "starter": "# A rakodas.txt tartalma a `rakodasok` változóban van (str).\n# 6. feladat: egy termék BE-száma és záró készlete.\n\nprint(\"Adja meg a termek nevet!\")\nnev = input().strip()\n\n",
+      "starter": "# A rakodas.txt tartalma a 'rakodasok' változóban van szöveges formában.\n# Elvárt kimenetek:\n# 'A beszallitasok szama: x'\n# 'A zaro keszlet: y lada'\n# vagy 'Nincs ilyen termek.'\n\nprint(\"Adja meg a termek nevet!\")\nnev = \n",
       "hints": [
-        "If the product name never appears, print Nincs ilyen termek. and stop.",
-        "Closing stock is total BE crates minus total KI crates for that name."
+        "Ha a név egyetlen sorban sem szerepel, írja ki: 'Nincs ilyen termek.', és álljon le. A záró készlet a BE és KI ládák különbsége."
       ]
     },
     {
       "type": "hutohaz_kapacitas",
-      "tags": ["validate", "simulation"],
+      "tags": [
+        "validate",
+        "simulation"
+      ],
       "title": "Kapacitás",
-      "description": "A hűtőház kapacitása 70 láda. A rakodások sorrendjében kövesse a bent lévő ládák összesenjét, és döntse el, túllépte-e ez az érték a kapacitást!\n\n1. Ha volt túllépés, írja ki: `A hűtőház legalább egyszer túllépte a kapacitást.` Ha nem volt, írja ki: `A hűtőház a nap folyamán végig a kapacitáson belül maradt.`\n2. Ha volt túllépés, adja meg annak az eseménynek az óra és perc értékét, amelynél a készlet először haladta meg a 70-et! Ha nem volt túllépés, erről a részfeladatról ne írjon ki semmit!",
+      "description": "A hűtőház kapacitása 70 láda. A rakodások sorrendjében kövesse a bent lévő ládák összesenjét, és döntse el, túllépte-e ez az érték a kapacitást!\n\n1. Ha volt túllépés, írja ki: 'A hűtőház legalább egyszer túllépte a kapacitást.' Ha nem volt, írja ki: 'A hűtőház a nap folyamán végig a kapacitáson belül maradt.'\n2. Ha volt túllépés, adja meg annak az eseménynek az óra és perc értékét, amelynél a készlet először haladta meg a 70-et! Ha nem volt túllépés, erről a részfeladatról ne írjon ki semmit!",
       "points": 3,
       "solution_file": "hutohaz_kapacitas.py",
       "uses_preamble": true,
-      "starter": "# A rakodas.txt tartalma a `rakodasok` változóban van (str).\n# 7. feladat: a futó készlet átlépte-e a 70 ládát.\n\n",
+      "starter": "# A rakodas.txt tartalma a 'rakodasok' változóban van szöveges formában.\n# Kapacitás: 70 láda.\n# Elvárt kimenet:\n# 'A hűtőház a nap folyamán végig a kapacitáson belül maradt.'\n# vagy\n# 'A hűtőház legalább egyszer túllépte a kapacitást.'\n# 'Az elso tullepes idopontja: x:y'\n",
       "hints": [
-        "Walk events in file order and track total crates after each one.",
-        "If the total never exceeds 70, print only the within-capacity sentence."
+        "Kövesse a készletet eseményenként. Ha soha nem haladja meg a 70-et, csak a kapacitáson belüli mondatot írja ki."
       ]
     },
     {
       "type": "hutohaz_keszlet_file",
-      "tags": ["IO", "simulation"],
+      "tags": [
+        "IO",
+        "simulation"
+      ],
       "title": "keszlet.txt",
-      "description": "A nap során a készlet alakulását a `keszlet.txt` állományba kell menteni. Minden rakodási esemény után írjon egy sort: az esemény óráját, percét és az esemény után bent lévő ládák összesenjét, szóközzel elválasztva! A sorok sorrendje egyezzen meg az események sorrendjével!",
+      "description": "A nap során a készlet alakulását a 'keszlet.txt' állományba kell menteni. Minden rakodási esemény után írjon egy sort: az esemény óráját, percét és az esemény után bent lévő ládák összesenjét, szóközzel elválasztva! A sorok sorrendje egyezzen meg az események sorrendjével!",
       "points": 3,
       "expected_file": "keszlet.txt",
       "solution_file": "hutohaz_keszlet_file.py",
       "uses_preamble": true,
-      "starter": "# A rakodas.txt tartalma a `rakodasok` változóban van (str).\n# 8. feladat: minden esemény után ora perc keszlet a keszlet.txt-be.\n\nwith open(\"keszlet.txt\", \"w\", encoding=\"utf-8\") as f:\n    pass\n",
+      "starter": "# A rakodas.txt tartalma a 'rakodasok' változóban van szöveges formában.\n# Elvárt kimenet a keszlet.txt-be: 'ora perc keszlet'\n\nwith open(\"keszlet.txt\", \"w\", encoding=\"utf-8\") as f:\n    pass\n",
       "hints": [
-        "Write one line per event after applying that event to the running stock."
+        "Használja az 'open' metódust a 'keszlet.txt' megnyitásához a 'w' móddal. Minden esemény után írja ki az óra, perc és aktuális készlet értéket."
       ]
     }
   ]

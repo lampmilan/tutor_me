@@ -11,14 +11,13 @@
     "path"
   ],
   "description": "Kövesse a kórházi csőposta kapszulájának útját a lepesek.txt alapján!",
-  "story": "Egy kórház csőpostája tizenhat állomást köt össze egy körben. A kapszula az 1. állomásról indul, és a feljegyzett lépésszámokkal halad előre. A 4., a 9. és a 13. állomás átrakó: ideérkezve a kapszula automatikusan még két állomást ugrik előre. A program a lépéseket a forrásában tárolja, majd a kapszula útját követi.",
+  "story": "Egy kórház csőpostája tizenhat állomást köt össze egy körben. A kapszula az 1. állomásról indul, és a feljegyzett lépésszámokkal halad előre. A 4., a 9. és a 13. állomás átrakó: ideérkezve a kapszula automatikusan még két állomást ugrik előre. A feladat a lépések beolvasása és a kapszula útjának szimulációja.",
   "constraints": [
-    "Pontosan 7 lépés; minden lépés 1–6 egész.",
-    "Állomások 1–16, körkörösen: 16 után az 1. következik.",
-    "Átrakó állomások: 4, 9, 13; az extra +2 ugrás a lépés után, és az ugrás célja már nem számít újabb átrakónak.",
-    "Cserélhető lépéssorral is működnie kell."
+    "Állomások száma >= 1; <= 16.",
+    "Az állomások körkörösen vannak elrendezve (16 után az 1. jön).",
+    "Átrakók: 4, 9, 13 (+2 ugrás; a cél nem számít újabb átrakónak)."
   ],
-  "data_explanation": "Hét egész szám, a kapszula lépései állomásban. A program ezeket a forrásában tárolja. A mintában az első lépés a 4. állomásra visz, ahonnan az átrakó még kettőt ugrik, így a kapszula a 6. állomásra kerül.",
+  "data_explanation": "A lepesek.txt állomány 7 egész számot tartalmaz, a kapszula lépéseinek nagyságát. A mintában az első lépés a 4. állomásra visz, ahonnan az átrakó még kettőt ugrik, így a kapszula a 6. állomásra kerül.",
   "data_file": "lepesek.txt",
   "dataset_type": "csoposta",
   "shared_variable": "lepesek",
@@ -35,14 +34,14 @@
       "tags": [
         "IO"
       ],
-      "title": "Tárolás",
-      "description": "A csőposta hét lépését a program forrásában kell eltárolnia. Tárolja el a megadott számokat egy megfelelő adatszerkezetben!",
+      "title": "1. feladat: Beolvasás",
+      "description": "Olvassa be és tárolja el a 'lepesek.txt' tartalmát a 'lepesek' változóban!",
       "points": 1,
-      "solution_file": "csoposta_tarolas.py",
+      "solution_file": "csoposta_beolvasas.py",
       "uses_preamble": false,
-      "starter": "# 1. feladat: olvassa be a lepesek.txt tartalmát.\n# Tárolja a teljes szöveget a `lepesek` változóban.\n\nlepesek = \"\"\n",
+      "starter": "# 1. feladat: olvassa be a lepesek.txt tartalmát.\n# Tárolja az állomány tartalmát a 'lepesek' változóban mint string (szöveg).\n\nlepesek = \"\"\n",
       "hints": [
-        "Read lepesek.txt into lepesek as a string."
+        "Használja az 'open' metódust a 'lepesek.txt' megnyitásához, majd a 'read' metódust a szöveges tartalom beolvasásához."
       ]
     },
     {
@@ -50,14 +49,14 @@
       "tags": [
         "count"
       ],
-      "title": "Lépések száma",
-      "description": "Határozza meg, hány lépést tárolt el a program! Az eredményt nevezze meg a kiírásban!",
+      "title": "2. feladat: Lépések száma",
+      "description": "Határozza meg, hány lépést tartalmaz a fájl! Az eredményt írja ki a képernyőre a mintának megfelelően!",
       "points": 1,
       "solution_file": "csoposta_szama.py",
       "uses_preamble": true,
-      "starter": "# A lepesek.txt tartalma a `lepesek` változóban van (str).\n# Hét egész lépés.\n#\n# Lépések száma\n",
+      "starter": "# A lepesek.txt tartalma a 'lepesek' változóban van szöveges formában.\n# Elvárt kimenet: 'A lepesek szama: x'\n",
       "hints": [
-        "Derive the answer from the current file contents; do not hard-code the sample."
+        "Bontsa fel a lepesek változót elemekre a split() metódussal, majd határozza meg a lista hosszát."
       ]
     },
     {
@@ -66,14 +65,14 @@
         "simulation",
         "path"
       ],
-      "title": "Végállomás",
-      "description": "Kövesse a kapszula útját az 1. állomástól! Adja meg, melyik állomáson áll a hét lépés (és a közben lezajlott átrakók) után! Az állomás sorszámát nevezze meg a kiírásban!",
+      "title": "3. feladat: Végállomás",
+      "description": "Kövesse a kapszula útját az 1. állomástól! Adja meg, melyik állomáson áll a hét lépés (és a közben lezajlott átrakó ugrások) után! Az eredményt írja ki a mintának megfelelően!",
       "points": 2,
       "solution_file": "csoposta_vegallomas.py",
       "uses_preamble": true,
-      "starter": "# A lepesek.txt tartalma a `lepesek` változóban van (str).\n# 16 állomás, átrakó 4,9,13 (+2).\n#\n# Végállomás\n",
+      "starter": "# A lepesek.txt tartalma a 'lepesek' változóban van szöveges formában.\n# 16 állomás, átrakó: 4, 9, 13 (+2 ugrás).\n# Elvárt kimenet: 'A kapszula vegallomasa: x'\n",
       "hints": [
-        "Derive the answer from the current file contents; do not hard-code the sample."
+        "Lépésenként adja hozzá a lépésszámot a pozícióhoz, ügyelve a 16 utáni 1-re lépésre (körkörösség). Ha a landing pozíció 4, 9 vagy 13, adjon hozzá további 2-t."
       ]
     },
     {
@@ -82,14 +81,14 @@
         "count",
         "simulation"
       ],
-      "title": "Átrakók",
-      "description": "Számolja meg, hányszor érkezett a kapszula átrakó állomásra a lépések után, az extra ugrás előtt! Az extra ugrás célállomását ne számolja újabb átrakónak akkor sem, ha az 4, 9 vagy 13!",
+      "title": "4. feladat: Átrakók száma",
+      "description": "Számolja meg, hányszor érkezett a kapszula átrakó állomásra (4, 9 vagy 13) közvetlenül a lépés után, az extra ugrás előtt! Az eredményt írja ki a mintának megfelelően!",
       "points": 2,
       "solution_file": "csoposta_atrako.py",
       "uses_preamble": true,
-      "starter": "# A lepesek.txt tartalma a `lepesek` változóban van (str).\n# Átrakó: landolás 4/9/13 a lépés után.\n#\n# Átrakók\n",
+      "starter": "# A lepesek.txt tartalma a 'lepesek' változóban van szöveges formában.\n# Elvárt kimenet: 'Az atrako erintesek szama: x'\n",
       "hints": [
-        "Derive the answer from the current file contents; do not hard-code the sample."
+        "Növelje a számlálót eggyel minden alkalommal, amikor a rendes lépés utáni pozíció benne van a [4, 9, 13] listában."
       ]
     }
   ]

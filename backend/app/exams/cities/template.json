@@ -5,7 +5,11 @@
   "level": "kozep",
   "origin": "synthetic",
   "difficulty": 2,
-  "tags": ["IO", "count", "min_max"],
+  "tags": [
+    "IO",
+    "count",
+    "min_max"
+  ],
   "description": "Értékelje ki a cities.txt fájlban tárolt városok népességadatait!",
   "story": "Egy statisztikai hivatal a magyar városok népességét tartja nyilván. A hivatal munkatársai a települések adatait szöveges fájlban gyűjtik, majd programokkal értékelik ki. Ebben a feladatban Önnek kell feldolgoznia a cities.txt fájlban tárolt városadatokat!",
   "constraints": [
@@ -27,45 +31,49 @@
   "tasks": [
     {
       "type": "read",
-      "tags": ["store"],
+      "tags": [
+        "store"
+      ],
       "title": "Beolvasás",
       "description": "Olvassa be a cities.txt fájlt, és írja ki a fájl teljes tartalmát a képernyőre! A kiírás legyen soronként azonos a fájl tartalmával (városnév, szóköz, lakosságszám).",
       "points": 1,
       "solution_file": "beolvasas.py",
       "uses_preamble": false,
-      "starter": "# 1. feladat: olvass be a cities.txt fájlt, és írd ki a teljes tartalmát.\n# Tárold a fájl szövegét a `cities` változóban a későbbi feladatokhoz.\n\ncities = \"\"\n\n",
+      "starter": "# 1. feladat: olvassa be a cities.txt tartalmát.\n# Tárolja az állomány tartalmát a 'cities' változóban mint string (szöveg).\n\ncities = \"\"\n",
       "hints": [
-        "Your solution works for the example dataset but fails on other datasets.",
-        "Print every line of cities.txt — do not hard-code the sample cities."
+        "Használja az 'open' metódust a 'cities.txt' megnyitásához, majd a 'read' metódust a szöveges tartalom beolvasásához. A fájl teljes tartalmát írja ki."
       ]
     },
     {
       "type": "count",
-      "tags": ["counting"],
+      "tags": [
+        "counting"
+      ],
       "title": "Városok száma",
-      "description": "A `cities` változó már tartalmazza a fájl adatait. Számítsa ki és jelenítse meg a városok számát (egy egész számot)!",
+      "description": "A 'cities' változó már tartalmazza a fájl adatait. Számítsa ki és jelenítse meg a városok számát (egy egész számot)!",
       "points": 1,
       "solution_file": "varosok_szama.py",
       "uses_preamble": true,
-      "starter": "# A cities.txt tartalma a `cities` változóban van (str).\n# Minden sor: városnév lakosságszám\n#\n# 2. feladat: írd ki a városok számát.\n\nprint()\n",
+      "starter": "# A cities.txt tartalma a 'cities' változóban van szöveges formában.\n# Elvárt kimenet: 'x'\n",
       "hints": [
-        "Your solution works for the example dataset but fails on other datasets.",
-        "Count the cities by reading every line of cities.txt — do not hard-code the answer."
+        "Számolja meg a nem üres sorokat a splitlines() metódus segítségével."
       ]
     },
     {
       "type": "maximum",
-      "tags": ["search"],
+      "tags": [
+        "search"
+      ],
       "field": "population",
       "label_field": "name",
       "title": "Legnépesebb város",
-      "description": "A `cities` változó már tartalmazza a fájl adatait. Írja ki a legnagyobb népességű város nevét!",
+      "description": "A 'cities' változó már tartalmazza a fájl adatait. Írja ki a legnagyobb népességű város nevét!",
       "points": 2,
       "solution_file": "nepesseg.py",
       "uses_preamble": true,
-      "starter": "# A cities.txt tartalma a `cities` változóban van (str).\n# Minden sor: városnév lakosságszám\n#\n# 3. feladat: írd ki a legnépesebb város nevét.\n\nprint()\n",
+      "starter": "# A cities.txt tartalma a 'cities' változóban van szöveges formában.\n# Elvárt kimenet: 'x'\n",
       "hints": [
-        "Make sure you're calculating the largest city from the contents of cities.txt instead of assuming a fixed value."
+        "Minden sorból olvassa ki a lakosságszámot, és írja ki a legnagyobb értékhez tartozó városnevet."
       ]
     }
   ]

@@ -38,13 +38,13 @@
         "IO"
       ],
       "title": "Beolvasás",
-      "description": "Olvassa be és tárolja el a `vizszint.txt` tartalmát!",
+      "description": "Olvassa be és tárolja el a 'vizszint.txt' tartalmát!",
       "points": 1,
       "solution_file": "zsilip_beolvasas.py",
       "uses_preamble": false,
-      "starter": "# 1. feladat: olvassa be a vizszint.txt tartalmát.\n# Tárolja a teljes szöveget a `meresek` változóban.\n# ora perc szint\n\nmeresek = \"\"\n",
+      "starter": "# 1. feladat: olvassa be a vizszint.txt tartalmát.\n# Tárolja az állomány tartalmát a 'meresek' változóban mint string (szöveg).\n\nmeresek = \"\"\n",
       "hints": [
-        "Read vizszint.txt into `meresek` as a raw string."
+        "Használja az 'open' metódust a 'vizszint.txt' megnyitásához, majd a 'read' metódust a szöveges tartalom beolvasásához."
       ]
     },
     {
@@ -57,9 +57,9 @@
       "points": 1,
       "solution_file": "zsilip_szama.py",
       "uses_preamble": true,
-      "starter": "# A vizszint.txt tartalma a `meresek` változóban van (str).\n# egy sor egy mérés\n#\n# Mérések\n",
+      "starter": "# A vizszint.txt tartalma a 'meresek' változóban van szöveges formában.\n# Elvárt kimenet: 'A meresek szama: x'\n",
       "hints": [
-        "Derive the answer from the current file contents; do not hard-code the sample."
+        "Számolja meg a nem üres sorokat a splitlines() metódus segítségével."
       ]
     },
     {
@@ -74,7 +74,7 @@
       "uses_preamble": true,
       "starter": "# A későbbi feladatok a kulonbseg(a, b) függvényt hívják.\n\ndef kulonbseg(a, b):\n    return 0\n",
       "hints": [
-        "Return abs(int(a)-int(b)). Empty stdout for this feladat."
+        "Adja vissza a két szám abszolút különbségét. Ennek a feladatnak üres a képernyő-kimenete."
       ]
     },
     {
@@ -88,9 +88,9 @@
       "points": 2,
       "solution_file": "zsilip_max.py",
       "uses_preamble": true,
-      "starter": "# A vizszint.txt tartalma a `meresek` változóban van (str).\n# kulonbseg a preambulumban\n#\n# Legnagyobb változás\n",
+      "starter": "# A vizszint.txt tartalma a 'meresek' változóban van szöveges formában.\n# A kulonbseg(a, b) függvény már rendelkezésre áll.\n# Elvárt kimenet: 'A legnagyobb valtozas: x cm, kezdete: o:p'\n",
       "hints": [
-        "Derive the answer from the current file contents; do not hard-code the sample."
+        "Szomszédos mérések között keresse a legnagyobb abszolút ugrást. Döntetlennél az állományban elsőt adja meg."
       ]
     },
     {
@@ -99,13 +99,13 @@
         "validate"
       ],
       "title": "Riasztás",
-      "description": "Döntse el, volt-e a napon riasztás, azaz előfordult-e 12 cm-nél nagyobb szomszédos ugrás! Ha volt, írja ki: `Volt riasztas.` Ha nem volt, írja ki: `Nem volt riasztas.`",
+      "description": "Döntse el, volt-e a napon riasztás, azaz előfordult-e 12 cm-nél nagyobb szomszédos ugrás! Ha volt, írja ki: 'Volt riasztas.' Ha nem volt, írja ki: 'Nem volt riasztas.'",
       "points": 2,
       "solution_file": "zsilip_riasztas.py",
       "uses_preamble": true,
-      "starter": "# A vizszint.txt tartalma a `meresek` változóban van (str).\n# küszöb 12 cm\n#\n# Riasztás\n",
+      "starter": "# A vizszint.txt tartalma a 'meresek' változóban van szöveges formában.\n# Elvárt kimenet: 'Volt riasztas.' vagy 'Nem volt riasztas.'\n",
       "hints": [
-        "Derive the answer from the current file contents; do not hard-code the sample."
+        "Riasztás van, ha legalább egy szomszédos ugrás nagyobb, mint 12 cm."
       ]
     },
     {
@@ -119,9 +119,9 @@
       "points": 3,
       "solution_file": "zsilip_ketto.py",
       "uses_preamble": true,
-      "starter": "# A vizszint.txt tartalma a `meresek` változóban van (str).\n# stdin 4 szám\n#\n# Két időpont\n\nprint(\"Elso ora:\")\no1=int(input())\nprint(\"Elso perc:\")\np1=int(input())\nprint(\"Masodik ora:\")\no2=int(input())\nprint(\"Masodik perc:\")\np2=int(input())\n",
+      "starter": "# A vizszint.txt tartalma a 'meresek' változóban van szöveges formában.\n# A kulonbseg(a, b) függvény már rendelkezésre áll.\n# Elvárt kimenet: 'A ket idopont kulonbsege: x cm'\n\nprint(\"Elso ora:\")\no1 = \nprint(\"Elso perc:\")\np1 = \nprint(\"Masodik ora:\")\no2 = \nprint(\"Masodik perc:\")\np2 = \n",
       "hints": [
-        "Derive the answer from the current file contents; do not hard-code the sample."
+        "Keresse meg a két bekért időponthoz tartozó vízszintet, majd hívja a kulonbseg() függvényt."
       ],
       "stdin": "6\n30\n7\n0\n"
     }

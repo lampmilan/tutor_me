@@ -77,7 +77,7 @@ A felajánlók száma: 8
 
 Compute `8` from rows, do not hard-code it.
 
-`input("prompt")` writes a prompt **without** a newline and will not match. Starters should `print` the prompt, then `int(input())`.
+`input("prompt")` writes a prompt **without** a newline and will not match. Starters should `print` the prompt, then leave `var = ` so the student writes `input()` themselves.
 
 ## Starter pattern (new exams)
 
@@ -85,25 +85,36 @@ Task 1 (`uses_preamble: false`):
 
 ```python
 # 1. feladat: olvassa be a felajanlas.txt tartalmát.
-# Tárolja a teljes szöveget a `felajanlasok` változóban.
+# Tárolja az állomány tartalmát a 'felajanlasok' változóban mint string (szöveg).
 
 felajanlasok = ""
 ```
 
+Do **not** add schema crumbs (`# op arg`, `# ora perc tipus`, `# Sorok: …`). File layout belongs in `data_explanation` and the feladat text.
+
 Later (`uses_preamble: true`):
 
 ```python
-# A felajanlas.txt tartalma a `felajanlasok` változóban van (str).
-# Első sor: ágyások száma; további sorok: kezdet vég szín
-#
-# 2. feladat: írja ki a felajánlások számát a minta szerint.
-
-print(f"A felajánlások száma: ")
+# A felajanlas.txt tartalma a 'felajanlasok' változóban van szöveges formában.
+# Elvárt kimenet: 'A felajánlások száma: x'
 ```
+
+Several lines:
+
+```python
+# A felajanlas.txt tartalma a 'felajanlasok' változóban van szöveges formában.
+# Elvárt kimenetek:
+# 'A racspontok szama: x'
+# 'A legkisebb melyseg: y cm'
+```
+
+A short domain reminder is fine when the rule is not obvious (`# 16 állomás, átrakó: 4, 9, 13 (+2 ugrás).`). Do **not** leave `# Title` leftovers or empty `print(f"…")` stubs.
 
 Do **not** tell them it is a list of tuples, and do **not** mention `agyasok_szama` as already injected.
 
-IO: print the prompt, then `int(input())` (or `input()`). File-write: `with open("szinek.txt", "w", encoding="utf-8") as f: pass`.
+IO: print the prompt, then `var = ` (student writes `input()`). File-write: `with open("szinek.txt", "w", encoding="utf-8") as f: pass`. Function tasks keep the `def` stub.
+
+Hints are Hungarian, method-level, and dataset-general (e.g. `open` + `read`, `split` / `splitlines`). Not English generics like “Derive the answer…”.
 
 ## Preamble
 
@@ -201,7 +212,7 @@ Do **not** add `PARSERS["toronyepites"] = ...` to the global module.
 
 Use **Constraints** for both visible (example) and hidden:
 
-- Honor maxima (`Ágyások ≤ 3000`)
+- Honor maxima (`Ágyások <= 3000`)
 - Honor format (fields, separators, wrap rule)
 - Honor suggested test keys (`ágyás 1`, `269`)
 - Visible: builders(visible, stdin) == MD Expected Output

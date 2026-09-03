@@ -9,7 +9,7 @@
   "description": "Ültesse be a lakópark virágágyásait a felajanlas.txt felajánlásai alapján!",
   "story": "Egy frissen épült óriási lakóparkba költözők elhatározták, hogy a még kopár környezetet megszépítik. A lakóparkot határoló kerítés mellett kijelölték a virágágyások helyét, és sorszámokkal látták el azokat. A sorszámozást, amely eggyel kezdődik, az egyetlen bejárat jobb oldalán lévő ágyással kezdték, és a bejárat bal oldalán lévő ágyással fejezték be. A lakók megadhatták, hogy mely szomszédos ágyásokat szeretnék beültetni. A felajánlásban megadták azt is, hogy milyen színű virággal.",
   "constraints": [
-    "Ágyások ≤ 3000; felajánlások száma ≤ ágyások száma.",
+    "Ágyások <= 3000; felajánlások száma <= ágyások száma.",
     "Körkörös szomszédság: utolsó ↔ első.",
     "4. feladat tesztjavaslat: ágyás 1 (több felajánló), 269 (senki)."
   ],
@@ -33,9 +33,9 @@
       "points": 1,
       "solution_file": "beolvasas.py",
       "uses_preamble": false,
-      "starter": "# 1. feladat: olvassa be a felajanlas.txt tartalmát.\n# Tárolja a teljes szöveget a `felajanlasok` változóban.\n\nfelajanlasok = \"\"\n\n",
+      "starter": "# 1. feladat: olvassa be a felajanlas.txt tartalmát.\n# Tárolja az állomány tartalmát a 'felajanlasok' változóban mint string (szöveg).\n\nfelajanlasok = \"\"\n",
       "hints": [
-        "Read every offer line after the first bed-count line — do not hard-code 465 offers."
+        "Használja az 'open' metódust a 'felajanlas.txt' megnyitásához, majd a 'read' metódust a szöveges tartalom beolvasásához."
       ]
     },
     {
@@ -46,9 +46,9 @@
       "points": 1,
       "solution_file": "felajanlasok_szama.py",
       "uses_preamble": true,
-      "starter": "# A felajanlas.txt tartalma a `felajanlasok` változóban van (str).\n# Első sor: ágyások száma; további sorok: kezdet vég szín\n#\n# 2. feladat: írja ki a felajánlások számát a minta szerint.\n\nprint(f\"A felajánlások száma: \")\n",
+      "starter": "# A felajanlas.txt tartalma a 'felajanlasok' változóban van szöveges formában.\n# Elvárt kimenet: 'A felajánlások száma: x'\n",
       "hints": [
-        "Count the offer rows — the first line of the file is the number of beds, not offers."
+        "Az első sor az ágyások száma, azt ne számolja felajánlásnak. A további nem üres sorok a felajánlások."
       ]
     },
     {
@@ -59,9 +59,9 @@
       "points": 2,
       "solution_file": "bejart.py",
       "uses_preamble": true,
-      "starter": "# A felajanlas.txt tartalma a `felajanlasok` változóban van (str).\n# Első sor: ágyások száma; további sorok: kezdet vég szín\n#\n# 3. feladat: azok a felajánlások, ahol a kezdő sorszám nagyobb, mint a záró\n# (körbeérnek a bejáraton). A sorszámok 1-től indulnak, szóközzel elválasztva.\n\nprint(\"A bejárat mindkét oldalán ültetők:\")\n",
+      "starter": "# A felajanlas.txt tartalma a 'felajanlasok' változóban van szöveges formában.\n# Elvárt kimenet: 'A bejárat mindkét oldalán ültetők: ...'\n",
       "hints": [
-        "An offer covers both sides of the entrance when its start index is greater than its end index."
+        "Azok a felajánlások körbeérnek, ahol a kezdő sorszám nagyobb, mint a záró. A sorszámok 1-től indulnak."
       ]
     },
     {
@@ -74,10 +74,10 @@
       "hidden_stdin": ["1\n", "100\n", "50\n"],
       "solution_file": "egy_agyas.py",
       "uses_preamble": true,
-      "starter": "# A felajanlas.txt tartalma a `felajanlasok` változóban van (str).\n# 4. feladat: kérjen be egy ágyás sorszámát, majd válaszoljon a három kérdésre.\n# A platform teszteléskor a 100-as ágyást adja bemenetként (stdin).\n\nprint(\"Adja meg az ágyás sorszámát!\")\nagyas = int(input())\n\n",
+      "starter": "# A felajanlas.txt tartalma a 'felajanlasok' változóban van szöveges formában.\n# Elvárt kimenetek:\n# 'A felajánlók száma: x'\n# 'A virágágyás színe, ha csak az első ültet: y'\n# 'A virágágyás színei: ...'\n# vagy 'Ezt az ágyást nem ültetik be.'\n\nprint(\"Adja meg az ágyás sorszámát!\")\nagyas = \n",
       "hints": [
-        "A wrapping offer (start > end) covers the bed if the bed is >= start or <= end.",
-        "Unique colors should appear in the order the offers are listed in the file."
+        "A körbeérő felajánlás (kezdet > vég) akkor fedi az ágyást, ha az ágyás >= kezdet vagy <= vég.",
+        "A színeket a felajánlások sorrendjében, ismétlés nélkül írja ki."
       ]
     },
     {
@@ -88,9 +88,9 @@
       "points": 2,
       "solution_file": "megoldhatosag.py",
       "uses_preamble": true,
-      "starter": "# A felajanlas.txt tartalma a `felajanlasok` változóban van (str).\n# 5. feladat: a három hivatalos mondat közül írja ki a megfelelőt.\n\nprint()\n",
+      "starter": "# A felajanlas.txt tartalma a 'felajanlasok' változóban van szöveges formában.\n# Elvárt kimenet:\n# 'Minden ágyás beültetésére van jelentkező.'\n# vagy 'Átszervezéssel megoldható a beültetés.'\n# vagy 'A beültetés nem oldható meg.'\n",
       "hints": [
-        "First check whether the union of all offer intervals covers every bed, then compare the summed interval lengths with the bed count."
+        "Először döntse el, minden ágyásra jut-e felajánló, majd hasonlítsa a vállalt ágyások összegét az ágyások számához."
       ]
     },
     {
@@ -102,10 +102,10 @@
       "expected_file": "szinek.txt",
       "solution_file": "szinek.py",
       "uses_preamble": true,
-      "starter": "# A felajanlas.txt tartalma a `felajanlasok` változóban van (str).\n# 6. feladat: first-come-first-served ültetés, eredmény a szinek.txt-be.\n# Soronként: szín felajánlás_sorszáma   pl. \"K 10\" vagy \"# 0\"\n\nwith open(\"szinek.txt\", \"w\", encoding=\"utf-8\") as f:\n    pass\n",
+      "starter": "# A felajanlas.txt tartalma a 'felajanlasok' változóban van szöveges formában.\n# Elvárt kimenet a szinek.txt-be: 'szin sorszam' vagy '# 0'\n\nwith open(\"szinek.txt\", \"w\", encoding=\"utf-8\") as f:\n    pass\n",
       "hints": [
-        "Plant beds in offer order; skip a bed if it already has a color.",
-        "Write one line per bed from 1 to agyasok_szama — unplanted beds are `# 0`."
+        "Az ültetést a felajánlások sorrendjében végezze. Ha egy ágyás már foglalt, azt ne írja felül.",
+        "Minden ágyásról egy sort írjon. A beültetetlen ágyás: '# 0'."
       ]
     }
   ]

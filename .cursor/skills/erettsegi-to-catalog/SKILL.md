@@ -126,10 +126,10 @@ One JSON task per numbered MD task. Nested `1.` / `2.` / `3.` under a parent sta
 | `points` | 1 = load/count; 2 = search/validate; 3 = nested / file-write / simulation |
 | `solution_file` | `{id}_{slug}.py` — **always** on new exams |
 | `uses_preamble` | `false` on task 1 (student loads); `true` after |
-| `starter` | Hungarian comments + stub. Variable is `(str)`. No parsed tuple/list examples. Print prompts for `IO`; `open` stub for file-write |
+| `starter` | Hungarian comments + stub. Task 1: `mint string (szöveg)`. Later: loaded-as-text + `Elvárt kimenet`. No schema crumbs (`# op arg`). Print prompts for `IO`, leave `var = ` (no `input()`); `open` stub for file-write |
 | `stdin` | Values only from `input(…)` in Expected Input, each on its own line, trailing `\n`. Copied onto every test case (platform limit) |
 | `expected_file` | Output filename if the task writes a file (stdout then ignored by judge). Do not ship that file as an editable workspace file |
-| `hints` | English, dataset-general (not sample-specific numbers) |
+| `hints` | Hungarian, dataset-general (methods, not sample-specific numbers) |
 | `field` / `label_field` / `op` / `value` | Only for generic aggregators |
 
 Flatten nested Expected I/O into **one** builder that prints prompts + all sub-answers in order.
@@ -198,7 +198,7 @@ Do not register this exam in the global `PARSERS` / `TASK_BUILDERS` dicts.
 - [ ] `dataset_type` == `{id}`; `parse` lives in `exams/{id}/builders.py` (not the global registry)
 - [ ] Each custom task `type` is a key in that file's `TASK_BUILDERS`; no `literal` for data-dependent answers
 - [ ] Preamble is runtime `f.read()` into one string; no parsed list / extra derived vars
-- [ ] Starters say `(str)` and describe the **file** format, not a parsed record
+- [ ] Starters: task 1 is `mint string (szöveg)`; later tasks `Elvárt kimenet`; no schema crumbs; variable is a file string, not a parsed record
 - [ ] Visible builders match MD sample I/O (prompts + exact strings)
 - [ ] Three hidden files obey Constraints and break hardcoded sample answers
 - [ ] Task 1 `uses_preamble: false`; later file-using tasks `true`

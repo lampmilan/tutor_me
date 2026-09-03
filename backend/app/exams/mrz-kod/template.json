@@ -5,15 +5,21 @@
   "level": "emelt",
   "origin": "synthetic",
   "difficulty": 4,
-  "tags": ["list", "loops", "store", "search", "validate"],
+  "tags": [
+    "list",
+    "loops",
+    "store",
+    "search",
+    "validate"
+  ],
   "description": "Headache demo — fájlnév/stdin, névparse, súlyozott ellenőrzőjegy. Auto-grade csak részben.",
-  "story": "Az útlevél adatoldalán 2×44 karakteres MRZ (Machine Readable Zone) kód van. Megengedett jelek: A–Z, számjegy, `<`.\n\nEz a demo a mrz.txt fájlt adja a workspace-be (az eredeti vizsga fájlnevet kér be). A nem a 2. sor 21. karaktere (`F` = nő, `M` = férfi). Dátumok ÉÉHHNN formában; érvényesség: MRZ lejárat ≥ aktuális dátum.\n\nMinta (mrz.txt):\nP<HUNNAGY<KOVACS<<GYOENGYVIRAG<MARIA<<<<<<<<\nXT123456<9HUN9805138F3005132<<<<<<<<<<<<<<04\n\nMiért headache a platformon?\n1) Eredeti 1. feladat: fájlnév bekérése (stdin) — itt a fájl fixen mrz.txt.\n2) 3. feladat: külön aktuális dátum stdin — a judge jelenleg nem ad feladat-specifikus stdin-t a sablonból.\n3) 5. feladat: `kodok.txt` + súlyozott ellenőrző számjegy (Elljegyszamolo) — külön tábla; hidden MRZ-eken a minta szerinti HELYES/HIBÁS nem általánosítható builderrel.\n\nA 2. és 4. feladat expected kimenete a datasetből számolt (gender / mrz_name). A 5. feladat csak sample literal.",
+  "story": "Az útlevél adatoldalán 2×44 karakteres MRZ (Machine Readable Zone) kód van. Megengedett jelek: A–Z, számjegy, '<'.\n\nEz a demo a mrz.txt fájlt adja a workspace-be (az eredeti vizsga fájlnevet kér be). A nem a 2. sor 21. karaktere ('F' = nő, 'M' = férfi). Dátumok ÉÉHHNN formában; érvényesség: MRZ lejárat >= aktuális dátum.\n\nMinta (mrz.txt):\nP<HUNNAGY<KOVACS<<GYOENGYVIRAG<MARIA<<<<<<<<\nXT123456<9HUN9805138F3005132<<<<<<<<<<<<<<04\n\nMiért headache a platformon?\n1) Eredeti 1. feladat: fájlnév bekérése (stdin) — itt a fájl fixen mrz.txt.\n2) 3. feladat: külön aktuális dátum stdin — a judge jelenleg nem ad feladat-specifikus stdin-t a sablonból.\n3) 5. feladat: 'kodok.txt' + súlyozott ellenőrző számjegy (Elljegyszamolo) — külön tábla; hidden MRZ-eken a minta szerinti HELYES/HIBÁS nem általánosítható builderrel.\n\nA 2. és 4. feladat expected kimenete a datasetből számolt (gender / mrz_name). A 5. feladat csak sample literal.",
   "data_file": "mrz.txt",
   "constraints": [
-    "Az MRZ 2×44 karakter; megengedett jelek: A–Z, számjegy, `<`.",
+    "Az MRZ 2×44 karakter; megengedett jelek: A–Z, számjegy, '<'.",
     "A fájl neve a workspace-ben fixen mrz.txt."
   ],
-  "data_explanation": "A mrz.txt két sora az útlevél gép által olvasható zónája. A nem a 2. sor 21. karaktere (`F` = nő, `M` = férfi). Dátumok ÉÉHHNN formában szerepelnek.",
+  "data_explanation": "A mrz.txt két sora az útlevél gép által olvasható zónája. A nem a 2. sor 21. karaktere ('F' = nő, 'M' = férfi). Dátumok ÉÉHHNN formában szerepelnek.",
   "dataset_type": "lines",
   "shared_variable": "mrz",
   "preamble": "with open(\"mrz.txt\", encoding=\"utf-8\") as f:\n    mrz = f.read()\n",
@@ -24,54 +30,63 @@
   "tasks": [
     {
       "type": "read",
-      "tags": ["store"],
+      "tags": [
+        "store"
+      ],
       "title": "MRZ kiírása",
       "description": "Olvasd be a mrz.txt fájlt, és írd ki a teljes tartalmát a képernyőre (mindkét sort)!",
       "points": 1,
       "uses_preamble": false,
-      "starter": "# 1. feladat: olvasd be és írd ki a mrz.txt teljes tartalmát.\n# (Az eredeti érettségi fájlnevet kér — itt a fájl neve fixen mrz.txt.)\n# Tárold a fájl szövegét a `mrz` változóban.\n\nmrz = \"\"\n\n",
+      "starter": "# 1. feladat: olvassa be a mrz.txt tartalmát.\n# Tárolja az állomány tartalmát a 'mrz' változóban mint string (szöveg).\n\nmrz = \"\"\n",
       "hints": [
-        "Print every line of mrz.txt exactly — do not hard-code the sample MRZ."
+        "Használja az 'open' metódust a 'mrz.txt' megnyitásához, majd a 'read' metódust a szöveges tartalom beolvasásához. A fájl teljes tartalmát írja ki."
       ],
       "solution_file": "mrz_kiiras.py"
     },
     {
       "type": "gender",
-      "tags": ["search"],
+      "tags": [
+        "search"
+      ],
       "title": "Nem meghatározása",
-      "description": "A `mrz` változó a fájl teljes szövege (str). A 2. sor 21. karaktere alapján írd ki: `Az okmány tulajdonosa nő.` vagy `Az okmány tulajdonosa férfi.`!",
+      "description": "A 'mrz' változó a fájl teljes szövege (str). A 2. sor 21. karaktere alapján írd ki: 'Az okmány tulajdonosa nő.' vagy 'Az okmány tulajdonosa férfi.'!",
       "points": 1,
       "uses_preamble": true,
-      "starter": "# A mrz.txt tartalma a `mrz` változóban van (str).\n# A nem: a 2. sor 21. karaktere  →  'F' = nő, 'M' = férfi (0-index: 20).\n#\n# 2. feladat: írd ki a megfelelő mondatot.\n\nprint()\n",
+      "starter": "# A mrz.txt tartalma a 'mrz' változóban van szöveges formában.\n# Elvárt kimenet: 'Az okmány tulajdonosa nő.' vagy 'Az okmány tulajdonosa férfi.'\n",
       "hints": [
-        "Index the gender character in the second MRZ line; do not assume the sample passport holder."
+        "A nemet a 2. sor 21. karaktere adja meg: F = nő, M = férfi."
       ],
       "solution_file": "nem.py"
     },
     {
       "type": "mrz_name",
-      "tags": ["search", "validate"],
+      "tags": [
+        "search",
+        "validate"
+      ],
       "title": "Név kirakása",
-      "description": "A névmező az 1. sorban az országkód után 39 karakter. `<<` választja el a családi és utónevet, `<` a névrészeket. Ha az 1. sor nem `<`-re végződik, csonkolt lehet.\nÍrd ki a minta szerint a családi nevet, utónevet, majd `A név nem csonkolt.` vagy `Lehetséges, hogy csonkolt a név.`",
+      "description": "A névmező az 1. sorban az országkód után 39 karakter. '<<' választja el a családi és utónevet, '<' a névrészeket. Ha az 1. sor nem '<'-re végződik, csonkolt lehet.\nÍrd ki a minta szerint a családi nevet, utónevet, majd 'A név nem csonkolt.' vagy 'Lehetséges, hogy csonkolt a név.'",
       "points": 2,
       "uses_preamble": true,
-      "starter": "# A mrz.txt tartalma a `mrz` változóban van (str).\n# 4. feladat: névmező parse.\n# 1. sor: típus(2) + ország(3) + név(39)\n# Családi és utónév között: <<\n# Névrészek között: <  → szóköz a kiírásban\n\nprint()\n",
+      "starter": "# A mrz.txt tartalma a 'mrz' változóban van szöveges formában.\n# Elvárt kimenetek:\n# 'Családi név: ...'\n# 'Utónév: ...'\n# 'A név nem csonkolt.' vagy 'Lehetséges, hogy csonkolt a név.'\n",
       "hints": [
-        "Split the first MRZ line on '<<' and '<'; do not hard-code the sample name."
+        "A névmező az 1. sorban az országkód után következik. A << választja el a családi és utónevet."
       ],
       "solution_file": "nev.py"
     },
     {
       "type": "literal",
-      "tags": ["validate"],
+      "tags": [
+        "validate"
+      ],
       "value": "(checksum / kodok.txt — not auto-gradable yet)",
       "title": "Ellenőrző számjegyek (előnézet)",
       "description": "Eredeti 5. feladat: Elljegyszamolo + kodok.txt súlyozott összeg; okmányszám / születési idő / érvényesség ellenőrző jegye → HELYES vagy HIBÁS a minta szerint.\n\nItt nincs kodok.txt a workspace-ben, és a literal expected szándékosan nem teljesíthető — ez a „major headache” rész: külön tábla, súlyok, több mező, formázott több soros kimenet.",
       "points": 2,
       "uses_preamble": true,
-      "starter": "# A mrz.txt tartalma a `mrz` változóban van (str).\n# 5. feladat: súlyozott ellenőrző számjegyek.\n# Ehhez az eredeti vizsgán kodok.txt és az Elljegyszamolo függvény kell.\n# A platform még nem támogatja ezt a feladatot éles gradinggel.\n\nprint(\"(checksum / kodok.txt — not auto-gradable yet)\")\n",
+      "starter": "# A mrz.txt tartalma a 'mrz' változóban van szöveges formában.\n# Elvárt kimenet: 'HELYES' vagy 'HIBÁS'\n# A platform ezt a feladatot még nem értékeli éles gradinggel.\n",
       "hints": [
-        "Checksum grading needs kodok.txt, weighted digit rules, and per-dataset expected output — not wired in this preview."
+        "Az ellenőrző számjegyekhez kodok.txt és súlyozott összeg kellene; ez a feladat itt csak előnézet."
       ],
       "solution_file": "ellenorzo.py"
     }

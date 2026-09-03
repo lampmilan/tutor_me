@@ -18,9 +18,10 @@
     "Az új szó első karaktere = előző szó utolsó karaktere (első szónál nincs megelőző).",
     "Ha mindkét hiba fennáll, elegendő az egyik hibaüzenet.",
     "Lépésszám = szabályos szavak száma a hibás előtt.",
-    "Értékelés: 0–2 kezdő, 3–5 közepes, 6 és felette haladó."
+    "Értékelés: 0–2 kezdő, 3–5 közepes, 6 és felette haladó.",
+    "Az öt részfeladat egyetlen program (szolanc_teljes.py); a Beküldés a teljes játékot értékeli."
   ],
-  "data_explanation": "A feladat tisztán interaktív: a szavak a billentyűzetről érkeznek. A szolanc.txt állomány üres helyőrző; a rejtett tesztek a begépelt szósort cserélik.",
+  "data_explanation": "A feladat tisztán interaktív: a szavak a billentyűzetről érkeznek. A szolanc.txt állomány üres helyőrző; a rejtett tesztek a begépelt szósort cserélik. A részfeladatok közös fájlt használnak.",
   "data_file": "szolanc.txt",
   "dataset_type": "szolanc",
   "shared_variable": "szavak",
@@ -32,6 +33,62 @@
     "datasets/hidden/03.txt"
   ],
   "tasks": [
+    {
+      "type": "store",
+      "tags": ["IO"],
+      "title": "Szavak bekérése",
+      "description": "A játék során a szavakat egyenként olvassa be a program, és minden lépésnél írja ki, hogy hányadik szót kéri!\n\nA későbbi részfeladatok ugyanebben a `szolanc_teljes.py` programban folytatódnak. A Beküldés a teljes játékot értékeli.",
+      "points": 1,
+      "solution_file": "szolanc_teljes.py",
+      "uses_preamble": false,
+      "starter": "# Szólánc: egy program a 1–5. feladatra.\n# Minden lépésnél írja ki: N. szó:\n# Az első szó mindig elfogadott.\n# A további szavak 6 betűsek, és az előző utolsó betűjével kezdődnek.\n# Először a hosszt ellenőrizze, aztán az illeszkedést.\n# Végén: hiba oka, helyes lépések száma, szint (kezdő / közepes / haladó).\n\nprint(\"1. szó:\")\nszo = input()\n",
+      "hints": [
+        "Print each numbered prompt on its own line, then call input()."
+      ],
+      "stdin": "villan\nnegyed\ndiadal\nlista\n"
+    },
+    {
+      "type": "store",
+      "tags": ["validate", "simulation"],
+      "title": "Játék vége",
+      "description": "Addig kérje a program a szavakat, ameddig a megadott új szó hatbetűs, és az első karaktere megegyezik az előző szó utolsó karakterével! Az utóbbi szabály alól a játékindító első szó kivétel, mert nem tartozik hozzá megelőző szó. Ha a szabályok nem teljesülnek, akkor a játéknak vége van.",
+      "points": 1,
+      "solution_file": "szolanc_teljes.py",
+      "uses_preamble": false,
+      "starter": "",
+      "hints": [
+        "Stop at the first illegal word. The first word is always accepted, even if it is not 6 letters."
+      ],
+      "stdin": "villan\nnegyed\ndiadal\nlista\n"
+    },
+    {
+      "type": "store",
+      "tags": ["validate"],
+      "title": "Befejezés oka",
+      "description": "A játék végén írja ki a befejezés okát, hogy az utolsó szó `Nem illeszkedett!` vagy `A karakterek száma téves!` szöveget! Ha az utolsó szó mindkét okból hibás, elegendő csak az egyik üzenetet megjelenítenie.\n\nElőször a hosszt ellenőrizze, aztán az illeszkedést.\n\n| Bemenet | Hiba |\n| --- | --- |\n| zsenge / ecetes / sproni | A karakterek száma téves! |\n| zsilip / pislog / homlok | Nem illeszkedett! |",
+      "points": 1,
+      "solution_file": "szolanc_teljes.py",
+      "uses_preamble": false,
+      "starter": "",
+      "hints": [
+        "Check length before the chain-letter rule so a short matching word prints the length error."
+      ],
+      "stdin": "villan\nnegyed\ndiadal\nlista\n"
+    },
+    {
+      "type": "store",
+      "tags": ["count"],
+      "title": "Helyes lépések",
+      "description": "Írja ki, hogy a szólánc hány, a szabályoknak megfelelő szóval folytatódott, azaz mennyi a lépések számának az értéke!\n\n`Helyes lépések száma: ` és a szabályos szavak száma a hibás előtt.",
+      "points": 1,
+      "solution_file": "szolanc_teljes.py",
+      "uses_preamble": false,
+      "starter": "",
+      "hints": [
+        "Step count is the number of legal words before the failing one."
+      ],
+      "stdin": "villan\nnegyed\ndiadal\nlista\n"
+    },
     {
       "type": "szolanc_teljes",
       "tags": [

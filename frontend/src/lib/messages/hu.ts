@@ -29,6 +29,7 @@ export const hu = {
     run: "Futtatás",
     submit: "Beküldés",
     submitTitle: "Aktuális feladat beküldése",
+    submitTitleShared: "A közös program beküldése (az összes részfeladat együtt)",
     loading: "Munkaterület betöltése…",
     waking: "A szerver ébred, egy pillanat…",
     loadFailed: "Nem sikerült betölteni a feladatsort",

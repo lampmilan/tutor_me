@@ -359,6 +359,20 @@ class KozepOracleTests(unittest.TestCase):
         self.assertNotEqual(mismatch, short)
         self.assertNotEqual(short, long_chain)
 
+    def test_szolanc_five_ui_tasks_share_one_program(self) -> None:
+        loaded = load_exam_by_id("szolanc")
+        tmpl = loaded.template
+        self.assertEqual(len(tmpl.tasks), 5)
+        self.assertEqual({t.solution_file for t in tmpl.tasks}, {"szolanc_teljes.py"})
+        self.assertEqual(
+            [t.type for t in tmpl.tasks],
+            ["store", "store", "store", "store", "szolanc_teljes"],
+        )
+        self.assertTrue(all(t.uses_preamble is False for t in tmpl.tasks))
+        self.assertTrue(tmpl.tasks[0].starter.strip())
+        self.assertTrue(all(not (t.starter or "").strip() for t in tmpl.tasks[1:]))
+        self.assertTrue(tmpl.tasks[-1].hidden_stdin)
+
 
 class EmeltOracleTests(unittest.TestCase):
     """Pinned visible + hidden oracle checks for the 10 emelt launch exams."""

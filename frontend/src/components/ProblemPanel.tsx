@@ -29,6 +29,26 @@ type ProblemPanelProps = {
 
 const SAMPLE_LINES = 5;
 
+function visibleSamples(task: Task, all: Task[]) {
+  const own = (task.test_cases ?? []).filter(
+    (tc) => !tc.is_hidden && tc.expected_output != null,
+  );
+  if (own.some((s) => (s.expected_output || "").trim())) {
+    return own;
+  }
+  const siblings = all
+    .filter((t) => t.solution_file === task.solution_file)
+    .sort((a, b) => a.order_index - b.order_index);
+  const grader = [...siblings].reverse().find((t) =>
+    (t.test_cases ?? []).some(
+      (tc) => !tc.is_hidden && (tc.expected_output || "").trim(),
+    ),
+  );
+  return (grader?.test_cases ?? []).filter(
+    (tc) => !tc.is_hidden && (tc.expected_output || "").trim(),
+  );
+}
+
 function cleanStory(story: string): string {
   return story.replace(/^\[\[.*?\]\]\s*/m, "").trim();
 }
@@ -154,9 +174,7 @@ export function ProblemPanel({
               {sorted.map((task, index) => {
                 const active = activePhase === task.id;
                 const status = phaseStatus[task.id] ?? "idle";
-                const samples = (task.test_cases ?? []).filter(
-                  (tc) => !tc.is_hidden && tc.expected_output != null,
-                );
+                const samples = visibleSamples(task, sorted);
                 const sampleInput =
                   (task.test_cases ?? []).find(
                     (tc) => !tc.is_hidden && (tc.stdin || "").trim(),

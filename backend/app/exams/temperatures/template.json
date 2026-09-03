@@ -5,7 +5,13 @@
   "level": "kozep",
   "origin": "synthetic",
   "difficulty": 2,
-  "tags": ["list", "loops", "store", "counting", "search"],
+  "tags": [
+    "list",
+    "loops",
+    "store",
+    "counting",
+    "search"
+  ],
   "description": "Olvasd be a temps.txt fájlt, és oldd meg a feladatokat!",
   "story": "Egy meteorológiai állomás napi középhőmérsékleteket rögzít.",
   "constraints": [
@@ -26,44 +32,50 @@
   "tasks": [
     {
       "type": "minimum",
-      "tags": ["store", "search"],
+      "tags": [
+        "store",
+        "search"
+      ],
       "field": "celsius",
       "title": "Legalacsonyabb hőmérséklet",
-      "description": "Olvasd be a temps.txt fájlt a `temps` listába, majd írd ki a legalacsonyabb hőmérsékletet!",
+      "description": "Olvasd be a temps.txt fájlt a 'temps' listába, majd írd ki a legalacsonyabb hőmérsékletet!",
       "points": 1,
       "uses_preamble": false,
-      "starter": "# 1. feladat: olvasd be a temps.txt fájlt a `temps` változóba (str),\n# majd írd ki a legalacsonyabb hőmérsékletet (egész szám).\n# Sor formátum: dátum celsius\n\ntemps = \"\"\n\nprint()\n",
+      "starter": "# 1. feladat: olvassa be a temps.txt tartalmát.\n# Tárolja az állomány tartalmát a 'temps' változóban mint string (szöveg).\n\ntemps = \"\"\n",
       "hints": [
-        "Your solution works for the example dataset but fails on other datasets.",
-        "Find the minimum by scanning every celsius value in temps.txt."
+        "Használja az 'open' metódust a 'temps.txt' megnyitásához, majd a 'read' metódust a szöveges tartalom beolvasásához. Írja ki a legalacsonyabb hőmérsékletet."
       ],
       "solution_file": "min_homerseklet.py"
     },
     {
       "type": "maximum",
-      "tags": ["search"],
+      "tags": [
+        "search"
+      ],
       "field": "celsius",
       "title": "Legmagasabb hőmérséklet",
-      "description": "A `temps` változó már rendelkezésre áll. Írd ki a legmagasabb hőmérsékletet!",
+      "description": "A 'temps' változó már rendelkezésre áll. Írd ki a legmagasabb hőmérsékletet!",
       "points": 1,
       "uses_preamble": true,
-      "starter": "# A temps.txt tartalma a `temps` változóban van (str).\n# Minden sor: dátum celsius\n#\n# 2. feladat: írd ki a legmagasabb hőmérsékletet.\n\nprint()\n",
+      "starter": "# A temps.txt tartalma a 'temps' változóban van szöveges formában.\n# Elvárt kimenet: 'x'\n",
       "hints": [
-        "Read the temperature column from temps.txt for each dataset instead of assuming a fixed maximum."
+        "Minden sorból olvassa ki a hőmérsékletet, és írja ki a maximumot."
       ],
       "solution_file": "max_homerseklet.py"
     },
     {
       "type": "average",
-      "tags": ["counting"],
+      "tags": [
+        "counting"
+      ],
       "field": "celsius",
       "title": "Átlaghőmérséklet",
-      "description": "A `temps` változó már rendelkezésre áll. Írd ki az átlagot egész számra csonkolva!",
+      "description": "A 'temps' változó már rendelkezésre áll. Írd ki az átlagot egész számra csonkolva!",
       "points": 2,
       "uses_preamble": true,
-      "starter": "# A temps.txt tartalma a `temps` változóban van (str).\n# Minden sor: dátum celsius\n#\n# 3. feladat: átlaghőmérséklet, int()-tel csonkolva.\n\nprint()\n",
+      "starter": "# A temps.txt tartalma a 'temps' változóban van szöveges formában.\n# Elvárt kimenet: 'x'\n",
       "hints": [
-        "Compute the average from all readings in temps.txt, then truncate with int()."
+        "Számítsa ki a hőmérsékletek átlagát, majd csonkolja int()-tel."
       ],
       "solution_file": "atlag_homerseklet.py"
     }

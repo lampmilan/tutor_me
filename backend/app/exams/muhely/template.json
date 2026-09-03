@@ -17,7 +17,6 @@
     "Események ≤ 1500; óra 7–16, perc 0–59; az állomány időrendben van.",
     "Művelet: `KI` vagy `BE`; szerszám azonosítója 1–99.",
     "Feltételezheti, hogy `BE` mindig egy kint lévő szerszámra vonatkozik, és `KI` nem ad ki már kint lévő azonosítót.",
-    "5. feladat tesztjavaslat: szerszám `12` (van lezárt kölcsönzése). Ha az azonosító egyetlen eseményben sem szerepel, írja ki: `Nincs ilyen szerszam.`"
   ],
   "data_explanation": "Minden sor egy esemény: óra, perc, művelet (`KI` vagy `BE`), szerszám azonosító. A mintában a 12-es szerszámot 8:15-kor viszik ki és 9:40-kor hozzák vissza; később újra kiadják. A 3-as szerszám a nap végén kint marad.",
   "data_file": "kolcsonzes.txt",
@@ -41,9 +40,9 @@
       "points": 1,
       "solution_file": "muhely_beolvasas.py",
       "uses_preamble": false,
-      "starter": "# 1. feladat: olvassa be a kolcsonzes.txt tartalmát.\n# Tárolja a teljes szöveget a `esemenyek` változóban.\n# ora perc KI/BE azonosito\n\nesemenyek = \"\"\n",
+      "starter": "# 1. feladat: olvassa be a kolcsonzes.txt tartalmát.\n# Tárolja az állomány tartalmát a 'esemenyek' változóban mint string (szöveg).\n\nesemenyek = \"\"\n",
       "hints": [
-        "Read kolcsonzes.txt into `esemenyek` as a raw string."
+        "Használja az 'open' metódust a 'kolcsonzes.txt' megnyitásához, majd a 'read' metódust a szöveges tartalom beolvasásához."
       ]
     },
     {
@@ -56,9 +55,9 @@
       "points": 1,
       "solution_file": "muhely_szama.py",
       "uses_preamble": true,
-      "starter": "# A kolcsonzes.txt tartalma a `esemenyek` változóban van (str).\n# egy sor egy esemény\n#\n# Események\n",
+      "starter": "# A kolcsonzes.txt tartalma a 'esemenyek' változóban van szöveges formában.\n# Elvárt kimenet: 'A kolcsonzesi esemenyek szama: x'\n",
       "hints": [
-        "Derive the answer from the current file contents; do not hard-code the sample."
+        "Számolja meg a nem üres sorokat a splitlines() metódus segítségével."
       ]
     },
     {
@@ -72,9 +71,9 @@
       "points": 2,
       "solution_file": "muhely_kint.py",
       "uses_preamble": true,
-      "starter": "# A kolcsonzes.txt tartalma a `esemenyek` változóban van (str).\n# KI kivesz, BE visszatesz\n#\n# Kint maradt\n",
+      "starter": "# A kolcsonzes.txt tartalma a 'esemenyek' változóban van szöveges formában.\n# Elvárt kimenetek:\n# 'A kint maradt szerszamok szama: x'\n# 'A kint maradt azonosito: ...'\n",
       "hints": [
-        "Derive the answer from the current file contents; do not hard-code the sample."
+        "A KI kiveszi a szerszámot, a BE visszateszi. A nap végén a kint maradt azonosítókat növekvő sorrendben írja ki."
       ]
     },
     {
@@ -88,9 +87,9 @@
       "points": 2,
       "solution_file": "muhely_leghosszabb.py",
       "uses_preamble": true,
-      "starter": "# A kolcsonzes.txt tartalma a `esemenyek` változóban van (str).\n# perc = BE-KI\n#\n# Leghosszabb\n",
+      "starter": "# A kolcsonzes.txt tartalma a 'esemenyek' változóban van szöveges formában.\n# Elvárt kimenet: 'A leghosszabb kolcsonzes: x perc, szerszam: y'\n",
       "hints": [
-        "Derive the answer from the current file contents; do not hard-code the sample."
+        "Egy lezárt kölcsönzés egy KI és a hozzá tartozó következő BE ugyanarra az azonosítóra. A perc a két időpont különbsége."
       ]
     },
     {
@@ -105,9 +104,9 @@
       "points": 3,
       "solution_file": "muhely_egy.py",
       "uses_preamble": true,
-      "starter": "# A kolcsonzes.txt tartalma a `esemenyek` változóban van (str).\n# stdin azonosito\n#\n# Egy szerszám\n\nprint(\"Adja meg a szerszam azonositojat!\")\nazon = int(input())\n",
+      "starter": "# A kolcsonzes.txt tartalma a 'esemenyek' változóban van szöveges formában.\n# Elvárt kimenetek:\n# 'A lezart kolcsonzesek szama: x'\n# 'A kolcsonzesek osszideje: y perc'\n# vagy 'Nincs ilyen szerszam.'\n\nprint(\"Adja meg a szerszam azonositojat!\")\nazon = \n",
       "hints": [
-        "Derive the answer from the current file contents; do not hard-code the sample."
+        "Ha az azonosító nem szerepel, írja ki: 'Nincs ilyen szerszam.', és álljon le."
       ],
       "stdin": "12\n"
     }

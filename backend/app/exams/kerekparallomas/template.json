@@ -4,13 +4,18 @@
   "level": "kozep",
   "origin": "synthetic",
   "difficulty": 2,
-  "tags": ["IO", "sum", "count", "min_max"],
+  "tags": [
+    "IO",
+    "sum",
+    "count",
+    "min_max"
+  ],
   "description": "Caveats demo — 8 állomás max/sum/count; kölcsönzés state kihagyva. (közép synthetic)",
   "story": "Egy városi kerékpármegosztó rendszer 8 állomásán reggel megszámolták a rendelkezésre álló kerékpárokat.",
   "constraints": [
     "Minden sor: állomás sorszáma és kerékpárok darabszáma."
   ],
-  "data_explanation": "A kerekpar.txt fájlban az adatok allomas_sorszam darab formában szerepelnek. Az 1. feladatban olvasd be a fájlt; a továbbiakban az `allomasok` változó már rendelkezésre áll.",
+  "data_explanation": "A kerekpar.txt fájlban az adatok allomas_sorszam darab formában szerepelnek. Az 1. feladatban olvasd be a fájlt; a továbbiakban az 'allomasok' változó már rendelkezésre áll.",
   "data_file": "kerekpar.txt",
   "dataset_type": "temperatures",
   "shared_variable": "allomasok",
@@ -25,47 +30,54 @@
   "tasks": [
     {
       "type": "maximum",
-      "tags": ["store", "search"],
+      "tags": [
+        "store",
+        "search"
+      ],
       "field": "celsius",
       "label_field": "date",
       "title": "Legtöbb kerékpár — állomás",
       "description": "Olvasd be a kerekpar.txt fájlt, majd írd ki annak az állomásnak a sorszámát, ahol a legtöbb kerékpár van! Ha több ilyen van, az elsőt.",
       "points": 1,
       "uses_preamble": false,
-      "starter": "# 1. feladat: olvasd be a kerekpar.txt fájlt,\n# majd írd ki a legtöbb kerékpárral rendelkező állomás sorszámát.\n# Sor formátum: allomas_sorszam darab\n\nallomasok = \"\"\n\nprint()\n",
+      "starter": "# 1. feladat: olvassa be a kerekpar.txt tartalmát.\n# Tárolja az állomány tartalmát a 'allomasok' változóban mint string (szöveg).\n\nallomasok = \"\"\n",
       "hints": [
-        "Your solution works for the example dataset but fails on other datasets.",
-        "Track the station index of the maximum bike count — print the station, not the count."
+        "Használja az 'open' metódust a 'kerekpar.txt' megnyitásához, majd a 'read' metódust a szöveges tartalom beolvasásához. A kimenet az állomás sorszáma, nem a darabszám."
       ],
       "solution_file": "legtobb_allomas.py"
     },
     {
       "type": "sum",
-      "tags": ["counting"],
+      "tags": [
+        "counting"
+      ],
       "field": "celsius",
       "title": "Összes kerékpár",
-      "description": "Az `allomasok` változó már rendelkezésre áll. Írd ki, hogy összesen hány kerékpár van a rendszerben!",
+      "description": "Az 'allomasok' változó már rendelkezésre áll. Írd ki, hogy összesen hány kerékpár van a rendszerben!",
       "points": 1,
       "uses_preamble": true,
-      "starter": "# A kerekpar.txt tartalma az `allomasok` változóban van (str).\n# Minden sor: allomas_sorszam darab\n#\n# 2. feladat: összes kerékpár a 8 állomáson.\n\nprint()\n",
+      "starter": "# A kerekpar.txt tartalma a 'allomasok' változóban van szöveges formában.\n# Elvárt kimenet: 'x'\n",
       "hints": [
-        "Sum the bike counts from every station in kerekpar.txt."
+        "Adja össze minden állomás darabszámát."
       ],
       "solution_file": "osszes_kerekpar.py"
     },
     {
       "type": "count_where",
-      "tags": ["counting", "search"],
+      "tags": [
+        "counting",
+        "search"
+      ],
       "field": "celsius",
       "op": "gte",
       "value": 8,
       "title": "Jól feltöltött állomások",
-      "description": "Az `allomasok` változó már rendelkezésre áll. Írd ki, hány állomáson van legalább 8 kerékpár! (Ez helyettesíti az eredeti kölcsönzéses 3–4. feladatot.)",
+      "description": "Az 'allomasok' változó már rendelkezésre áll. Írd ki, hány állomáson van legalább 8 kerékpár! (Ez helyettesíti az eredeti kölcsönzéses 3–4. feladatot.)",
       "points": 2,
       "uses_preamble": true,
-      "starter": "# A kerekpar.txt tartalma az `allomasok` változóban van (str).\n# Minden sor: allomas_sorszam darab\n#\n# 3. feladat: hány állomáson van legalább 8 kerékpár?\n\nprint()\n",
+      "starter": "# A kerekpar.txt tartalma a 'allomasok' változóban van szöveges formában.\n# Elvárt kimenet: 'x'\n",
       "hints": [
-        "Count stations whose bike count is >= 8 — the threshold is fixed, the data is not."
+        "Számolja meg azokat az állomásokat, ahol a darabszám legalább 8."
       ],
       "solution_file": "jol_feltoltott.py"
     }

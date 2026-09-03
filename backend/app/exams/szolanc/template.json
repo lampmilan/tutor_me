@@ -4,7 +4,13 @@
   "level": "kozep",
   "origin": "official",
   "difficulty": 4,
-  "tags": ["IO", "count", "validate", "simulation", "table"],
+  "tags": [
+    "IO",
+    "count",
+    "validate",
+    "simulation",
+    "table"
+  ],
   "description": "Készítsen programot szolanc néven, amely egy szólánc játékot szimulál a billentyűzetről érkező szavakból!",
   "story": "A szólánc kedvelt nyelvi játék. A játék során úgy kell szavakat egymás után mondani, hogy az előző szó utolsó betűjével kezdődjön a következő szó.",
   "constraints": [
@@ -85,18 +91,23 @@
     },
     {
       "type": "szolanc_teljes",
-      "tags": ["table"],
-      "title": "Szint",
-      "description": "Az elért helyes lépésszám alapján a táblázatban foglaltnak megfelelő értékelő felirat jelenjen meg!\n\n| Lépésszám | Felirat |\n| --- | --- |\n| 0 – 2 | kezdő |\n| 3 – 5 | közepes |\n| 6 és felette | haladó |\n\n`Szint: ` és a felirat. A Beküldés a teljes programot (1–5. feladat) értékeli.",
+      "tags": [
+        "IO",
+        "count",
+        "validate",
+        "simulation",
+        "table"
+      ],
+      "title": "Szólánc játék",
+      "description": "A játék során a szavakat egyenként olvassa be a program, és minden lépésnél írja ki, hogy hányadik szót kéri!\nAddig kérje a program a szavakat, ameddig a megadott új szó hatbetűs, és az első karaktere megegyezik az előző szó utolsó karakterével! Az első szó kivétel. Ha a szabályok nem teljesülnek, a játéknak vége.\nA játék végén írja ki a befejezés okát: 'Nem illeszkedett!' vagy 'A karakterek száma téves!'\nÍrja ki, hogy a szólánc hány, a szabályoknak megfelelő szóval folytatódott (helyes lépések száma)!\nAz elért helyes lépésszám alapján jelenjen meg a szint: 0–2 'kezdő', 3–5 'közepes', 6 és felette 'haladó'.",
       "points": 3,
       "solution_file": "szolanc_teljes.py",
       "uses_preamble": false,
-      "starter": "",
+      "starter": "# Szólánc: szavak beolvasása a billentyűzetről, amíg a lánc szabályos.\n# Elvárt kimenetek:\n# 'N. szó:'\n# 'Nem illeszkedett!' vagy 'A karakterek száma téves!'\n# 'Helyes lépések száma: x'\n# 'Szint: kezdő' / 'közepes' / 'haladó'\n\nprint(\"1. szó:\")\nszo = \n",
       "hints": [
-        "Print each numbered prompt on its own line, then call input().",
-        "Stop at the first illegal word. The first word is always accepted, even if it is not 6 letters.",
-        "Check length before the chain-letter rule so a short matching word prints the length error.",
-        "Step count is the number of legal words before the failing one. Levels: 0–2 kezdő, 3–5 közepes, 6+ haladó."
+        "Minden lépésnél írja ki a sorszámozott bekérő sort, majd hívja az input() függvényt.",
+        "Az első szó mindig elfogadott. A továbbiaknál először a hosszt, aztán az illeszkedést ellenőrizze.",
+        "A lépésszám a hibás szó előtti szabályos szavak száma. Szintek: 0–2 kezdő, 3–5 közepes, 6+ haladó."
       ],
       "stdin": "villan\nnegyed\ndiadal\nlista\n",
       "hidden_stdin": [

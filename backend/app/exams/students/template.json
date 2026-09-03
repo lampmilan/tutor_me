@@ -5,7 +5,12 @@
   "level": "kozep",
   "origin": "synthetic",
   "difficulty": 2,
-  "tags": ["list", "loops", "store", "counting"],
+  "tags": [
+    "list",
+    "loops",
+    "store",
+    "counting"
+  ],
   "description": "Olvasd be a students.txt fájlt, és oldd meg a feladatokat!",
   "story": "Egy osztálynapló a diákok év végi jegyeit tartalmazza.",
   "constraints": [
@@ -26,45 +31,52 @@
   "tasks": [
     {
       "type": "count",
-      "tags": ["store", "counting"],
+      "tags": [
+        "store",
+        "counting"
+      ],
       "title": "Diákok száma",
-      "description": "Olvasd be a students.txt fájlt a `students` listába, majd írd ki a diákok számát!",
+      "description": "Olvasd be a students.txt fájlt a 'students' listába, majd írd ki a diákok számát!",
       "points": 1,
       "uses_preamble": false,
-      "starter": "# 1. feladat: olvasd be a students.txt fájlt a `students` változóba (str),\n# majd írd ki a diákok számát.\n# Sor formátum: név jegy\n\nstudents = \"\"\n\nprint()\n",
+      "starter": "# 1. feladat: olvassa be a students.txt tartalmát.\n# Tárolja az állomány tartalmát a 'students' változóban mint string (szöveg).\n\nstudents = \"\"\n",
       "hints": [
-        "Your solution works for the example dataset but fails on other datasets.",
-        "Count every line in students.txt — class size changes between datasets."
+        "Használja az 'open' metódust a 'students.txt' megnyitásához, majd a 'read' metódust a szöveges tartalom beolvasásához. A diákok száma a nem üres sorok száma."
       ],
       "solution_file": "diakok_szama.py"
     },
     {
       "type": "average",
-      "tags": ["counting"],
+      "tags": [
+        "counting"
+      ],
       "field": "grade",
       "title": "Átlagjegy",
-      "description": "A `students` változó már rendelkezésre áll. Írd ki az átlagjegyet egész számra csonkolva!",
+      "description": "A 'students' változó már rendelkezésre áll. Írd ki az átlagjegyet egész számra csonkolva!",
       "points": 2,
       "uses_preamble": true,
-      "starter": "# A students.txt tartalma a `students` változóban van (str).\n# Minden sor: név jegy\n#\n# 2. feladat: átlagjegy, int()-tel csonkolva.\n\nprint()\n",
+      "starter": "# A students.txt tartalma a 'students' változóban van szöveges formában.\n# Elvárt kimenet: 'x'\n",
       "hints": [
-        "Compute the average grade from students.txt for each dataset, then truncate with int()."
+        "Adja össze a jegyeket, ossza el a diákok számával, majd csonkolja int()-tel."
       ],
       "solution_file": "atlag.py"
     },
     {
       "type": "count_where",
-      "tags": ["counting", "search"],
+      "tags": [
+        "counting",
+        "search"
+      ],
       "field": "grade",
       "op": "gte",
       "value": 2,
       "title": "Átment diákok",
-      "description": "A `students` változó már rendelkezésre áll. Írd ki, hány diák kapott legalább 2-est!",
+      "description": "A 'students' változó már rendelkezésre áll. Írd ki, hány diák kapott legalább 2-est!",
       "points": 2,
       "uses_preamble": true,
-      "starter": "# A students.txt tartalma a `students` változóban van (str).\n# Minden sor: név jegy\n#\n# 3. feladat: hány diák kapott legalább 2-est?\n\nprint()\n",
+      "starter": "# A students.txt tartalma a 'students' változóban van szöveges formában.\n# Elvárt kimenet: 'x'\n",
       "hints": [
-        "Filter students by reading each grade from students.txt — do not assume who passed."
+        "Számolja meg azokat a sorokat, amelyekben a jegy legalább 2."
       ],
       "solution_file": "atment.py"
     }

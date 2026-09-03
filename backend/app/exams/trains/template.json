@@ -5,7 +5,13 @@
   "level": "kozep",
   "origin": "synthetic",
   "difficulty": 2,
-  "tags": ["list", "loops", "store", "counting", "search"],
+  "tags": [
+    "list",
+    "loops",
+    "store",
+    "counting",
+    "search"
+  ],
   "description": "Olvasd be a trains.txt fájlt, és oldd meg a feladatokat!",
   "story": "Egy vasúttársaság a napi járatokat tartja nyilván.",
   "constraints": [
@@ -26,46 +32,53 @@
   "tasks": [
     {
       "type": "count",
-      "tags": ["store", "counting"],
+      "tags": [
+        "store",
+        "counting"
+      ],
       "title": "Járatok száma",
-      "description": "Olvasd be a trains.txt fájlt a `trains` listába, majd írd ki a járatok számát!",
+      "description": "Olvasd be a trains.txt fájlt a 'trains' listába, majd írd ki a járatok számát!",
       "points": 1,
       "uses_preamble": false,
-      "starter": "# 1. feladat: olvasd be a trains.txt fájlt a `trains` változóba (str),\n# majd írd ki a járatok számát.\n# Sor formátum: id from to minutes\n\ntrains = \"\"\n\nprint()\n",
+      "starter": "# 1. feladat: olvassa be a trains.txt tartalmát.\n# Tárolja az állomány tartalmát a 'trains' változóban mint string (szöveg).\n\ntrains = \"\"\n",
       "hints": [
-        "Your solution works for the example dataset but fails on other datasets.",
-        "Count every line in trains.txt — the number of trains can change between datasets."
+        "Használja az 'open' metódust a 'trains.txt' megnyitásához, majd a 'read' metódust a szöveges tartalom beolvasásához. A járatok száma a nem üres sorok száma."
       ],
       "solution_file": "jaratok_szama.py"
     },
     {
       "type": "maximum",
-      "tags": ["search"],
+      "tags": [
+        "search"
+      ],
       "field": "minutes",
       "label_field": "id",
       "title": "Leghosszabb járat",
-      "description": "A `trains` változó már rendelkezésre áll. Írd ki a leghosszabb menetidejű járat azonosítóját!",
+      "description": "A 'trains' változó már rendelkezésre áll. Írd ki a leghosszabb menetidejű járat azonosítóját!",
       "points": 2,
       "uses_preamble": true,
-      "starter": "# A trains.txt tartalma a `trains` változóban van (str).\n# Minden sor: id from to minutes\n#\n# 2. feladat: írd ki a leghosszabb járat azonosítóját.\n\nprint()\n",
+      "starter": "# A trains.txt tartalma a 'trains' változóban van szöveges formában.\n# Elvárt kimenet: 'x'\n",
       "hints": [
-        "Compare the minutes field from each line of trains.txt instead of assuming a fixed train id."
+        "Hasonlítsa a perc mezőket, és írja ki a legnagyobb menetidejű járat azonosítóját."
       ],
       "solution_file": "leghosszabb.py"
     },
     {
       "type": "count_where",
-      "tags": ["counting", "search"],
+      "tags": [
+        "counting",
+        "search"
+      ],
       "field": "to",
       "op": "eq",
       "value": "Budapest",
       "title": "Budapestre tartó járatok",
-      "description": "A `trains` változó már rendelkezésre áll. Írd ki, hány járat érkezik Budapestre!",
+      "description": "A 'trains' változó már rendelkezésre áll. Írd ki, hány járat érkezik Budapestre!",
       "points": 2,
       "uses_preamble": true,
-      "starter": "# A trains.txt tartalma a `trains` változóban van (str).\n# Minden sor: id from to minutes\n#\n# 3. feladat: hány járat érkezik Budapestre?\n\nprint()\n",
+      "starter": "# A trains.txt tartalma a 'trains' változóban van szöveges formában.\n# Elvárt kimenet: 'x'\n",
       "hints": [
-        "Filter trains by reading the destination column from trains.txt for each dataset."
+        "Számolja meg azokat a sorokat, amelyek célállomása Budapest."
       ],
       "solution_file": "budapest.py"
     }

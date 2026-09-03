@@ -13,9 +13,9 @@
   "description": "Értékelje ki a locsolókocsi parancsszavát a parancs.txt alapján!",
   "story": "Egy kertészet automata locsolókocsija a gyepet egy parancsszó alapján járja be. A kocsi mindig északnak nézve indul a (0, 0) pontból. Az E betű egy métert lép a nézőiránya szerint, a J betű 90 fokot fordul jobbra, a B betű 90 fokot fordul balra. A program a parancsszót a forrásában tárolja, majd a megtett út adatait értékeli ki.",
   "constraints": [
-    "Parancsszó hossza 1–80 karakter; csak `E`, `J` és `B` szerepelhet.",
+    "Parancsszó hossza 1–80 karakter; csak 'E', 'J' és 'B' szerepelhet.",
     "Kelet pozitív x, észak pozitív y; a kiindulás (0, 0), nézőirány észak.",
-    "Manhattan-távolság: `|x| + |y|`.",
+    "Manhattan-távolság: '|x| + |y|'.",
     "Cserélhető parancsszóval is működnie kell."
   ],
   "data_explanation": "Egyetlen parancsszó, szóköz nélkül. A mintában négy előrelépés, egy jobbra és egy balra fordulás van. A program ezt a forrásában tárolja, nem fájlból olvassa.",
@@ -40,9 +40,9 @@
       "points": 1,
       "solution_file": "locsolo_tarolas.py",
       "uses_preamble": false,
-      "starter": "# 1. feladat: olvassa be a parancs.txt tartalmát.\n# Tárolja a teljes szöveget a `parancsok` változóban.\n\nparancsok = \"\"\n",
+      "starter": "# 1. feladat: olvassa be a parancs.txt tartalmát.\n# Tárolja az állomány tartalmát a 'parancsok' változóban mint string (szöveg).\n\nparancsok = \"\"\n",
       "hints": [
-        "Read parancs.txt into parancsok as a string."
+        "Használja az 'open' metódust a 'parancs.txt' megnyitásához, majd a 'read' metódust a szöveges tartalom beolvasásához."
       ]
     },
     {
@@ -51,13 +51,13 @@
         "count"
       ],
       "title": "Betűk száma",
-      "description": "Határozza meg, hogy a parancsszóban hány `E`, hány `J` és hány `B` betű található! Az eredményeket külön sorban, megnevezve írja a képernyőre!",
+      "description": "Határozza meg, hogy a parancsszóban hány 'E', hány 'J' és hány 'B' betű található! Az eredményeket külön sorban, megnevezve írja a képernyőre!",
       "points": 1,
       "solution_file": "locsolo_betuk.py",
       "uses_preamble": true,
-      "starter": "# A parancs.txt tartalma a `parancsok` változóban van (str).\n# Parancsszó: E/J/B.\n#\n# Betűk száma\n",
+      "starter": "# A parancs.txt tartalma a 'parancsok' változóban van szöveges formában.\n# Elvárt kimenetek:\n# 'E betuk szama: x'\n# 'J betuk szama: y'\n# 'B betuk szama: z'\n",
       "hints": [
-        "Derive the answer from the current file contents; do not hard-code the sample."
+        "Számolja meg a parancsszóban az E, J és B karakterek előfordulásait."
       ]
     },
     {
@@ -70,9 +70,9 @@
       "points": 2,
       "solution_file": "locsolo_vegpont.py",
       "uses_preamble": true,
-      "starter": "# A parancs.txt tartalma a `parancsok` változóban van (str).\n# Kelet +x, észak +y, indulás (0,0).\n#\n# Végpont\n",
+      "starter": "# A parancs.txt tartalma a 'parancsok' változóban van szöveges formában.\n# Elvárt kimenetek:\n# 'A vegso helyzet: kelet x, eszak y'\n# 'A Manhattan-tavolsag: z'\n",
       "hints": [
-        "Derive the answer from the current file contents; do not hard-code the sample."
+        "Az E egy métert lép a nézőirány szerint, a J jobbra, a B balra fordul 90 fokot. A Manhattan-távolság |x| + |y|."
       ]
     },
     {
@@ -81,13 +81,13 @@
         "validate"
       ],
       "title": "Visszatérés",
-      "description": "Döntse el, hogy a kocsi a parancsszó végrehajtása után a kiinduló ponton áll-e! Ha igen, írja ki: `A locsolo visszater a kiindulo pontra.` Ha nem, írja ki: `A locsolo nem tert vissza a kiindulo pontra.`",
+      "description": "Döntse el, hogy a kocsi a parancsszó végrehajtása után a kiinduló ponton áll-e! Ha igen, írja ki: 'A locsolo visszater a kiindulo pontra.' Ha nem, írja ki: 'A locsolo nem tert vissza a kiindulo pontra.'",
       "points": 2,
       "solution_file": "locsolo_vissza.py",
       "uses_preamble": true,
-      "starter": "# A parancs.txt tartalma a `parancsok` változóban van (str).\n# Kiinduló pont (0, 0).\n#\n# Visszatérés\n",
+      "starter": "# A parancs.txt tartalma a 'parancsok' változóban van szöveges formában.\n# Elvárt kimenet: 'A locsolo visszater a kiindulo pontra.' vagy 'A locsolo nem tert vissza a kiindulo pontra.'\n",
       "hints": [
-        "Derive the answer from the current file contents; do not hard-code the sample."
+        "A kocsi akkor tért vissza, ha a végső helyzet (0, 0)."
       ]
     }
   ]

@@ -14,12 +14,11 @@
   "description": "Számítsa ki a csomagok postai díját a dijszabas.txt táblázat alapján!",
   "story": "Egy postahivatal a csomagokat tömeg szerint díjazza. A díjtáblázat lépcsős: a csomag tömege a táblázatban szereplő felső határig az adott díjat viseli. A kezelő a feladott csomagok tömegét egymás után adja meg kilogrammban, és nullával jelzi a sor végét. A program minden csomagra kiírja a díjat, majd az aznapi bevételt.",
   "constraints": [
-    "A `dijszabas.txt` soronként egy felső határt (kg) és egy díjat (Ft) tartalmaz, növekvő határ szerint.",
-    "Minden csomag tömege 1 és a táblázat legnagyobb határa közé esik; 0 a sor vége.",
-    "Pontos egyezés a határon a kisebb kategóriába tartozik (`<=`).",
-    "A bemenet érvényességét nem kell ellenőrizni."
+    "Díjkategóriák növekvő határ szerint; cserélhető adatokkal is működnie kell.",
+    "Csomagtömeg bekérés: 0 <= m <= max_határ, 0 a sor vége.",
+    "Határegyezés a kisebb kategóriába tartozik (m <= határ)."
   ],
-  "data_explanation": "Minden sor két egész: a kategória legnagyobb tömege kilogrammban és a kategória díja forintban. A mintában az 1–5 kg-os csomag 800 Ft, a 6–10 kg-os 1200 Ft, a 11–20 kg-os 1800 Ft.",
+  "data_explanation": "Minden sor két egész számot tartalmaz: a kategória legnagyobb tömegét kilogrammban és a kategória díját forintban. Például az 1–5 kg-os csomag 800 Ft, a 6–10 kg-os 1200 Ft, a 11–20 kg-os 1800 Ft.",
   "data_file": "dijszabas.txt",
   "dataset_type": "csomagfeladas",
   "shared_variable": "dijszabas",
@@ -36,14 +35,14 @@
       "tags": [
         "IO"
       ],
-      "title": "Beolvasás",
-      "description": "Olvassa be és tárolja el a `dijszabas.txt` tartalmát!",
+      "title": "1. feladat: Beolvasás",
+      "description": "Olvassa be és tárolja el a 'dijszabas.txt' tartalmát a 'dijszabas' változóban!",
       "points": 1,
       "solution_file": "csomagfeladas_beolvasas.py",
       "uses_preamble": false,
-      "starter": "# 1. feladat: olvassa be a dijszabas.txt tartalmát.\n# Tárolja a teljes szöveget a `dijszabas` változóban.\n# Sorok: max_kg dij\n\ndijszabas = \"\"\n",
+      "starter": "# 1. feladat: olvassa be a dijszabas.txt tartalmát.\n# Tárolja az állomány tartalmát a 'dijszabas' változóban mint string (szöveg).\n\ndijszabas = \"\"\n",
       "hints": [
-        "Read dijszabas.txt into `dijszabas` as a raw string."
+        "Használja az 'open' metódust a 'dijszabas.txt' megnyitásához, majd a 'read' metódust a szöveges tartalom beolvasásához."
       ]
     },
     {
@@ -52,14 +51,14 @@
         "count",
         "table"
       ],
-      "title": "Kategóriák",
-      "description": "Határozza meg, hány díjkategóriát tartalmaz a táblázat! Az eredményt nevezze meg a kiírásban!",
+      "title": "2. feladat: Kategóriák száma",
+      "description": "Határozza meg, hány díjkategóriát tartalmaz a táblázat! Az eredményt írja ki a képernyőre a mintának megfelelően!",
       "points": 1,
       "solution_file": "csomagfeladas_kategoriak.py",
       "uses_preamble": true,
-      "starter": "# A dijszabas.txt tartalma a `dijszabas` változóban van (str).\n# Soronként egy kategória.\n#\n# Kategóriák\n",
+      "starter": "# A dijszabas.txt tartalma a 'dijszabas' változóban van szöveges formában.\n# Elvárt kimenet: 'A dijkategoriak szama: x'\n",
       "hints": [
-        "Derive the answer from the current file contents; do not hard-code the sample."
+        "Számolja meg a sorok számát a dijszabas változóban a splitlines() metódus segítségével."
       ]
     },
     {
@@ -70,14 +69,14 @@
         "sum",
         "simulation"
       ],
-      "title": "Feladás",
-      "description": "Kérje be a felhasználótól a csomagok tömegét kilogrammban, egyenként, amíg 0-t nem kap! Minden pozitív tömegre írja ki a `Dij: … Ft` sort a táblázat szerinti díjjal! A bekéréskor mindig jelenjen meg a `Csomag tomege (kg):` szöveg.\n\n1. Minden pozitív tömegű csomagra írja ki a díjat a fenti formában!\n2. A feladott csomagok díját adja össze, és írja ki az aznapi bevételt! A 0 tömegű záróértéket ne számolja díjnak!",
+      "title": "3. feladat: Csomagok feladása és díjszámítás",
+      "description": "Kérje be a felhasználótól a csomagok tömegét kilogrammban egyenként, amíg 0-t nem kap! Minden pozitív tömegre írja ki a díjat 'Dij: {osszeg} Ft' formátumban! A végén adja össze a feladott csomagok díját és írja ki az aznapi teljes bevételt!",
       "points": 3,
       "solution_file": "csomagfeladas_feladas.py",
       "uses_preamble": true,
-      "starter": "# A dijszabas.txt tartalma a `dijszabas` változóban van (str).\n# stdin: tömegek, 0 a végén.\n#\n# Feladás\n\nprint(\"Csomag tomege (kg):\")\n",
+      "starter": "# A dijszabas.txt tartalma a 'dijszabas' változóban van szöveges formában.\n# Elvárt kimenetek:\n# 'Csomag tomege (kg):'\n# 'Dij: x Ft'\n# ...\n# 'Osszesen: y Ft'\n\nprint(\"Csomag tomege (kg):\")\ntomeg = \n",
       "hints": [
-        "Derive the answer from the current file contents; do not hard-code the sample."
+        "Dolgozza fel a díjszabás szövegét számpárokká (határ, díj). A bekért tömeghez keresse meg az első olyan kategóriát, ahol a tömeg <= határ."
       ],
       "stdin": "3\n8\n15\n4\n0\n"
     }

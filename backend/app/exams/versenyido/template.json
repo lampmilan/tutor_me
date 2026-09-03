@@ -4,13 +4,17 @@
   "level": "kozep",
   "origin": "synthetic",
   "difficulty": 2,
-  "tags": ["IO", "sum", "min_max"],
+  "tags": [
+    "IO",
+    "sum",
+    "min_max"
+  ],
   "description": "Trivial demo — hét napi edzésperc: összeg, átlag, maximum. (közép synthetic)",
   "story": "Egy úszóedző hét napra feljegyezte a délutáni edzések időtartamát percben.",
   "constraints": [
     "Minden sor: nap sorszáma és perc."
   ],
-  "data_explanation": "A versenyido.txt fájlban a percek nap_sorszám perc formában szerepelnek. Az 1. feladatban olvasd be a fájlt; a továbbiakban a `napok` változó már rendelkezésre áll.",
+  "data_explanation": "A versenyido.txt fájlban a percek nap_sorszám perc formában szerepelnek. Az 1. feladatban olvasd be a fájlt; a továbbiakban a 'napok' változó már rendelkezésre áll.",
   "data_file": "versenyido.txt",
   "dataset_type": "temperatures",
   "shared_variable": "napok",
@@ -25,45 +29,51 @@
   "tasks": [
     {
       "type": "sum",
-      "tags": ["store", "counting"],
+      "tags": [
+        "store",
+        "counting"
+      ],
       "field": "celsius",
       "title": "Összes perc",
       "description": "Olvasd be a versenyido.txt fájlt, majd írd ki az összes edzett percet (egy egész szám)!",
       "points": 1,
       "uses_preamble": false,
-      "starter": "# 1. feladat: olvasd be a versenyido.txt fájlt,\n# majd írd ki az összes edzett perc összegét.\n# Sor formátum: nap_sorszám perc\n\nnapok = \"\"\n\nprint()\n",
+      "starter": "# 1. feladat: olvassa be a versenyido.txt tartalmát.\n# Tárolja az állomány tartalmát a 'napok' változóban mint string (szöveg).\n\nnapok = \"\"\n",
       "hints": [
-        "Your solution works for the example dataset but fails on other datasets.",
-        "Sum the minutes column from every line in versenyido.txt."
+        "Használja az 'open' metódust a 'versenyido.txt' megnyitásához, majd a 'read' metódust a szöveges tartalom beolvasásához. Adja össze a perc mezőket."
       ],
       "solution_file": "osszes_perc.py"
     },
     {
       "type": "average",
-      "tags": ["counting"],
+      "tags": [
+        "counting"
+      ],
       "field": "celsius",
       "title": "Napi átlag",
-      "description": "A `napok` változó már rendelkezésre áll. Írd ki a napi átlagot egészre csonkítva!",
+      "description": "A 'napok' változó már rendelkezésre áll. Írd ki a napi átlagot egészre csonkítva!",
       "points": 1,
       "uses_preamble": true,
-      "starter": "# A versenyido.txt tartalma a `napok` változóban van (str).\n# Minden sor: nap_sorszám perc\n#\n# 2. feladat: napi átlag, int()-tel csonkolva.\n\nprint()\n",
+      "starter": "# A versenyido.txt tartalma a 'napok' változóban van szöveges formában.\n# Elvárt kimenet: 'x'\n",
       "hints": [
-        "Average all minutes in versenyido.txt, then truncate with int()."
+        "Számítsa ki a percek átlagát, majd csonkolja int()-tel."
       ],
       "solution_file": "napi_atlag.py"
     },
     {
       "type": "maximum",
-      "tags": ["search"],
+      "tags": [
+        "search"
+      ],
       "field": "celsius",
       "label_field": "date",
       "title": "Leghosszabb edzés napja",
-      "description": "A `napok` változó már rendelkezésre áll. Írd ki a leghosszabb edzés napjának sorszámát! Ha több ilyen van, az elsőt.",
+      "description": "A 'napok' változó már rendelkezésre áll. Írd ki a leghosszabb edzés napjának sorszámát! Ha több ilyen van, az elsőt.",
       "points": 2,
       "uses_preamble": true,
-      "starter": "# A versenyido.txt tartalma a `napok` változóban van (str).\n# Minden sor: nap_sorszám perc\n#\n# 3. feladat: a leghosszabb edzés napjának sorszáma.\n\nprint()\n",
+      "starter": "# A versenyido.txt tartalma a 'napok' változóban van szöveges formában.\n# Elvárt kimenet: 'x'\n",
       "hints": [
-        "Find the maximum minutes value, then print that row's day number — not the minutes."
+        "Keresse a legnagyobb percértéket, és írja ki annak a sornak a napsorszámát, nem a perceket."
       ],
       "solution_file": "leghosszabb.py"
     }

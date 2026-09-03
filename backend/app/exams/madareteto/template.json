@@ -15,7 +15,7 @@
   "constraints": [
     "Pontosan 7 egész, a hét napjainak sorrendjében; értékek 1–100 gramm.",
     "Több azonos legnagyobb érték esetén az első nap sorszáma (1–7).",
-    "Jutalom: van legalább egy olyan háromnapos, egymást követő szakasz, amelyben minden nap ≥ 50."
+    "Jutalom: van legalább egy olyan háromnapos, egymást követő szakasz, amelyben minden nap >= 50."
   ],
   "data_explanation": "Hét egész szám, az etetőbe töltött eleség grammban, hétfőtől vasárnapig. A program ezeket a forrásában tárolja, nem fájlból olvassa.",
   "data_file": "eleseg.txt",
@@ -39,9 +39,9 @@
       "points": 1,
       "solution_file": "madareteto_tarolas.py",
       "uses_preamble": false,
-      "starter": "# 1. feladat: olvassa be az eleseg.txt tartalmát.\n# Tárolja a teljes szöveget a `napok` változóban.\n\nnapok = \"\"\n",
+      "starter": "# 1. feladat: olvassa be az eleseg.txt tartalmát.\n# Tárolja az állomány tartalmát a 'napok' változóban mint string (szöveg).\n\nnapok = \"\"\n",
       "hints": [
-        "Read eleseg.txt into napok as a string."
+        "Használja az 'open' metódust az 'eleseg.txt' megnyitásához, majd a 'read' metódust a szöveges tartalom beolvasásához."
       ]
     },
     {
@@ -54,9 +54,9 @@
       "points": 1,
       "solution_file": "madareteto_osszeg.py",
       "uses_preamble": true,
-      "starter": "# A eleseg.txt tartalma a `napok` változóban van (str).\n# Hét napi gramm.\n#\n# Heti eleség\n",
+      "starter": "# Az eleseg.txt tartalma a 'napok' változóban van szöveges formában.\n# Elvárt kimenet: 'A heti eleseg: x g'\n",
       "hints": [
-        "Derive the answer from the current file contents; do not hard-code the sample."
+        "Bontsa fel a napok változót számokra a split() metódussal, majd adja össze az értékeket."
       ]
     },
     {
@@ -69,9 +69,9 @@
       "points": 2,
       "solution_file": "madareteto_legnagyobb.py",
       "uses_preamble": true,
-      "starter": "# A eleseg.txt tartalma a `napok` változóban van (str).\n# Döntetlennél az első nap.\n#\n# Legnagyobb adag\n",
+      "starter": "# Az eleseg.txt tartalma a 'napok' változóban van szöveges formában.\n# Elvárt kimenet: 'A legnagyobb adag: x g, y. nap.'\n",
       "hints": [
-        "Derive the answer from the current file contents; do not hard-code the sample."
+        "Ha több azonos legnagyobb érték van, az első nap sorszámát adja meg."
       ]
     },
     {
@@ -80,13 +80,13 @@
         "validate"
       ],
       "title": "Jutalom",
-      "description": "Döntse el, jár-e a jutalom a három egymást követő, legalább 50 grammos nap szabálya szerint! Ha jár, írja ki: `Jutalom jar.` Ha nem, írja ki: `Nincs jutalom.`",
+      "description": "Döntse el, jár-e a jutalom a három egymást követő, legalább 50 grammos nap szabálya szerint! Ha jár, írja ki: 'Jutalom jar.' Ha nem, írja ki: 'Nincs jutalom.'",
       "points": 2,
       "solution_file": "madareteto_jutalom.py",
       "uses_preamble": true,
-      "starter": "# A eleseg.txt tartalma a `napok` változóban van (str).\n# Három egymást követő nap ≥ 50.\n#\n# Jutalom\n",
+      "starter": "# Az eleseg.txt tartalma a 'napok' változóban van szöveges formában.\n# Elvárt kimenet: 'Jutalom jar.' vagy 'Nincs jutalom.'\n",
       "hints": [
-        "Derive the answer from the current file contents; do not hard-code the sample."
+        "Vizsgálja a három egymást követő napos szakaszokat. Jutalom jár, ha legalább egy szakaszban minden nap legalább 50."
       ]
     }
   ]

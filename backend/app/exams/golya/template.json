@@ -4,16 +4,25 @@
   "level": "emelt",
   "origin": "synthetic",
   "difficulty": 4,
-  "tags": ["IO", "count", "search", "min_max", "group", "lookup", "validate", "function"],
+  "tags": [
+    "IO",
+    "count",
+    "search",
+    "min_max",
+    "group",
+    "lookup",
+    "validate",
+    "function"
+  ],
   "description": "Értékelje ki Zsiga gólya őszi vonulását a golya.txt alapján!",
   "story": "Egy természetvédelmi egyesület Zsiga, egy fehér gólya őszi vonulását követi nyomon. A madár hátára erősített jeladó minden nap egy helymeghatározást küld: a dátumot, a pozíció egész koordinátáit és annak az országnak a nevét, amelynek területén a gólya aznap tartózkodott. Az állomány időrendben tartalmazza a méréseket. A program feladata a rögzített útvonal alapján megállapítani, hol mennyi időt töltött a madár, mekkora volt a napi elmozdulás, és mely napokon lépte át a határokat.",
   "constraints": [
-    "Mérések ≤ 400; az állomány időrendben van; minden sor egy naptári nap egyetlen mérése.",
+    "Mérések <= 400; az állomány időrendben van; minden sor egy naptári nap egyetlen mérése.",
     "Hónap 8–10; a nap a naptár szerint érvényes; x és y egész szám, -1000 és 1000 között.",
     "Az x keleti, az y északi irányban nő; a távolság egysége a térkép rácsegysége.",
-    "Ország: egy ékezetmentes szó (például `Magyarorszag`, `Szerbia`, `Egyiptom`).",
+    "Ország: egy ékezetmentes szó (például 'Magyarorszag', 'Szerbia', 'Egyiptom').",
     "Napi elmozdulás: két szomszédos mérés euklideszi távolsága, három tizedesjegyre kerekítve.",
-    "5. feladat tesztjavaslat: `Szerbia` (szerepel a fájlban). Ha a bekért név nem fordul elő, írja ki: `Zsiga nem jart ebben az orszagban.`",
+    "5. feladat tesztjavaslat: 'Szerbia' (szerepel a fájlban). Ha a bekért név nem fordul elő, írja ki: 'Zsiga nem jart ebben az orszagban.'",
     "7. feladat: döntetlen esetén az állományban először megjelenő országot adja meg.",
     "8. feladat: határátlépés, ha két szomszédos mérés országa különbözik; a kimeneti sor a későbbi (érkezési) dátumot tartalmazza."
   ],
@@ -32,112 +41,131 @@
   "tasks": [
     {
       "type": "store",
-      "tags": ["IO"],
+      "tags": [
+        "IO"
+      ],
       "title": "Beolvasás",
-      "description": "Olvassa be és tárolja el a `golya.txt` tartalmát!",
+      "description": "Olvassa be és tárolja el a 'golya.txt' tartalmát!",
       "points": 1,
       "solution_file": "golya_beolvasas.py",
       "uses_preamble": false,
-      "starter": "# 1. feladat: olvassa be a golya.txt tartalmát.\n# Tárolja a teljes szöveget a `meresek` változóban.\n# Sorok: honap nap x y orszag\n\nmeresek = \"\"\n",
+      "starter": "# 1. feladat: olvassa be a golya.txt tartalmát.\n# Tárolja az állomány tartalmát a 'meresek' változóban mint string (szöveg).\n\nmeresek = \"\"\n",
       "hints": [
-        "Read the whole golya.txt file into the meresek string."
+        "Használja az 'open' metódust a 'golya.txt' megnyitásához, majd a 'read' metódust a szöveges tartalom beolvasásához."
       ]
     },
     {
       "type": "golya_count",
-      "tags": ["count"],
+      "tags": [
+        "count"
+      ],
       "title": "Mérések száma",
       "description": "Határozza meg, hány helymeghatározást tartalmaz az állomány! Minden sor egy naptári nap egyetlen mérésének felel meg. A mérések számát a képernyőn, megnevezve jelenítse meg!",
       "points": 1,
       "solution_file": "golya_meresek.py",
       "uses_preamble": true,
-      "starter": "# A golya.txt tartalma a `meresek` változóban van (str).\n# Minden sor: honap nap x y orszag\n#\n# 2. feladat: írja ki a mérések számát.\n\nprint(f\"A meresek szama: \")\n",
+      "starter": "# A golya.txt tartalma a 'meresek' változóban van szöveges formában.\n# Elvárt kimenet: 'A meresek szama: x'\n",
       "hints": [
-        "Count non-empty measurement lines — do not hard-code 14."
+        "Számolja meg a nem üres sorokat a splitlines() metódus segítségével."
       ]
     },
     {
       "type": "golya_orszagok",
-      "tags": ["search", "count"],
+      "tags": [
+        "search",
+        "count"
+      ],
       "title": "Érintett országok",
       "description": "Adja meg a vonulás megfigyelt szakaszának első és utolsó országát! Az első a fájl első sorához, az utolsó az utolsó sorához tartozik. Írja ki azt is, hány különböző ország szerepel az állományban! Az adatokat külön sorban, megnevezve jelenítse meg!",
       "points": 2,
       "solution_file": "golya_kezdet.py",
       "uses_preamble": true,
-      "starter": "# A golya.txt tartalma a `meresek` változóban van (str).\n#\n# 3. feladat: első és utolsó ország, plusz a különböző országok száma.\n\nprint(f\"A vonulas kezdete: \")\nprint(f\"A vonulas vege: \")\nprint(f\"Az erintett orszagok szama: \")\n",
+      "starter": "# A golya.txt tartalma a 'meresek' változóban van szöveges formában.\n# Elvárt kimenetek:\n# 'A vonulas kezdete: x'\n# 'A vonulas vege: y'\n# 'Az erintett orszagok szama: z'\n",
       "hints": [
-        "The first and last countries are the first and last non-empty lines.",
-        "Count distinct country names, not the number of days."
+        "Az első és az utolsó sor országa a vonulás kezdete és vége. A különböző országneveket csak egyszer számolja."
       ]
     },
     {
       "type": "store",
-      "tags": ["function"],
+      "tags": [
+        "function"
+      ],
       "title": "tavolsag",
-      "description": "Készítsen függvényt tavolsag néven, amely megadja két helyszín síkbeli távolságát! A függvény a két pont x és y koordinátáját egész számokként kapja meg, a visszaadott érték legyen valós szám! A távolságot a `(x1-x2)^2 + (y1-y2)^2` kifejezés négyzetgyökeként számolja! A függvényt a későbbi feladatok megoldásánál felhasználhatja.",
+      "description": "Készítsen függvényt tavolsag néven, amely megadja két helyszín síkbeli távolságát! A függvény a két pont x és y koordinátáját egész számokként kapja meg, a visszaadott érték legyen valós szám! A távolságot a '(x1-x2)^2 + (y1-y2)^2' kifejezés négyzetgyökeként számolja! A függvényt a későbbi feladatok megoldásánál felhasználhatja.",
       "points": 2,
       "solution_file": "golya_tavolsag.py",
       "uses_preamble": true,
-      "starter": "# A későbbi feladatok a tavolsag(x1, y1, x2, y2) függvényt hívják.\n# Írja meg a függvényt: euklideszi távolság a síkon.\n\ndef tavolsag(x1, y1, x2, y2):\n    return 0\n",
+      "starter": "# A későbbi feladatok a tavolsag(x1, y1, x2, y2) függvényt hívják.\n# Euklideszi távolság a síkon.\n\ndef tavolsag(x1, y1, x2, y2):\n    return 0\n",
       "hints": [
-        "Return the square root of (x1-x2)^2 + (y1-y2)^2. Empty stdout for this feladat."
+        "A távolság a (x1-x2)^2 + (y1-y2)^2 kifejezés négyzetgyöke. Ennek a feladatnak üres a képernyő-kimenete."
       ]
     },
     {
       "type": "golya_orszag",
-      "tags": ["IO", "lookup", "count", "validate"],
+      "tags": [
+        "IO",
+        "lookup",
+        "count",
+        "validate"
+      ],
       "title": "Egy ország",
-      "description": "Kérje be a felhasználótól egy ország nevét! A teszteléshez használhatja a `Szerbia` nevet, amely szerepel az állományban. Ha a bekért név egyetlen mérésben sem fordul elő, írja ki a `Zsiga nem jart ebben az orszagban.` szöveget, és ne végezze el a következő két részfeladatot!\n\n1. Határozza meg, hány napon tartózkodott Zsiga a megadott országban! Minden, az országot tartalmazó sor egy napnak számít. A napok számát nevezze meg a kiírásban!\n2. Adja meg, melyik dátumon volt Zsiga először, illetve utoljára a bekért országban! A dátumokat `hó.nap` alakban írja ki, például `8.22`! Ha csak egyetlen napot töltött ott, a két dátum egyezzen meg!",
+      "description": "Kérje be a felhasználótól egy ország nevét! A teszteléshez használhatja a 'Szerbia' nevet, amely szerepel az állományban. Ha a bekért név egyetlen mérésben sem fordul elő, írja ki a 'Zsiga nem jart ebben az orszagban.' szöveget, és ne végezze el a következő két részfeladatot!\n\n1. Határozza meg, hány napon tartózkodott Zsiga a megadott országban! Minden, az országot tartalmazó sor egy napnak számít. A napok számát nevezze meg a kiírásban!\n2. Adja meg, melyik dátumon volt Zsiga először, illetve utoljára a bekért országban! A dátumokat 'hó.nap' alakban írja ki, például '8.22'! Ha csak egyetlen napot töltött ott, a két dátum egyezzen meg!",
       "points": 3,
       "stdin": "Szerbia\n",
       "solution_file": "golya_egy_orszag.py",
       "uses_preamble": true,
-      "starter": "# A golya.txt tartalma a `meresek` változóban van (str).\n# 5. feladat: egy ország napjai, első és utolsó dátuma.\n\nprint(\"Adja meg az orszag nevet!\")\norszag = input().strip()\n\n",
+      "starter": "# A golya.txt tartalma a 'meresek' változóban van szöveges formában.\n# Elvárt kimenetek:\n# 'Zsiga ebben az orszagban x napot toltott.'\n# 'Eloszor: h.n'\n# 'Utoljara: h.n'\n# vagy 'Zsiga nem jart ebben az orszagban.'\n\nprint(\"Adja meg az orszag nevet!\")\norszag = \n",
       "hints": [
-        "If the typed country never appears, print Zsiga nem jart ebben az orszagban. and stop.",
-        "Days spent equal the number of matching rows. First/last dates follow file order."
+        "Ha a bekért ország nem szerepel, írja ki: 'Zsiga nem jart ebben az orszagban.', és álljon le. A napok száma a matching sorok száma."
       ]
     },
     {
       "type": "golya_max_hop",
-      "tags": ["min_max", "function"],
+      "tags": [
+        "min_max",
+        "function"
+      ],
       "title": "Legnagyobb napi elmozdulás",
       "description": "A tavolsag függvény segítségével határozza meg a két szomszédos mérés közötti legnagyobb napi elmozdulást! A távolságot három tizedesjegyre kerekítve, a mintának megfelelően írja ki, és adja meg a korábbi mérés dátumát, ahonnan az elmozdulás indult! Ha több azonos legnagyobb érték van, az állományban első párt adja meg!",
       "points": 2,
       "solution_file": "golya_elmozdulas.py",
       "uses_preamble": true,
-      "starter": "# A golya.txt tartalma a `meresek` változóban van (str).\n# A tavolsag(x1, y1, x2, y2) függvény már rendelkezésre áll.\n# 6. feladat: legnagyobb szomszédos távolság és a korábbi mérés dátuma.\n\nprint(f\"A legnagyobb napi tavolsag: \")\nprint(f\"A repules napja: \")\n",
+      "starter": "# A golya.txt tartalma a 'meresek' változóban van szöveges formában.\n# A tavolsag(x1, y1, x2, y2) függvény már rendelkezésre áll.\n# Elvárt kimenetek:\n# 'A legnagyobb napi tavolsag: x.xxx'\n# 'A repules napja: h.n'\n",
       "hints": [
-        "Compare consecutive rows only. On a tie, keep the earliest pair in the file.",
-        "Print the distance rounded to three decimal places."
+        "Csak a szomszédos méréseket hasonlítsa. Döntetlennél az állományban első párt adja meg. A távolságot három tizedesjegyre kerekítse."
       ]
     },
     {
       "type": "golya_max_orszag",
-      "tags": ["group", "min_max"],
+      "tags": [
+        "group",
+        "min_max"
+      ],
       "title": "Legtöbb nap",
       "description": "Állapítsa meg, melyik országban töltötte Zsiga a legtöbb napot a megfigyelt szakaszon! Írja a képernyőre az ország nevét és a napok számát! Ha több ilyen ország is van, az állományban először megjelenőt adja meg!",
       "points": 2,
       "solution_file": "golya_legtobb.py",
       "uses_preamble": true,
-      "starter": "# A golya.txt tartalma a `meresek` változóban van (str).\n# 7. feladat: a legtöbb napos ország (döntetlennél a fájlban első).\n\nprint(f\"A legtobb nap: \")\n",
+      "starter": "# A golya.txt tartalma a 'meresek' változóban van szöveges formában.\n# Elvárt kimenet: 'A legtobb nap: x, y nap'\n",
       "hints": [
-        "Group rows by country name. On a tie, pick the country that appears first in the file."
+        "Csoportosítsa a sorokat ország szerint. Döntetlennél azt az országot adja meg, amelyik először megjelenik a fájlban."
       ]
     },
     {
       "type": "golya_hatar",
-      "tags": ["IO", "group"],
+      "tags": [
+        "IO",
+        "group"
+      ],
       "title": "hatar.txt",
-      "description": "A határátlépéseket a `hatar.txt` állományba kell menteni. Minden olyan szomszédos méréspárnál, ahol az ország megváltozik, írjon egy sort: az érkezés hónapját és napját, a kiinduló országot, majd az új országot, szóközzel elválasztva! A sorok a vonulás időrendjét kövessék!",
+      "description": "A határátlépéseket a 'hatar.txt' állományba kell menteni. Minden olyan szomszédos méréspárnál, ahol az ország megváltozik, írjon egy sort: az érkezés hónapját és napját, a kiinduló országot, majd az új országot, szóközzel elválasztva! A sorok a vonulás időrendjét kövessék!",
       "points": 3,
       "expected_file": "hatar.txt",
       "solution_file": "golya_hatar.py",
       "uses_preamble": true,
-      "starter": "# A golya.txt tartalma a `meresek` változóban van (str).\n# 8. feladat: határátlépések a hatar.txt-be (erkezés honap nap kiindulo uj).\n\nwith open(\"hatar.txt\", \"w\", encoding=\"utf-8\") as f:\n    pass\n",
+      "starter": "# A golya.txt tartalma a 'meresek' változóban van szöveges formában.\n# Elvárt kimenet a hatar.txt-be: 'honap nap kiindulo uj'\n\nwith open(\"hatar.txt\", \"w\", encoding=\"utf-8\") as f:\n    pass\n",
       "hints": [
-        "Write a line only when two consecutive measurements have different country names.",
-        "Use the later row's date (the arrival day)."
+        "Akkor írjon sort, ha két szomszédos mérés országa különbözik. A dátum az érkezés (későbbi) mérésé."
       ]
     }
   ]

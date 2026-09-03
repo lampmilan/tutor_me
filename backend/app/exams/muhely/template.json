@@ -16,7 +16,7 @@
   "constraints": [
     "Események ≤ 1500; óra 7–16, perc 0–59; az állomány időrendben van.",
     "Művelet: `KI` vagy `BE`; szerszám azonosítója 1–99.",
-    "Feltételezheti, hogy `BE` mindig egy kint lévő szerszámra vonatkozik, és `KI` nem ad ki már kint lévő azonosítót.",
+    "Feltételezheti, hogy `BE` mindig egy kint lévő szerszámra vonatkozik, és `KI` nem ad ki már kint lévő azonosítót."
   ],
   "data_explanation": "Minden sor egy esemény: óra, perc, művelet (`KI` vagy `BE`), szerszám azonosító. A mintában a 12-es szerszámot 8:15-kor viszik ki és 9:40-kor hozzák vissza; később újra kiadják. A 3-as szerszám a nap végén kint marad.",
   "data_file": "kolcsonzes.txt",

@@ -13,6 +13,8 @@ POSTHOG_SECRET="${POSTHOG_SECRET:-posthog-api-key}"
 CORS_ORIGINS="${CORS_ORIGINS:-}"
 ALLOW_OPEN_CORS="${ALLOW_OPEN_CORS:-0}"
 MEMORY="${CLOUD_RUN_MEMORY:-512Mi}"
+# Seed rematerializes the full catalog in one HTTP request; 60s 504s.
+TIMEOUT="${CLOUD_RUN_TIMEOUT:-300}"
 MIN_INSTANCES="${CLOUD_RUN_MIN_INSTANCES:-1}"
 WORKSPACE_TTL_DAYS="${WORKSPACE_TTL_DAYS:-7}"
 RATE_LIMIT_EXECUTE_PER_MINUTE="${RATE_LIMIT_EXECUTE_PER_MINUTE:-30}"
@@ -84,7 +86,7 @@ gcloud run deploy "${SERVICE}" \
   --project "${PROJECT}" \
   --region "${REGION}" \
   --allow-unauthenticated \
-  --timeout 60 \
+  --timeout "${TIMEOUT}" \
   --memory "${MEMORY}" \
   --cpu 1 \
   --min-instances "${MIN_INSTANCES:-1}" \

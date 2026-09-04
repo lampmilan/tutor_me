@@ -24,14 +24,13 @@ import {
 import {
   clearStoredWorkspaceId,
   getLastSeenDaysAgo,
-  getOrCreateVisitorId,
   getStoredPhaseStatus,
   getStoredWorkspaceId,
   recordLastSeen,
   setStoredPhaseStatus,
   setStoredWorkspaceId,
 } from "@/lib/workspaceStorage";
-import { captureIfConsented } from "@/lib/cookieConsent";
+import { captureEvent } from "@/lib/cookieConsent";
 import {
   SURVEY_DELAY_AFTER_CONFETTI_MS,
   hasProductSurveyBeenSeen,
@@ -268,18 +267,16 @@ export function ExamWorkspace({ examId, initialExam = null }: ExamWorkspaceProps
 
         // Analytics: share link open detection
         if (preferredWsId != null) {
-          captureIfConsented("share_link_opened", {
+          captureEvent("share_link_opened", {
             exam_id: examId,
             workspace_id: ws.id,
-            distinct_id: getOrCreateVisitorId(),
           });
         }
         // Analytics: return visit detection
         const daysAgo = getLastSeenDaysAgo();
         if (daysAgo !== null && daysAgo <= 7) {
-          captureIfConsented("return_visit", {
+          captureEvent("return_visit", {
             days_since_last_visit: Math.floor(daysAgo),
-            distinct_id: getOrCreateVisitorId(),
           });
         }
         recordLastSeen();
@@ -371,10 +368,9 @@ export function ExamWorkspace({ examId, initialExam = null }: ExamWorkspaceProps
       setJudge(null);
       setOutput("");
       setError("");
-      captureIfConsented("task_opened", {
+      captureEvent("task_opened", {
         exam_id: examId,
         task_index: task.order_index,
-        distinct_id: getOrCreateVisitorId(),
       });
     },
     [examId, files],
@@ -446,10 +442,9 @@ export function ExamWorkspace({ examId, initialExam = null }: ExamWorkspaceProps
       setError(translateError(result.error));
       setRuntime(result.runtime);
       setExitCode(result.exit_code);
-      captureIfConsented("code_executed", {
+      captureEvent("code_executed", {
         exam_id: examId,
         task_index: activeTask.order_index,
-        distinct_id: getOrCreateVisitorId(),
       });
     } catch (e) {
       setError(
@@ -475,18 +470,16 @@ export function ExamWorkspace({ examId, initialExam = null }: ExamWorkspaceProps
       setJudge(result);
       setRuntime(null);
       setExitCode(null);
-      captureIfConsented("judge_submitted", {
+      captureEvent("judge_submitted", {
         exam_id: examId,
         task_index: activeTask.order_index,
-        distinct_id: getOrCreateVisitorId(),
       });
       if (result.points_earned === result.points_possible && result.points_possible > 0) {
-        captureIfConsented("task_completed", {
+        captureEvent("task_completed", {
           exam_id: examId,
           task_index: activeTask.order_index,
           score: result.points_earned,
           max_score: result.points_possible,
-          distinct_id: getOrCreateVisitorId(),
         });
       }
       setPhaseStatus((prev) => {
@@ -501,13 +494,12 @@ export function ExamWorkspace({ examId, initialExam = null }: ExamWorkspaceProps
           } else {
             void fireExamCompleteConfetti();
           }
-          captureIfConsented("exam_completed", {
+          captureEvent("exam_completed", {
             exam_id: examId,
             total_score: exam.tasks.reduce(
               (sum, t) => sum + (next[t.id] === "passed" ? t.points : 0),
               0,
             ),
-            distinct_id: getOrCreateVisitorId(),
           });
         }
         return next;

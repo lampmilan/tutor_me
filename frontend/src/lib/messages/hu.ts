@@ -89,7 +89,7 @@ export const hu = {
   },
   cookieConsent: {
     title: "Sütik",
-    body: "A használatot csak akkor mérjük, ha elfogadod. Elutasítás vagy döntés nélkül nem küldünk analitikai adatot. A választásodat elmentjük ezen az eszközön.",
+    body: "A használatot sütik nélkül, névtelenül is mérjük. Ha elfogadod, sütiket is használunk, hogy a visszatéréseket pontosabban lássuk. Elutasítás esetén marad a sütimentes mérés. A választásodat elmentjük ezen az eszközön.",
     accept: "Elfogadom",
     decline: "Elutasítom",
   },

@@ -8,10 +8,6 @@ const backendUrl = (
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  // Inline the small Tailwind bundle so first paint is not blocked on a CSS chunk.
-  experimental: {
-    inlineCss: true,
-  },
   // Browser calls /api/*; Next rewrites to Cloud Run (prod) or Compose/local backend.
   async rewrites() {
     return [

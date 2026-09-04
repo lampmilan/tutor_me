@@ -60,7 +60,7 @@ export default function LandingPage() {
         <div className="mt-20 flex flex-col items-start gap-3">
           <Link
             href="/app"
-            prefetch
+            prefetch={false}
             className="inline-flex items-center rounded-lg bg-[var(--accent)] px-7 py-3.5 text-base font-semibold text-black shadow-md transition-opacity hover:opacity-90 active:opacity-75"
           >
             Ingyenes próba

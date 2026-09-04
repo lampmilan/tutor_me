@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { hu } from "@/lib/messages/hu";
-import { getCookieConsent, persistCookieConsent } from "@/lib/cookieConsent";
+import { getCookieConsent } from "@/lib/cookieConsent";
+import { persistCookieConsent } from "@/lib/posthogClient";
 
 export function CookieConsentBanner() {
   const [visible, setVisible] = useState(false);

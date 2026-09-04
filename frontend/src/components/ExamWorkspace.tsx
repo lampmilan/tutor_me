@@ -30,7 +30,7 @@ import {
   setStoredPhaseStatus,
   setStoredWorkspaceId,
 } from "@/lib/workspaceStorage";
-import { captureEvent } from "@/lib/cookieConsent";
+import { captureEvent } from "@/lib/posthogClient";
 import {
   SURVEY_DELAY_AFTER_CONFETTI_MS,
   hasProductSurveyBeenSeen,

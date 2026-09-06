@@ -1,8 +1,14 @@
 "use client";
 
+import { Check, TriangleAlert, X } from "lucide-react";
 import type { JudgeResponse } from "@/lib/api";
 import { translateError, translateJudgeLabel, translateSummaryLine } from "@/lib/errors";
 import { hu } from "@/lib/messages/hu";
+
+function JudgeIcon({ passed }: { passed: boolean }) {
+  const Icon = passed ? Check : X;
+  return <Icon className="h-3.5 w-3.5 shrink-0" aria-hidden />;
+}
 
 type OutputPanelProps = {
   output: string;
@@ -41,7 +47,10 @@ export function OutputPanel({
       </div>
       <div className="flex-1 overflow-auto px-3 py-2 font-mono text-[13px] leading-relaxed">
         {error ? (
-          <pre className="whitespace-pre-wrap text-[var(--danger)]">{error}</pre>
+          <div className="flex items-start gap-2 text-[var(--danger)]">
+            <TriangleAlert className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden />
+            <pre className="whitespace-pre-wrap">{error}</pre>
+          </div>
         ) : null}
         {output ? (
           <pre className="whitespace-pre-wrap text-[var(--fg)]">{output}</pre>
@@ -52,13 +61,13 @@ export function OutputPanel({
         {judge ? (
           <div className="space-y-2">
             <p
-              className={
+              className={`flex items-center gap-1.5 ${
                 judge.passed_count === judge.total_count
                   ? "text-[var(--success)]"
                   : "text-[var(--fg)]"
-              }
+              }`}
             >
-              {judge.passed_count === judge.total_count ? "✓" : "✗"}{" "}
+              <JudgeIcon passed={judge.passed_count === judge.total_count} />
               {judge.passed_count === judge.total_count
                 ? hu.output.allPassed
                 : translateSummaryLine(
@@ -69,15 +78,17 @@ export function OutputPanel({
             {judge.failed_labels.length > 0 ? (
               <ul className="space-y-0.5 text-[var(--danger)]">
                 {judge.failed_labels.map((label) => (
-                  <li key={label}>
-                    ✗ {hu.output.failedLabel(translateJudgeLabel(label))}
+                  <li key={label} className="flex items-start gap-1.5">
+                    <X className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden />
+                    {hu.output.failedLabel(translateJudgeLabel(label))}
                   </li>
                 ))}
               </ul>
             ) : null}
             {judge.hints.length > 0 ? (
               <div className="space-y-1 border-t border-[var(--border)] pt-2 font-sans text-[12px] leading-relaxed text-[var(--muted-strong)]">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--muted)]">
+                <p className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--muted)]">
+                  <TriangleAlert className="h-3.5 w-3.5 shrink-0" aria-hidden />
                   {hu.output.hints}
                 </p>
                 {judge.hints.map((hint) => (
@@ -91,11 +102,14 @@ export function OutputPanel({
                   key={r.test_case_id}
                   className={r.passed ? "text-[var(--success)]" : "text-[var(--danger)]"}
                 >
-                  {r.passed ? "✓" : "✗"} {translateJudgeLabel(r.label || r.name)}
+                  <span className="inline-flex items-start gap-1.5">
+                    <JudgeIcon passed={r.passed} />
+                    {translateJudgeLabel(r.label || r.name)}
+                  </span>
                   {!r.passed && r.error ? (
-                    <span className="text-[var(--muted-strong)]">
-                      {" "}
-                      · {translateError(r.error)}
+                    <span className="mt-0.5 flex items-start gap-1.5 text-[var(--muted-strong)]">
+                      <TriangleAlert className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden />
+                      {translateError(r.error)}
                     </span>
                   ) : null}
                   {!r.is_hidden && !r.passed && r.expected != null && r.actual != null ? (

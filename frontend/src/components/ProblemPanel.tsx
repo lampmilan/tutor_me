@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { Check } from "lucide-react";
 import { TagChip } from "@/components/TagChip";
 import { originLabel } from "@/lib/origin";
 import { sortTagsForDisplay } from "@/lib/tags";
@@ -200,7 +201,11 @@ export function ProblemPanel({
                                 : "bg-[var(--panel-hover)] text-[var(--muted-strong)]"
                           }`}
                         >
-                          {status === "passed" ? "✓" : index + 1}
+                          {status === "passed" ? (
+                            <Check className="h-3.5 w-3.5" aria-hidden />
+                          ) : (
+                            index + 1
+                          )}
                         </span>
                         <div className="min-w-0 flex-1">
                           <div className="flex flex-wrap items-baseline justify-between gap-2">

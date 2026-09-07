@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useRef, useEffect, useState } from "react";
+import { Heart, MessageSquareX, X } from "lucide-react";
 import { api } from "@/lib/api";
 import { hu } from "@/lib/messages/hu";
 
@@ -208,8 +209,13 @@ export function FeedbackButton({ examTitle, taskTitles }: Props) {
           }
         }}
         className="flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--panel)] px-4 py-2.5 text-sm font-medium text-[var(--muted-strong)] shadow-lg transition hover:border-[var(--accent)] hover:text-[var(--fg)]"
+        aria-label={isOpen ? hu.feedback.close : hu.feedback.button}
       >
-        <span>{isOpen ? "✕" : "💬"}</span>
+        {isOpen ? (
+          <X className="h-4 w-4" aria-hidden />
+        ) : (
+          <MessageSquareX className="h-4 w-4" aria-hidden />
+        )}
         {!isOpen && <span>{hu.feedback.button}</span>}
       </button>
     </div>
@@ -240,7 +246,7 @@ function FeedbackPanel({
     <div className="w-80 rounded-xl border border-[var(--border)] bg-[var(--panel)] p-5 shadow-2xl">
       {submitted ? (
         <div className="flex flex-col items-center gap-3 py-6 text-center">
-          <span className="text-3xl">🙏</span>
+          <Heart className="h-8 w-8 text-[var(--accent)]" aria-hidden />
           <p className="text-sm font-medium text-[var(--fg)]">{hu.feedback.thanks}</p>
         </div>
       ) : (
@@ -250,9 +256,10 @@ function FeedbackPanel({
             <button
               type="button"
               onClick={onClose}
-              className="text-xs text-[var(--muted)] transition hover:text-[var(--fg)]"
+              className="text-[var(--muted)] transition hover:text-[var(--fg)]"
+              aria-label={hu.feedback.close}
             >
-              ✕
+              <X className="h-4 w-4" aria-hidden />
             </button>
           </div>
           {children}

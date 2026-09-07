@@ -66,6 +66,7 @@ export const hu = {
     sending: "Küldés…",
     sendFailed: "Nem sikerült elküldeni. Próbáld újra.",
     thanks: "Köszönjük a visszajelzést!",
+    close: "Bezárás",
   },
   productSurvey: {
     title: "Egy gyors kérdés",

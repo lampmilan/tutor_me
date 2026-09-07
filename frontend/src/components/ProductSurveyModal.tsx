@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useId, useState } from "react";
+import { Heart, X } from "lucide-react";
 import { api } from "@/lib/api";
 import { hu } from "@/lib/messages/hu";
 import { type ProductPayOption } from "@/lib/productSurvey";
@@ -95,7 +96,7 @@ export function ProductSurveyModal({ examTitle, onClose, onSubmitted }: Props) {
       >
         {submitted ? (
           <div className="flex flex-col items-center gap-3 py-6 text-center">
-            <span className="text-3xl">🙏</span>
+            <Heart className="h-8 w-8 text-[var(--accent)]" aria-hidden />
             <p className="text-sm font-medium text-[var(--fg)]">{hu.feedback.thanks}</p>
           </div>
         ) : (
@@ -107,10 +108,10 @@ export function ProductSurveyModal({ examTitle, onClose, onSubmitted }: Props) {
               <button
                 type="button"
                 onClick={onClose}
-                className="text-xs text-[var(--muted)] transition hover:text-[var(--fg)]"
+                className="text-[var(--muted)] transition hover:text-[var(--fg)]"
                 aria-label={hu.productSurvey.skip}
               >
-                ✕
+                <X className="h-4 w-4" aria-hidden />
               </button>
             </div>
 

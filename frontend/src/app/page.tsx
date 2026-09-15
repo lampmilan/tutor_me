@@ -1,75 +1,192 @@
 import Link from "next/link";
 import { hu } from "@/lib/messages/hu";
+import { fetchExamList } from "@/lib/exams";
+import { findEasyStarter } from "@/lib/starters";
 
-const TOTAL_EXAMS = 19;
+export const revalidate = 60;
 
-export default function LandingPage() {
+export default async function LandingPage() {
+  const exams = await fetchExamList();
+  const easy = findEasyStarter(exams);
+  const primaryHref = easy ? `/exam/${easy.id}` : "/app";
+
   return (
     <main className="min-h-screen">
-      <div className="mx-auto flex max-w-3xl flex-col px-6 pb-24 pt-20">
-        {/* ── Hero (copied from current landing) ── */}
-        <p className="mb-3 font-[family-name:var(--font-ibm-plex-mono)] text-5xl font-bold tracking-tight text-[var(--accent)] md:text-6xl">
-          VizsgaGO
-        </p>
-        <h1 className="max-w-2xl font-[family-name:var(--font-ibm-plex-mono)] text-2xl font-bold leading-snug text-[var(--fg)] md:text-3xl">
-          {hu.home.tagline}
-        </h1>
-        <p className="mt-4 max-w-xl text-base leading-relaxed text-[var(--muted-strong)]">
-          {hu.home.subtitle}
-        </p>
-
-        {/* ── USP sections ── */}
-        <div className="mt-20 flex flex-col gap-16">
-
-          {/* USP 1 */}
-          <section className="flex flex-col gap-3">
-            <h2 className="font-[family-name:var(--font-ibm-plex-mono)] text-3xl font-bold leading-tight text-[var(--fg)] md:text-4xl">
-              <span className="text-[var(--accent)]">{TOTAL_EXAMS}+</span> Eredeti, érettségi-szintű feladat
-            </h2>
-            <p className="max-w-2xl text-base leading-relaxed text-[var(--muted-strong)]">
-              Ne elégedj meg a régi, ezerszer megoldott feladatsorokkal. Platformunkon a hivatalos feladatsorok mellett, saját
-              fejlesztésű feladatokat találsz, amelyek stílusukban és nehézségükben pontosan követik a
-              hivatalos érettségi követelményeket.
-            </p>
-          </section>
-
-          {/* USP 2 */}
-          <section className="flex flex-col gap-3">
-            <h2 className="font-[family-name:var(--font-ibm-plex-mono)] text-3xl font-bold leading-tight text-[var(--fg)] md:text-4xl">
-              Zökkenőmentes felkészülés
-            </h2>
-            <p className="max-w-2xl text-base leading-relaxed text-[var(--muted-strong)]">
-              Felejtsd el a PDF-ek, a letöltött forrásfájlok és az IDE közötti állandó ugrálást.
-              A feladatleírás, a forrásfájlok és az interaktív kódkészítő ablak mind egyetlen felületen vár.
-            </p>
-          </section>
-
-          {/* USP 3 */}
-          <section className="flex flex-col gap-3">
-            <h2 className="font-[family-name:var(--font-ibm-plex-mono)] text-3xl font-bold leading-tight text-[var(--fg)] md:text-4xl">
-              Fókuszálj arra, ami még nem megy
-            </h2>
-            <p className="max-w-2xl text-base leading-relaxed text-[var(--muted-strong)]">
-              Ne vesztegesd az idődet arra, amit már tudsz. Szűrj feladat típusok szerint, és gyakorold
-              célzottan a fájlbeolvasást, a bejárást vagy a rendezési algoritmusokat!
-            </p>
-          </section>
-        </div>
-
-        {/* ── CTA ── */}
-        <div className="mt-20 flex flex-col items-start gap-3">
+      <header className="border-b border-[var(--border)]/60">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4">
+          <Link
+            href="/"
+            className="font-[family-name:var(--font-ibm-plex-mono)] text-xl font-bold tracking-tight text-[var(--accent)]"
+          >
+            VizsgaGO
+          </Link>
+          <nav className="hidden items-center gap-6 text-sm text-[var(--muted-strong)] md:flex">
+            <Link href="/app" className="transition hover:text-[var(--fg)]">
+              {hu.landing.navExams}
+            </Link>
+            <a href="#hogyan" className="transition hover:text-[var(--fg)]">
+              {hu.landing.navHow}
+            </a>
+            <a href="#rolunk" className="transition hover:text-[var(--fg)]">
+              {hu.landing.navAbout}
+            </a>
+          </nav>
           <Link
             href="/app"
             prefetch
-            className="inline-flex items-center rounded-lg bg-[var(--accent)] px-7 py-3.5 text-base font-semibold text-black shadow-md transition-opacity hover:opacity-90 active:opacity-75"
+            className="inline-flex items-center rounded-lg bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-black transition-opacity hover:opacity-90 active:opacity-75"
           >
-            Ingyenes próba
+            {hu.landing.navStart}
           </Link>
-          <p className="text-sm text-[var(--muted)]">
-            Regisztráció nélkül, azonnal a böngésződben.
+        </div>
+      </header>
+
+      <section className="mx-auto grid max-w-6xl gap-12 px-6 pb-16 pt-12 md:grid-cols-2 md:items-center md:pt-16">
+        <div className="animate-[fade-up_0.5s_ease-out_both]">
+          <p className="mb-4 inline-flex rounded-full border border-[var(--border)] bg-[var(--accent-soft)] px-3 py-1 text-xs font-medium text-[var(--accent)]">
+            {hu.landing.badge}
           </p>
+          <h1 className="max-w-xl font-[family-name:var(--font-ibm-plex-mono)] text-3xl font-bold leading-snug text-[var(--fg)] md:text-4xl">
+            {hu.landing.headline}
+          </h1>
+          <p className="mt-4 max-w-lg text-base leading-relaxed text-[var(--muted-strong)]">
+            {hu.landing.body}
+          </p>
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            <Link
+              href={primaryHref}
+              prefetch
+              className="inline-flex items-center rounded-lg bg-[var(--accent)] px-6 py-3 text-base font-semibold text-black transition-opacity hover:opacity-90 active:opacity-75"
+            >
+              {hu.landing.ctaPrimary}
+            </Link>
+            <Link
+              href="/app"
+              prefetch
+              className="inline-flex items-center rounded-lg border border-[var(--border)] px-6 py-3 text-base font-semibold text-[var(--fg)] transition hover:border-[var(--accent)] hover:text-[var(--accent)]"
+            >
+              {hu.landing.ctaSecondary}
+            </Link>
+          </div>
+          <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm text-[var(--muted)]">
+            <li>{hu.landing.trustNoReg}</li>
+            <li>{hu.landing.trustBrowser}</li>
+            <li>{hu.landing.trustFeedback}</li>
+          </ul>
+        </div>
+
+        <ProductPreview />
+      </section>
+
+      <section className="border-t border-[var(--border)]/60 bg-[var(--panel)]/40">
+        <div className="mx-auto grid max-w-6xl gap-10 px-6 py-16 md:grid-cols-3">
+          <Feature
+            title={hu.landing.featureAllInOneTitle}
+            body={hu.landing.featureAllInOneBody}
+          />
+          <Feature
+            title={hu.landing.featureExamLevelTitle}
+            body={hu.landing.featureExamLevelBody}
+          />
+          <Feature
+            title={hu.landing.featureTargetedTitle}
+            body={hu.landing.featureTargetedBody}
+          />
+        </div>
+      </section>
+
+      <section id="hogyan" className="scroll-mt-20">
+        <div className="mx-auto max-w-6xl px-6 py-16">
+          <h2 className="font-[family-name:var(--font-ibm-plex-mono)] text-2xl font-bold text-[var(--fg)] md:text-3xl">
+            {hu.landing.compareHeading}
+          </h2>
+          <div className="mt-10 grid gap-6 sm:grid-cols-2">
+            <CompareCard
+              title={hu.landing.compareFeedbackTitle}
+              body={hu.landing.compareFeedbackBody}
+            />
+            <CompareCard
+              title={hu.landing.compareTimeTitle}
+              body={hu.landing.compareTimeBody}
+            />
+            <CompareCard
+              title={hu.landing.compareTechTitle}
+              body={hu.landing.compareTechBody}
+            />
+            <CompareCard
+              title={hu.landing.compareProgressTitle}
+              body={hu.landing.compareProgressBody}
+            />
+          </div>
+        </div>
+      </section>
+
+      <section id="rolunk" className="scroll-mt-20 border-t border-[var(--border)]/60">
+        <div className="mx-auto max-w-6xl px-6 py-16">
+          <h2 className="font-[family-name:var(--font-ibm-plex-mono)] text-2xl font-bold text-[var(--fg)]">
+            {hu.landing.aboutHeading}
+          </h2>
+          <p className="mt-4 max-w-2xl text-base leading-relaxed text-[var(--muted-strong)]">
+            {hu.landing.aboutBody}
+          </p>
+          <Link
+            href="/app"
+            prefetch
+            className="mt-8 inline-flex items-center rounded-lg bg-[var(--accent)] px-6 py-3 text-base font-semibold text-black transition-opacity hover:opacity-90 active:opacity-75"
+          >
+            {hu.landing.bottomCta}
+          </Link>
+        </div>
+      </section>
+    </main>
+  );
+}
+
+function Feature({ title, body }: { title: string; body: string }) {
+  return (
+    <div>
+      <h3 className="font-[family-name:var(--font-ibm-plex-mono)] text-lg font-bold text-[var(--fg)]">
+        {title}
+      </h3>
+      <p className="mt-2 text-sm leading-relaxed text-[var(--muted-strong)]">{body}</p>
+    </div>
+  );
+}
+
+function CompareCard({ title, body }: { title: string; body: string }) {
+  return (
+    <div className="rounded-xl border border-[var(--border)] bg-[var(--panel)] p-5">
+      <h3 className="font-semibold text-[var(--fg)]">{title}</h3>
+      <p className="mt-2 text-sm leading-relaxed text-[var(--muted-strong)]">{body}</p>
+    </div>
+  );
+}
+
+function ProductPreview() {
+  return (
+    <div className="animate-[fade-up_0.6s_ease-out_0.08s_both] overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--panel)]">
+      <div className="flex items-center justify-between border-b border-[var(--border)] px-4 py-2.5">
+        <span className="text-sm font-semibold text-[var(--fg)]">Fogások</span>
+        <span className="rounded-md bg-[var(--accent-soft)] px-2 py-0.5 text-xs font-medium text-[var(--accent)]">
+          {hu.landing.previewSuccess}
+        </span>
+      </div>
+      <div className="grid min-h-[220px] sm:grid-cols-2">
+        <div className="border-b border-[var(--border)] p-4 sm:border-b-0 sm:border-r">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
+            {hu.landing.previewTask}
+          </p>
+          <p className="mt-2 text-sm leading-relaxed text-[var(--muted-strong)]">
+            {hu.landing.previewTaskBody}
+          </p>
+          <p className="mt-3 text-xs text-[var(--muted)]">{hu.landing.previewExample}</p>
+        </div>
+        <div className="bg-[var(--editor)] p-4 font-[family-name:var(--font-ibm-plex-mono)] text-sm">
+          <p className="text-[11px] text-[var(--muted)]">{hu.landing.previewFile}</p>
+          <p className="mt-3 text-[var(--accent)]">fogasok = open(...).read()</p>
+          <p className="mt-1 text-[var(--muted-strong)]">print(len(sorok))</p>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

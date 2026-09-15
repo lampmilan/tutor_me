@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { ExamCard } from "@/components/ExamCard";
+import { ExamStartHere } from "@/components/ExamStartHere";
 import { TagToggleBar } from "@/components/TagToggleBar";
 import { hu } from "@/lib/messages/hu";
 import { normalizeOrigin, type ExamOrigin } from "@/lib/origin";
@@ -22,6 +23,7 @@ function normalizeLevel(level?: string): string {
 }
 
 export function ExamList({ exams }: ExamListProps) {
+  const [query, setQuery] = useState("");
   const [level, setLevel] = useState<LevelFilter>("all");
   const [origin, setOrigin] = useState<OriginFilter>("all");
   const [difficulty, setDifficulty] = useState<number | "all">("all");
@@ -30,103 +32,132 @@ export function ExamList({ exams }: ExamListProps) {
   const allTags = useMemo(() => collectTagsFromExams(exams), [exams]);
 
   const filtered = useMemo(() => {
+    const q = query.trim().toLocaleLowerCase("hu");
     return exams.filter((exam) => {
+      if (q) {
+        const hay = `${exam.title} ${exam.description}`.toLocaleLowerCase("hu");
+        if (!hay.includes(q)) return false;
+      }
       if (level !== "all" && normalizeLevel(exam.level) !== level) return false;
       if (origin !== "all" && normalizeOrigin(exam.origin) !== origin) return false;
       if (difficulty !== "all" && (exam.difficulty ?? 2) !== difficulty) return false;
       if (!examMatchesTagFilter(exam.tags, selectedTags)) return false;
       return true;
     });
-  }, [exams, level, origin, difficulty, selectedTags]);
+  }, [exams, query, level, origin, difficulty, selectedTags]);
 
   const hasFilters =
-    level !== "all" || origin !== "all" || difficulty !== "all" || selectedTags.length > 0;
+    query.trim() !== "" ||
+    level !== "all" ||
+    origin !== "all" ||
+    difficulty !== "all" ||
+    selectedTags.length > 0;
 
   return (
-    <section>
-      <div className="mb-4 space-y-3">
-        <div className="flex flex-wrap items-end gap-4">
+    <div>
+      <ExamStartHere exams={exams} pool={filtered} />
+
+      <section>
+        <h2 className="mb-3 font-[family-name:var(--font-ibm-plex-mono)] text-lg font-bold text-[var(--fg)]">
+          {hu.home.browseHeading}
+        </h2>
+
+        <div className="mb-4 space-y-3">
           <label className="flex flex-col gap-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
-            {hu.home.filterLevel}
-            <select
-              value={level}
-              onChange={(e) => setLevel(e.target.value as LevelFilter)}
-              className="rounded border border-[var(--border)] bg-[var(--panel)] px-2 py-1.5 text-sm normal-case tracking-normal text-[var(--fg)]"
-            >
-              <option value="all">{hu.home.filterAll}</option>
-              <option value="kozep">{hu.home.levelKozep}</option>
-              <option value="emelt">{hu.home.levelEmelt}</option>
-            </select>
+            {hu.home.filterSearch}
+            <input
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder={hu.home.filterSearchPlaceholder}
+              className="rounded border border-[var(--border)] bg-[var(--panel)] px-3 py-2 text-sm font-normal normal-case tracking-normal text-[var(--fg)] placeholder:text-[var(--muted)]"
+            />
           </label>
 
-          <label className="flex flex-col gap-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
-            {hu.home.filterOrigin}
-            <select
-              value={origin}
-              onChange={(e) => setOrigin(e.target.value as OriginFilter)}
-              className="rounded border border-[var(--border)] bg-[var(--panel)] px-2 py-1.5 text-sm normal-case tracking-normal text-[var(--fg)]"
-            >
-              <option value="all">{hu.home.filterAll}</option>
-              <option value="official">{hu.home.originOfficial}</option>
-              <option value="synthetic">{hu.home.originSynthetic}</option>
-            </select>
-          </label>
+          <div className="flex flex-wrap items-end gap-4">
+            <label className="flex flex-col gap-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
+              {hu.home.filterLevel}
+              <select
+                value={level}
+                onChange={(e) => setLevel(e.target.value as LevelFilter)}
+                className="rounded border border-[var(--border)] bg-[var(--panel)] px-2 py-1.5 text-sm normal-case tracking-normal text-[var(--fg)]"
+              >
+                <option value="all">{hu.home.filterAll}</option>
+                <option value="kozep">{hu.home.levelKozep}</option>
+                <option value="emelt">{hu.home.levelEmelt}</option>
+              </select>
+            </label>
 
-          <label className="flex flex-col gap-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
-            {hu.home.filterDifficulty}
-            <select
-              value={difficulty === "all" ? "all" : String(difficulty)}
-              onChange={(e) => {
-                const v = e.target.value;
-                setDifficulty(v === "all" ? "all" : Number(v));
-              }}
-              className="rounded border border-[var(--border)] bg-[var(--panel)] px-2 py-1.5 text-sm normal-case tracking-normal text-[var(--fg)]"
-            >
-              <option value="all">{hu.home.filterAll}</option>
-              {[1, 2, 3, 4, 5].map((n) => (
-                <option key={n} value={n}>
-                  {"⬤".repeat(n)}
-                  {"○".repeat(5 - n)}
-                </option>
-              ))}
-            </select>
-          </label>
+            <label className="flex flex-col gap-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
+              {hu.home.filterOrigin}
+              <select
+                value={origin}
+                onChange={(e) => setOrigin(e.target.value as OriginFilter)}
+                className="rounded border border-[var(--border)] bg-[var(--panel)] px-2 py-1.5 text-sm normal-case tracking-normal text-[var(--fg)]"
+              >
+                <option value="all">{hu.home.filterAll}</option>
+                <option value="official">{hu.home.originOfficial}</option>
+                <option value="synthetic">{hu.home.originSynthetic}</option>
+              </select>
+            </label>
 
-          {hasFilters ? (
-            <button
-              type="button"
-              onClick={() => {
-                setLevel("all");
-                setOrigin("all");
-                setDifficulty("all");
-                setSelectedTags([]);
-              }}
-              className="rounded border border-[var(--border)] px-3 py-1.5 text-sm text-[var(--muted-strong)] transition hover:border-[var(--accent)] hover:text-[var(--fg)]"
-            >
-              {hu.home.filterClear}
-            </button>
-          ) : null}
+            <label className="flex flex-col gap-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
+              {hu.home.filterDifficulty}
+              <select
+                value={difficulty === "all" ? "all" : String(difficulty)}
+                onChange={(e) => {
+                  const v = e.target.value;
+                  setDifficulty(v === "all" ? "all" : Number(v));
+                }}
+                className="rounded border border-[var(--border)] bg-[var(--panel)] px-2 py-1.5 text-sm normal-case tracking-normal text-[var(--fg)]"
+              >
+                <option value="all">{hu.home.filterAll}</option>
+                {[1, 2, 3, 4, 5].map((n) => (
+                  <option key={n} value={n}>
+                    {"⬤".repeat(n)}
+                    {"○".repeat(5 - n)}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            {hasFilters ? (
+              <button
+                type="button"
+                onClick={() => {
+                  setQuery("");
+                  setLevel("all");
+                  setOrigin("all");
+                  setDifficulty("all");
+                  setSelectedTags([]);
+                }}
+                className="rounded border border-[var(--border)] px-3 py-1.5 text-sm text-[var(--muted-strong)] transition hover:border-[var(--accent)] hover:text-[var(--fg)]"
+              >
+                {hu.home.filterClear}
+              </button>
+            ) : null}
+          </div>
+
+          <TagToggleBar
+            tags={allTags}
+            selected={selectedTags}
+            onChange={setSelectedTags}
+            label={hu.home.filterTags}
+          />
         </div>
 
-        <TagToggleBar
-          tags={allTags}
-          selected={selectedTags}
-          onChange={setSelectedTags}
-          label={hu.home.filterTags}
-        />
-      </div>
-
-      {filtered.length === 0 ? (
-        <p className="text-[var(--muted)]">{hu.home.filterNoMatch}</p>
-      ) : (
-        <ul className="space-y-3">
-          {filtered.map((exam) => (
-            <li key={exam.id}>
-              <ExamCard exam={exam} />
-            </li>
-          ))}
-        </ul>
-      )}
-    </section>
+        {filtered.length === 0 ? (
+          <p className="text-[var(--muted)]">{hu.home.filterNoMatch}</p>
+        ) : (
+          <ul className="space-y-3">
+            {filtered.map((exam) => (
+              <li key={exam.id}>
+                <ExamCard exam={exam} />
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+    </div>
   );
 }

@@ -43,7 +43,7 @@ export default async function LandingPage() {
           </nav>
           <Link
             href="/app"
-            prefetch
+            prefetch={false}
             className="inline-flex items-center rounded-lg bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-black transition-opacity hover:opacity-90 active:opacity-75"
           >
             {hu.landing.navStart}
@@ -65,14 +65,14 @@ export default async function LandingPage() {
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <Link
               href={primaryHref}
-              prefetch
+              prefetch={false}
               className="inline-flex items-center rounded-lg bg-[var(--accent)] px-6 py-3 text-base font-semibold text-black transition-opacity hover:opacity-90 active:opacity-75"
             >
               {hu.landing.ctaPrimary}
             </Link>
             <Link
               href="/app"
-              prefetch
+              prefetch={false}
               className="inline-flex items-center rounded-lg border border-[var(--border)] px-6 py-3 text-base font-semibold text-[var(--fg)] transition hover:border-[var(--accent)] hover:text-[var(--accent)]"
             >
               {hu.landing.ctaSecondary}
@@ -156,7 +156,7 @@ export default async function LandingPage() {
           </p>
           <Link
             href="/app"
-            prefetch
+            prefetch={false}
             className="mt-8 inline-flex items-center rounded-lg bg-[var(--accent)] px-6 py-3 text-base font-semibold text-black transition-opacity hover:opacity-90 active:opacity-75"
           >
             {hu.landing.bottomCta}

@@ -1,20 +1,25 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, Montserrat } from "next/font/google";
 import "./globals.css";
-import { CookieConsentBanner } from "@/components/CookieConsentBanner";
-import { MobileBestOnPcNotice } from "@/components/MobileBestOnPcNotice";
-import { PostHogProvider } from "@/components/PostHogProvider";
+import { DeferredClientChrome } from "@/components/DeferredClientChrome";
+
+const PAGE_BG = "#0e1412";
+const PAGE_FG = "#e7efe9";
 
 const sans = Montserrat({
   variable: "--font-montserrat",
   subsets: ["latin", "latin-ext"],
   weight: ["400", "500", "600", "700"],
+  display: "swap",
+  preload: false,
 });
 
 const mono = IBM_Plex_Mono({
   variable: "--font-ibm-plex-mono",
   subsets: ["latin", "latin-ext"],
-  weight: ["400", "500", "700"],
+  weight: ["700"],
+  display: "swap",
+  preload: true,
 });
 
 export const metadata: Metadata = {
@@ -28,13 +33,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="hu">
-      <body className={`${sans.variable} ${mono.variable} antialiased`}>
-        <PostHogProvider>
-          {children}
-          <MobileBestOnPcNotice />
-          <CookieConsentBanner />
-        </PostHogProvider>
+    <html lang="hu" style={{ backgroundColor: PAGE_BG, color: PAGE_FG }}>
+      <body
+        className={`${sans.variable} ${mono.variable} antialiased`}
+        style={{ backgroundColor: PAGE_BG, color: PAGE_FG, margin: 0 }}
+      >
+        {children}
+        <DeferredClientChrome />
       </body>
     </html>
   );

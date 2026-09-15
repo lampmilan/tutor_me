@@ -122,6 +122,7 @@ export const hu = {
     sending: "Küldés…",
     sendFailed: "Nem sikerült elküldeni. Próbáld újra.",
     thanks: "Köszönjük a visszajelzést!",
+    close: "Bezárás",
   },
   productSurvey: {
     title: "Egy gyors kérdés",
@@ -145,7 +146,7 @@ export const hu = {
   },
   cookieConsent: {
     title: "Sütik",
-    body: "Sütikkel csak akkor mérjük a használatot, ha elfogadod. Elutasítás esetén sütik nélkül, névtelenül számoljuk a látogatókat. Döntés nélkül nem küldünk adatot. A választásodat elmentjük ezen az eszközön.",
+    body: "A használatot sütik nélkül, névtelenül is mérjük. Ha elfogadod, sütiket is használunk, hogy a visszatéréseket pontosabban lássuk. Elutasítás esetén marad a sütimentes mérés. A választásodat elmentjük ezen az eszközön.",
     accept: "Elfogadom",
     decline: "Elutasítom",
   },

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ExamList } from "@/components/ExamList";
 import { hu } from "@/lib/messages/hu";
 import { fetchExamList } from "@/lib/exams";
@@ -10,27 +11,24 @@ export default async function HomePage() {
 
   return (
     <main className="min-h-screen">
-      <div className="mx-auto flex min-h-screen max-w-5xl flex-col px-6 pb-16 pt-16">
-        <p className="mb-3 font-[family-name:var(--font-ibm-plex-mono)] text-5xl font-bold tracking-tight text-[var(--accent)] md:text-6xl">
-          VizsgaGO
-        </p>
-        <h1 className="max-w-2xl font-[family-name:var(--font-ibm-plex-mono)] text-2xl font-bold leading-snug text-[var(--fg)] md:text-3xl">
-          {hu.home.tagline}
-        </h1>
-        <p className="mt-4 max-w-xl text-base leading-relaxed text-[var(--muted-strong)]">
-          {hu.home.subtitle}
-        </p>
-
-        <div className="mt-12">
-          <h2 className="mb-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--muted)]">
-            {hu.home.examsHeading}
-          </h2>
-          {exams.length === 0 ? (
-            <p className="text-[var(--muted)]">{hu.home.noExams}</p>
-          ) : (
-            <ExamList exams={exams} />
-          )}
+      <header className="border-b border-[var(--border)]/60">
+        <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-6 py-4">
+          <Link
+            href="/"
+            className="font-[family-name:var(--font-ibm-plex-mono)] text-xl font-bold tracking-tight text-[var(--accent)]"
+          >
+            VizsgaGO
+          </Link>
+          <h1 className="text-sm font-semibold text-[var(--fg)]">{hu.home.examsHeading}</h1>
         </div>
+      </header>
+
+      <div className="mx-auto max-w-5xl px-6 pb-16 pt-8">
+        {exams.length === 0 ? (
+          <p className="text-[var(--muted)]">{hu.home.noExams}</p>
+        ) : (
+          <ExamList exams={exams} />
+        )}
       </div>
     </main>
   );

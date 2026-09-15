@@ -8,6 +8,7 @@ import type { ExamListItem } from "@/lib/api";
 import { findEasyStarter, findEmeltStarter, pickRandomExam } from "@/lib/starters";
 
 const RANDOM_EXAM_BG = "/exams_list/random_exam_bg.webp";
+const RANDOM_EXAM_BG_SIZE = { width: 600, height: 300 } as const;
 
 type ExamStartHereProps = {
   exams: ExamListItem[];
@@ -58,16 +59,18 @@ export function ExamStartHere({ exams, pool }: ExamStartHereProps) {
           }}
           className="relative mt-4 flex w-full items-center justify-between gap-4 overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--panel)] px-5 py-4 text-left transition hover:border-[var(--accent)]"
         >
-          <div
-            className="pointer-events-none absolute inset-0"
-            aria-hidden
-          >
+          <div className="pointer-events-none absolute inset-0" aria-hidden>
             <Image
               src={RANDOM_EXAM_BG}
               alt=""
-              fill
-              className="object-cover object-right"
-              sizes="100vw"
+              width={RANDOM_EXAM_BG_SIZE.width}
+              height={RANDOM_EXAM_BG_SIZE.height}
+              unoptimized
+              className="absolute right-0 top-1/2 max-w-none -translate-y-1/2"
+              style={{
+                width: RANDOM_EXAM_BG_SIZE.width,
+                height: RANDOM_EXAM_BG_SIZE.height,
+              }}
             />
           </div>
           <span className="relative">

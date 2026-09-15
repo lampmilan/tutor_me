@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
 import { confetti } from "@tsparticles/confetti";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { ArrowBigLeft } from "lucide-react";
 import { FeedbackButton } from "@/components/FeedbackModal";
 import { FileExplorer } from "@/components/FileExplorer";
 import { OutputPanel } from "@/components/OutputPanel";
@@ -552,10 +553,11 @@ export function ExamWorkspace({ examId, initialExam = null }: ExamWorkspaceProps
     <div className="flex h-screen flex-col overflow-hidden bg-[var(--bg)] text-[var(--fg)]">
       <header className="flex items-center gap-4 border-b border-[var(--border)] bg-[var(--panel)] px-4 py-2">
         <Link
-          href="/"
-          className="font-[family-name:var(--font-ibm-plex-mono)] text-lg font-bold tracking-tight text-[var(--accent)]"
+          href="/app"
+          aria-label={hu.workspace.back}
+          className="inline-flex text-[var(--accent)] transition hover:opacity-80"
         >
-          VizsgaGO
+          <ArrowBigLeft />
         </Link>
         <div className="min-w-0 flex-1">
           <h1 className="truncate text-sm font-medium">{exam.title}</h1>

@@ -177,7 +177,7 @@ export function ProductSurveyModal({ examTitle, onClose, onSubmitted }: Props) {
               type="button"
               onClick={() => void submit()}
               disabled={!canSubmit}
-              className="mt-4 w-full rounded bg-[var(--accent)] py-2 text-sm font-medium text-[var(--bg)] transition hover:brightness-110 disabled:opacity-40"
+              className="mt-4 w-full rounded bg-[var(--accent)] py-2 text-sm font-medium text-black transition hover:brightness-110 disabled:opacity-40"
             >
               {submitting ? hu.feedback.sending : hu.feedback.send}
             </button>

@@ -270,7 +270,7 @@ function FeedbackPanel({
             type="button"
             onClick={onSubmit}
             disabled={submitDisabled}
-            className="mt-3 w-full rounded bg-[var(--accent)] py-2 text-sm font-medium text-[var(--bg)] transition hover:brightness-110 disabled:opacity-40"
+            className="mt-3 w-full rounded bg-[var(--accent)] py-2 text-sm font-medium text-black transition hover:brightness-110 disabled:opacity-40"
           >
             {submitting ? hu.feedback.sending : hu.feedback.send}
           </button>

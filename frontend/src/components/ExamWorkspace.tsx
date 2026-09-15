@@ -585,7 +585,7 @@ export function ExamWorkspace({ examId, initialExam = null }: ExamWorkspaceProps
             type="button"
             onClick={() => void run()}
             disabled={busy}
-            className="rounded bg-[var(--accent)] px-3 py-1.5 text-sm font-medium text-[var(--bg)] transition hover:brightness-110 disabled:opacity-50"
+            className="rounded bg-[var(--accent)] px-3 py-1.5 text-sm font-medium text-black transition hover:brightness-110 disabled:opacity-50"
           >
             {hu.workspace.run}
           </button>

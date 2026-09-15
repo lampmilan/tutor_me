@@ -97,7 +97,7 @@ export function MobileBestOnPcNotice() {
           type="button"
           autoFocus
           onClick={dismiss}
-          className="mt-4 w-full rounded-lg bg-[var(--accent)] px-4 py-2.5 text-sm font-semibold text-[var(--bg)] transition hover:opacity-90 active:opacity-75"
+          className="mt-4 w-full rounded-lg bg-[var(--accent)] px-4 py-2.5 text-sm font-semibold text-black transition hover:opacity-90 active:opacity-75"
         >
           {hu.mobileNotice.dismiss}
         </button>

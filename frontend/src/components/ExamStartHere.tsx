@@ -59,15 +59,15 @@ export function ExamStartHere({ exams, pool }: ExamStartHereProps) {
           className="relative mt-4 flex w-full items-center justify-between gap-4 overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--panel)] px-5 py-4 text-left transition hover:border-[var(--accent)]"
         >
           <div
-            className="pointer-events-none absolute inset-y-0 right-0 aspect-[13/8] h-full"
+            className="pointer-events-none absolute inset-0"
             aria-hidden
           >
             <Image
               src={RANDOM_EXAM_BG}
               alt=""
               fill
-              className="object-none object-right"
-              sizes="(min-width: 768px) 22vw, 50vw"
+              className="object-cover object-right"
+              sizes="100vw"
             />
           </div>
           <span className="relative">

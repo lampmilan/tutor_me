@@ -20,7 +20,7 @@ const HEADER_BG_IMAGE = "/landin_page_images/header_bg.webp";
 export default async function LandingPage() {
   const exams = await fetchExamList();
   const easy = findEasyStarter(exams);
-  const primaryHref = easy ? `/exam/${easy.id}` : "/app";
+  const primaryHref = easy ? `/exam/${easy.id}?from=landing` : "/app";
 
   return (
     <main className="min-h-screen">

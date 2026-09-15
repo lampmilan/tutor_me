@@ -100,6 +100,8 @@ export const hu = {
       "Új munkaterületet indítasz — a jelenlegi szerkesztés elvész. Folytatod?",
     resizePanels: "Panelek méretezése",
     feladat: "feladat",
+    back: "Vissza a feladatsorokhoz",
+    backLanding: "Vissza a kezdőlapra",
   },
   feedback: {
     button: "Visszajelzés",

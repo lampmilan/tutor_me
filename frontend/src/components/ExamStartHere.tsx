@@ -59,7 +59,7 @@ export function ExamStartHere({ exams, pool }: ExamStartHereProps) {
           className="relative mt-4 flex w-full items-center justify-between gap-4 overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--panel)] px-5 py-4 text-left transition hover:border-[var(--accent)]"
         >
           <div
-            className="pointer-events-none absolute inset-y-0 right-0 w-full max-w-sm"
+            className="pointer-events-none absolute inset-y-0 right-0 w-[min(100%,20rem)] overflow-hidden"
             aria-hidden
           >
             <Image
@@ -67,7 +67,7 @@ export function ExamStartHere({ exams, pool }: ExamStartHereProps) {
               alt=""
               fill
               className="object-cover object-right"
-              sizes="(min-width: 640px) 24rem, 100vw"
+              sizes="20rem"
             />
           </div>
           <span className="relative">

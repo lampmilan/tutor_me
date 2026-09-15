@@ -66,7 +66,7 @@ export function ExamStartHere({ exams, pool }: ExamStartHereProps) {
               src={RANDOM_EXAM_BG}
               alt=""
               fill
-              className="object-cover object-right"
+              className="object-none object-right"
               sizes="(min-width: 768px) 22vw, 50vw"
             />
           </div>

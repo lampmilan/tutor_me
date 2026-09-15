@@ -1,7 +1,8 @@
-import Link from "next/link";
 import { ExamList } from "@/components/ExamList";
+import { SiteHeader } from "@/components/SiteHeader";
 import { hu } from "@/lib/messages/hu";
 import { fetchExamList } from "@/lib/exams";
+import { PAGE_SHELL_CLASS } from "@/lib/layout";
 
 /** Must be a numeric literal — Next.js segment config is statically analyzed. */
 export const revalidate = 60;
@@ -11,19 +12,10 @@ export default async function HomePage() {
 
   return (
     <main className="min-h-screen">
-      <header className="border-b border-[var(--border)]/60">
-        <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-6 py-4">
-          <Link
-            href="/"
-            className="font-[family-name:var(--font-ibm-plex-mono)] text-xl font-bold tracking-tight text-[var(--accent)]"
-          >
-            VizsgaGO
-          </Link>
-          <h1 className="text-sm font-semibold text-[var(--fg)]">{hu.home.examsHeading}</h1>
-        </div>
-      </header>
+      <SiteHeader />
 
-      <div className="mx-auto max-w-5xl px-6 pb-16 pt-8">
+      <div className={`${PAGE_SHELL_CLASS} pb-16 pt-8`}>
+        <h1 className="sr-only">{hu.home.examsHeading}</h1>
         {exams.length === 0 ? (
           <p className="text-[var(--muted)]">{hu.home.noExams}</p>
         ) : (

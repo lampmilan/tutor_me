@@ -9,8 +9,10 @@ import {
   Zap,
   type LucideIcon,
 } from "lucide-react";
+import { SiteHeader } from "@/components/SiteHeader";
 import { hu } from "@/lib/messages/hu";
 import { fetchExamList } from "@/lib/exams";
+import { PAGE_SHELL_CLASS } from "@/lib/layout";
 import { findEasyStarter } from "@/lib/starters";
 
 export const revalidate = 60;
@@ -38,36 +40,9 @@ export default async function LandingPage() {
             sizes="(min-width: 768px) 50vw, 100vw"
           />
         </div>
-        <header className="relative border-b border-[var(--border)]/60">
-          <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4">
-            <Link
-              href="/"
-              className="font-[family-name:var(--font-ibm-plex-mono)] text-xl font-bold tracking-tight text-[var(--accent)]"
-            >
-              VizsgaGO
-            </Link>
-            <nav className="hidden items-center gap-6 text-sm text-[var(--muted-strong)] md:flex">
-              <Link href="/app" className="transition hover:text-[var(--fg)]">
-                {hu.landing.navExams}
-              </Link>
-              <a href="#hogyan" className="transition hover:text-[var(--fg)]">
-                {hu.landing.navHow}
-              </a>
-              <a href="#rolunk" className="transition hover:text-[var(--fg)]">
-                {hu.landing.navAbout}
-              </a>
-            </nav>
-            <Link
-              href="/app"
-              prefetch={false}
-              className="inline-flex items-center rounded-lg bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-black transition-opacity hover:opacity-90 active:opacity-75"
-            >
-              {hu.landing.navStart}
-            </Link>
-          </div>
-        </header>
+        <SiteHeader />
 
-        <section className="relative mx-auto grid max-w-6xl gap-12 px-6 pb-16 pt-12 md:grid-cols-2 md:items-center md:pt-16">
+        <section className={`relative ${PAGE_SHELL_CLASS} grid gap-12 pb-16 pt-12 md:grid-cols-2 md:items-center md:pt-16`}>
           <div className="animate-[fade-up_0.5s_ease-out_both]">
             <h1 className="max-w-xl font-[family-name:var(--font-ibm-plex-mono)] text-3xl font-bold leading-snug text-[var(--fg)] md:text-4xl">
               {hu.landing.headline}
@@ -112,7 +87,7 @@ export default async function LandingPage() {
       </div>
 
       <section className="border-t border-[var(--border)]/60 bg-[var(--panel)]/40">
-        <div className="mx-auto grid max-w-6xl gap-10 px-6 py-16 md:grid-cols-3">
+        <div className={`${PAGE_SHELL_CLASS} grid gap-10 py-16 md:grid-cols-3`}>
           <Feature
             icon={Laptop}
             title={hu.landing.featureAllInOneTitle}
@@ -132,7 +107,7 @@ export default async function LandingPage() {
       </section>
 
       <section id="hogyan" className="scroll-mt-20">
-        <div className="mx-auto max-w-6xl px-6 py-16">
+        <div className={`${PAGE_SHELL_CLASS} py-16`}>
           <h2 className="font-[family-name:var(--font-ibm-plex-mono)] text-2xl font-bold text-[var(--fg)] md:text-3xl">
             {hu.landing.compareHeading}
           </h2>
@@ -158,7 +133,7 @@ export default async function LandingPage() {
       </section>
 
       <section id="rolunk" className="scroll-mt-20 border-t border-[var(--border)]/60">
-        <div className="mx-auto max-w-6xl px-6 py-16">
+        <div className={`${PAGE_SHELL_CLASS} py-16`}>
           <h2 className="font-[family-name:var(--font-ibm-plex-mono)] text-2xl font-bold text-[var(--fg)]">
             {hu.landing.aboutHeading}
           </h2>

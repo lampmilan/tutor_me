@@ -1,10 +1,13 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { hu } from "@/lib/messages/hu";
 import type { ExamListItem } from "@/lib/api";
 import { findEasyStarter, findEmeltStarter, pickRandomExam } from "@/lib/starters";
+
+const RANDOM_EXAM_BG = "/exams_list/random_exam_bg.webp";
 
 type ExamStartHereProps = {
   exams: ExamListItem[];
@@ -53,15 +56,27 @@ export function ExamStartHere({ exams, pool }: ExamStartHereProps) {
             const pick = pickRandomExam(randomPool);
             if (pick) router.push(`/exam/${pick.id}`);
           }}
-          className="mt-4 flex w-full items-center justify-between gap-4 rounded-xl border border-[var(--border)] bg-[var(--accent-soft)] px-5 py-4 text-left transition hover:border-[var(--accent)]"
+          className="relative mt-4 flex w-full items-center justify-between gap-4 overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--panel)] px-5 py-4 text-left transition hover:border-[var(--accent)]"
         >
-          <span>
+          <div
+            className="pointer-events-none absolute inset-y-0 right-0 aspect-[13/8] h-full"
+            aria-hidden
+          >
+            <Image
+              src={RANDOM_EXAM_BG}
+              alt=""
+              fill
+              className="object-cover object-right"
+              sizes="(min-width: 768px) 22vw, 50vw"
+            />
+          </div>
+          <span className="relative">
             <span className="block font-semibold text-[var(--fg)]">{hu.home.randomPickTitle}</span>
             <span className="mt-0.5 block text-sm text-[var(--muted-strong)]">
               {hu.home.randomPickSub}
             </span>
           </span>
-          <span className="shrink-0 rounded-lg bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-black">
+          <span className="relative shrink-0 rounded-lg bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-black">
             {hu.home.randomPickCta}
           </span>
         </button>

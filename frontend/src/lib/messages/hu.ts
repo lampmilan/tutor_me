@@ -28,7 +28,7 @@ export const hu = {
     easyStartMeta: "Közép · ~10–15 perc",
     emeltStartEyebrow: "Kipróbálnám az emeltet",
     emeltStartMeta: "Emelt · ~15–20 perc",
-    startCta: "Kezdem →",
+    startCta: "Kezdem",
     randomPickTitle: "Válassz nekem egy feladatot",
     randomPickSub: "Véletlen a jelenlegi találatok közül",
     randomPickCta: "Sorsolás",
@@ -40,8 +40,10 @@ export const hu = {
     navStart: "Kezdés most",
     headline: "Gyakorold a programozást úgy, ahogy az érettségin kell.",
     body:
-      "Érettségi szintű feladatok, beépített szerkesztő és azonnali visszajelzés — PDF és fájlkezelés nélkül.",
-    ctaPrimary: "Próbálj ki egy 5 perces feladatot →",
+
+      "Érettségi szintű programozási feladatok, közvetlenül a böngésződben.",
+    ctaPrimary: "Próbálj ki egy 5 perces feladatot",
+
     ctaSecondary: "Feladatsorok böngészése",
     trustNoReg: "Nincs regisztráció",
     trustBrowser: "Böngészőben",
@@ -53,7 +55,7 @@ export const hu = {
     previewSuccess: "Helyes megoldás!",
     featureAllInOneTitle: "Minden egy helyen",
     featureAllInOneBody:
-      "A feladatleírás, a forrásfájlok és a kódszerkesztő egyetlen felületen vár — nincs ugrálás PDF és IDE között.",
+      "A feladatleírás, a forrásfájlok és a kódszerkesztő egyetlen felületen vár. Nincs ugrálás PDF és IDE között.",
     featureExamLevelTitle: "Érettségi szintű feladatok",
     featureExamLevelBody:
       "Hivatalos és saját fejlesztésű feladatsorok, amelyek stílusukban és nehézségükben követik a vizsgát.",
@@ -62,11 +64,11 @@ export const hu = {
       "Szűrj szint, forrás, nehézség és témakör szerint, és gyakorold azt, ami még nem megy.",
     compareHeading: "Miért jobb, mint PDF + IDE?",
     compareFeedbackTitle: "Azonnali visszajelzés",
-    compareFeedbackBody: "Beküldés után látod, mi helyes — nem kell manuálisan összevetni.",
+    compareFeedbackBody: "Beküldés után látod, mi helyes. Nem kell manuálisan összevetni.",
     compareTimeTitle: "Kevesebb időveszteség",
     compareTimeBody: "Nincs fájlkeresés és környezetbeállítás: egy kattintás, és kódolhatsz.",
     compareTechTitle: "Kevesebb technikai akadály",
-    compareTechBody: "Minden a böngészőben fut — nincs telepítés, nincs külön IDE.",
+    compareTechBody: "Minden a böngészőben fut. Nincs telepítés, nincs külön IDE.",
     compareProgressTitle: "Valódi haladás",
     compareProgressBody: "Célzott feladatokkal a gyenge pontokra fókuszálhatsz.",
     aboutHeading: "Rólunk",
@@ -75,7 +77,7 @@ export const hu = {
     bottomCta: "Kezdd el most",
   },
   examCard: {
-    start: "Megnyitás →",
+    start: "Megnyitás",
   },
   workspace: {
     save: "Mentés",

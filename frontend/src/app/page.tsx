@@ -1,4 +1,14 @@
 import Link from "next/link";
+import Image from "next/image";
+import {
+  CircleCheckBig,
+  GlobeCheck,
+  Laptop,
+  NotebookText,
+  Target,
+  Zap,
+  type LucideIcon,
+} from "lucide-react";
 import { hu } from "@/lib/messages/hu";
 import { fetchExamList } from "@/lib/exams";
 import { findEasyStarter } from "@/lib/starters";
@@ -69,9 +79,18 @@ export default async function LandingPage() {
             </Link>
           </div>
           <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm text-[var(--muted)]">
-            <li>{hu.landing.trustNoReg}</li>
-            <li>{hu.landing.trustBrowser}</li>
-            <li>{hu.landing.trustFeedback}</li>
+            <li className="inline-flex items-center gap-1.5">
+              <Zap className="h-4 w-4 shrink-0" aria-hidden />
+              {hu.landing.trustNoReg}
+            </li>
+            <li className="inline-flex items-center gap-1.5">
+              <GlobeCheck className="h-4 w-4 shrink-0" aria-hidden />
+              {hu.landing.trustBrowser}
+            </li>
+            <li className="inline-flex items-center gap-1.5">
+              <CircleCheckBig className="h-4 w-4 shrink-0" aria-hidden />
+              {hu.landing.trustFeedback}
+            </li>
           </ul>
         </div>
 
@@ -81,14 +100,20 @@ export default async function LandingPage() {
       <section className="border-t border-[var(--border)]/60 bg-[var(--panel)]/40">
         <div className="mx-auto grid max-w-6xl gap-10 px-6 py-16 md:grid-cols-3">
           <Feature
+            icon={Laptop}
+            imageSrc="/landin_page_images/minden_egy_helyen.webp"
             title={hu.landing.featureAllInOneTitle}
             body={hu.landing.featureAllInOneBody}
           />
           <Feature
+            icon={NotebookText}
+            imageSrc="/landin_page_images/erettsegi_szintu_feladatok.webp"
             title={hu.landing.featureExamLevelTitle}
             body={hu.landing.featureExamLevelBody}
           />
           <Feature
+            icon={Target}
+            imageSrc="/landin_page_images/cellzott_gyakorlas.webp"
             title={hu.landing.featureTargetedTitle}
             body={hu.landing.featureTargetedBody}
           />
@@ -142,9 +167,29 @@ export default async function LandingPage() {
   );
 }
 
-function Feature({ title, body }: { title: string; body: string }) {
+function Feature({
+  icon: Icon,
+  imageSrc,
+  title,
+  body,
+}: {
+  icon: LucideIcon;
+  imageSrc: string;
+  title: string;
+  body: string;
+}) {
   return (
-    <div>
+    <div className="flex h-full flex-col">
+      <div className="relative aspect-square w-full overflow-hidden rounded-xl">
+        <Image
+          src={imageSrc}
+          alt=""
+          fill
+          className="object-cover"
+          sizes="(min-width: 768px) 341px, 100vw"
+        />
+      </div>
+      <Icon className="mt-4 mb-3 h-6 w-6 shrink-0" aria-hidden />
       <h3 className="font-[family-name:var(--font-ibm-plex-mono)] text-lg font-bold text-[var(--fg)]">
         {title}
       </h3>

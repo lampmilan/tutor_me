@@ -34,7 +34,7 @@ export default async function LandingPage() {
             alt=""
             fill
             priority
-            className="object-cover object-right"
+            className="object-cover object-right opacity-50"
             sizes="(min-width: 768px) 50vw, 100vw"
           />
         </div>

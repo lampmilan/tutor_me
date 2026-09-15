@@ -16,12 +16,12 @@ export function SiteHeader() {
           <Link href="/app" className="transition hover:text-[var(--fg)]">
             {hu.landing.navExams}
           </Link>
-          <a href="/#hogyan" className="transition hover:text-[var(--fg)]">
+          <Link href="/#hogyan" className="transition hover:text-[var(--fg)]">
             {hu.landing.navHow}
-          </a>
-          <a href="/#rolunk" className="transition hover:text-[var(--fg)]">
+          </Link>
+          <Link href="/#rolunk" className="transition hover:text-[var(--fg)]">
             {hu.landing.navAbout}
-          </a>
+          </Link>
         </nav>
         <Link
           href="/app"

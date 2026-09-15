@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { ArrowBigLeft } from "lucide-react";
 import { ExamList } from "@/components/ExamList";
 import { hu } from "@/lib/messages/hu";
 import { fetchExamList } from "@/lib/exams";
@@ -16,10 +15,9 @@ export default async function HomePage() {
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-6 py-4">
           <Link
             href="/"
-            aria-label={hu.home.back}
-            className="inline-flex text-[var(--accent)] transition hover:opacity-80"
+            className="font-[family-name:var(--font-ibm-plex-mono)] text-xl font-bold tracking-tight text-[var(--accent)]"
           >
-            <ArrowBigLeft />
+            VizsgaGO
           </Link>
           <h1 className="text-sm font-semibold text-[var(--fg)]">{hu.home.examsHeading}</h1>
         </div>

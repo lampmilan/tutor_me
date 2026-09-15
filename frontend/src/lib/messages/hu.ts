@@ -6,7 +6,6 @@ export const hu = {
     subtitle:
       "Válassz feladatsort, írd meg a kódot, majd ellenőrizd a megoldásod helyességét.",
     examsHeading: "Feladatsorok",
-    back: "Vissza",
     noExams: "Még nincs feladatsor. Indítsd el a backendet a katalógus betöltéséhez.",
     filterLevel: "Szint",
     filterOrigin: "Forrás",
@@ -105,6 +104,7 @@ export const hu = {
     resizePanels: "Panelek méretezése",
     feladat: "feladat",
     back: "Vissza a feladatsorokhoz",
+    backLanding: "Vissza a kezdőlapra",
   },
   feedback: {
     button: "Visszajelzés",

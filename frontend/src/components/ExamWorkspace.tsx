@@ -186,6 +186,7 @@ async function resolveWorkspace(
 
 export function ExamWorkspace({ examId, initialExam = null }: ExamWorkspaceProps) {
   const searchParams = useSearchParams();
+  const fromLanding = searchParams.get("from") === "landing";
   const urlWorkspaceId = useMemo(() => {
     const raw = searchParams.get("ws");
     if (!raw) return null;
@@ -553,8 +554,8 @@ export function ExamWorkspace({ examId, initialExam = null }: ExamWorkspaceProps
     <div className="flex h-screen flex-col overflow-hidden bg-[var(--bg)] text-[var(--fg)]">
       <header className="flex items-center gap-4 border-b border-[var(--border)] bg-[var(--panel)] px-4 py-2">
         <Link
-          href="/app"
-          aria-label={hu.workspace.back}
+          href={fromLanding ? "/" : "/app"}
+          aria-label={fromLanding ? hu.workspace.backLanding : hu.workspace.back}
           className="inline-flex text-[var(--accent)] transition hover:opacity-80"
         >
           <ArrowBigLeft />

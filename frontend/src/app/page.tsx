@@ -15,6 +15,8 @@ import { findEasyStarter } from "@/lib/starters";
 
 export const revalidate = 60;
 
+const HEADER_BG_IMAGE = "/landin_page_images/header_bg.webp";
+
 export default async function LandingPage() {
   const exams = await fetchExamList();
   const easy = findEasyStarter(exams);
@@ -22,80 +24,95 @@ export default async function LandingPage() {
 
   return (
     <main className="min-h-screen">
-      <header className="border-b border-[var(--border)]/60">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4">
-          <Link
-            href="/"
-            className="font-[family-name:var(--font-ibm-plex-mono)] text-xl font-bold tracking-tight text-[var(--accent)]"
-          >
-            VizsgaGO
-          </Link>
-          <nav className="hidden items-center gap-6 text-sm text-[var(--muted-strong)] md:flex">
-            <Link href="/app" className="transition hover:text-[var(--fg)]">
-              {hu.landing.navExams}
-            </Link>
-            <a href="#hogyan" className="transition hover:text-[var(--fg)]">
-              {hu.landing.navHow}
-            </a>
-            <a href="#rolunk" className="transition hover:text-[var(--fg)]">
-              {hu.landing.navAbout}
-            </a>
-          </nav>
-          <Link
-            href="/app"
-            prefetch={false}
-            className="inline-flex items-center rounded-lg bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-black transition-opacity hover:opacity-90 active:opacity-75"
-          >
-            {hu.landing.navStart}
-          </Link>
+      <div className="relative overflow-hidden">
+        <div
+          className="pointer-events-none absolute inset-y-0 right-0 aspect-[4/3] h-full"
+          aria-hidden
+        >
+          <Image
+            src={HEADER_BG_IMAGE}
+            alt=""
+            fill
+            priority
+            className="object-cover object-right"
+            sizes="(min-width: 768px) 50vw, 100vw"
+          />
         </div>
-      </header>
-
-      <section className="mx-auto grid max-w-6xl gap-12 px-6 pb-16 pt-12 md:grid-cols-2 md:items-center md:pt-16">
-        <div className="animate-[fade-up_0.5s_ease-out_both]">
-          <p className="mb-4 inline-flex rounded-full border border-[var(--border)] bg-[var(--accent-soft)] px-3 py-1 text-xs font-medium text-[var(--accent)]">
-            {hu.landing.badge}
-          </p>
-          <h1 className="max-w-xl font-[family-name:var(--font-ibm-plex-mono)] text-3xl font-bold leading-snug text-[var(--fg)] md:text-4xl">
-            {hu.landing.headline}
-          </h1>
-          <p className="mt-4 max-w-lg text-base leading-relaxed text-[var(--muted-strong)]">
-            {hu.landing.body}
-          </p>
-          <div className="mt-8 flex flex-wrap items-center gap-3">
+        <header className="relative border-b border-[var(--border)]/60">
+          <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4">
             <Link
-              href={primaryHref}
-              prefetch={false}
-              className="inline-flex items-center rounded-lg bg-[var(--accent)] px-6 py-3 text-base font-semibold text-black transition-opacity hover:opacity-90 active:opacity-75"
+              href="/"
+              className="font-[family-name:var(--font-ibm-plex-mono)] text-xl font-bold tracking-tight text-[var(--accent)]"
             >
-              {hu.landing.ctaPrimary}
+              VizsgaGO
             </Link>
+            <nav className="hidden items-center gap-6 text-sm text-[var(--muted-strong)] md:flex">
+              <Link href="/app" className="transition hover:text-[var(--fg)]">
+                {hu.landing.navExams}
+              </Link>
+              <a href="#hogyan" className="transition hover:text-[var(--fg)]">
+                {hu.landing.navHow}
+              </a>
+              <a href="#rolunk" className="transition hover:text-[var(--fg)]">
+                {hu.landing.navAbout}
+              </a>
+            </nav>
             <Link
               href="/app"
               prefetch={false}
-              className="inline-flex items-center rounded-lg border border-[var(--border)] px-6 py-3 text-base font-semibold text-[var(--fg)] transition hover:border-[var(--accent)] hover:text-[var(--accent)]"
+              className="inline-flex items-center rounded-lg bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-black transition-opacity hover:opacity-90 active:opacity-75"
             >
-              {hu.landing.ctaSecondary}
+              {hu.landing.navStart}
             </Link>
           </div>
-          <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm text-[var(--muted)]">
-            <li className="inline-flex items-center gap-1.5">
-              <Zap className="h-4 w-4 shrink-0" aria-hidden />
-              {hu.landing.trustNoReg}
-            </li>
-            <li className="inline-flex items-center gap-1.5">
-              <GlobeCheck className="h-4 w-4 shrink-0" aria-hidden />
-              {hu.landing.trustBrowser}
-            </li>
-            <li className="inline-flex items-center gap-1.5">
-              <CircleCheckBig className="h-4 w-4 shrink-0" aria-hidden />
-              {hu.landing.trustFeedback}
-            </li>
-          </ul>
-        </div>
+        </header>
 
-        <ProductPreview />
-      </section>
+        <section className="relative mx-auto grid max-w-6xl gap-12 px-6 pb-16 pt-12 md:grid-cols-2 md:items-center md:pt-16">
+          <div className="animate-[fade-up_0.5s_ease-out_both]">
+            <p className="mb-4 inline-flex rounded-full border border-[var(--border)] bg-[var(--accent-soft)] px-3 py-1 text-xs font-medium text-[var(--accent)]">
+              {hu.landing.badge}
+            </p>
+            <h1 className="max-w-xl font-[family-name:var(--font-ibm-plex-mono)] text-3xl font-bold leading-snug text-[var(--fg)] md:text-4xl">
+              {hu.landing.headline}
+            </h1>
+            <p className="mt-4 max-w-lg text-base leading-relaxed text-[var(--muted-strong)]">
+              {hu.landing.body}
+            </p>
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <Link
+                href={primaryHref}
+                prefetch={false}
+                className="inline-flex items-center rounded-lg bg-[var(--accent)] px-6 py-3 text-base font-semibold text-black transition-opacity hover:opacity-90 active:opacity-75"
+              >
+                {hu.landing.ctaPrimary}
+              </Link>
+              <Link
+                href="/app"
+                prefetch={false}
+                className="inline-flex items-center rounded-lg border border-[var(--border)] px-6 py-3 text-base font-semibold text-[var(--fg)] transition hover:border-[var(--accent)] hover:text-[var(--accent)]"
+              >
+                {hu.landing.ctaSecondary}
+              </Link>
+            </div>
+            <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm text-[var(--muted)]">
+              <li className="inline-flex items-center gap-1.5">
+                <Zap className="h-4 w-4 shrink-0" aria-hidden />
+                {hu.landing.trustNoReg}
+              </li>
+              <li className="inline-flex items-center gap-1.5">
+                <GlobeCheck className="h-4 w-4 shrink-0" aria-hidden />
+                {hu.landing.trustBrowser}
+              </li>
+              <li className="inline-flex items-center gap-1.5">
+                <CircleCheckBig className="h-4 w-4 shrink-0" aria-hidden />
+                {hu.landing.trustFeedback}
+              </li>
+            </ul>
+          </div>
+
+          <ProductPreview />
+        </section>
+      </div>
 
       <section className="border-t border-[var(--border)]/60 bg-[var(--panel)]/40">
         <div className="mx-auto grid max-w-6xl gap-10 px-6 py-16 md:grid-cols-3">

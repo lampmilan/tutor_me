@@ -208,7 +208,7 @@ export function FeedbackButton({ examTitle, taskTitles }: Props) {
             setMenuOpen(true);
           }
         }}
-        className="flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--panel)] px-4 py-2.5 text-sm font-medium text-[var(--muted-strong)] shadow-lg transition hover:border-[var(--accent)] hover:text-[var(--fg)]"
+        className="flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--fg)] px-4 py-2.5 text-sm font-medium text-black shadow-lg transition-opacity hover:opacity-90"
         aria-label={isOpen ? hu.feedback.close : hu.feedback.button}
       >
         {isOpen ? (
@@ -270,7 +270,7 @@ function FeedbackPanel({
             type="button"
             onClick={onSubmit}
             disabled={submitDisabled}
-            className="mt-3 w-full rounded bg-[var(--accent)] py-2 text-sm font-medium text-[var(--bg)] transition hover:brightness-110 disabled:opacity-40"
+            className="mt-3 w-full rounded bg-[var(--accent)] py-2 text-sm font-medium text-black transition hover:brightness-110 disabled:opacity-40"
           >
             {submitting ? hu.feedback.sending : hu.feedback.send}
           </button>

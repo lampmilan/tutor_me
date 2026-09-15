@@ -569,7 +569,7 @@ export function ExamWorkspace({ examId, initialExam = null }: ExamWorkspaceProps
             type="button"
             onClick={() => void resetWorkspace()}
             disabled={busy}
-            className="rounded border border-[var(--border)] px-3 py-1.5 text-sm text-[var(--muted-strong)] transition hover:border-[var(--accent)] hover:text-[var(--fg)] disabled:opacity-50"
+            className="rounded border border-[var(--border)] bg-[var(--fg)] px-3 py-1.5 text-sm text-black transition-opacity hover:opacity-90 disabled:opacity-50"
           >
             {hu.workspace.resetWorkspace}
           </button>
@@ -577,7 +577,7 @@ export function ExamWorkspace({ examId, initialExam = null }: ExamWorkspaceProps
             type="button"
             onClick={() => void save()}
             disabled={saving || !isDirty || current.read_only}
-            className="rounded border border-[var(--border)] px-3 py-1.5 text-sm text-[var(--muted-strong)] transition hover:border-[var(--accent)] hover:text-[var(--fg)] disabled:opacity-40"
+            className="rounded border border-[var(--border)] bg-[var(--fg)] px-3 py-1.5 text-sm text-black transition-opacity hover:opacity-90 disabled:opacity-40"
           >
             {saving ? hu.workspace.saving : isDirty || dirty ? hu.workspace.save : hu.workspace.saved}
           </button>
@@ -585,7 +585,7 @@ export function ExamWorkspace({ examId, initialExam = null }: ExamWorkspaceProps
             type="button"
             onClick={() => void run()}
             disabled={busy}
-            className="rounded bg-[var(--accent)] px-3 py-1.5 text-sm font-medium text-[var(--bg)] transition hover:brightness-110 disabled:opacity-50"
+            className="rounded bg-[var(--accent)] px-3 py-1.5 text-sm font-medium text-black transition hover:brightness-110 disabled:opacity-50"
           >
             {hu.workspace.run}
           </button>
@@ -598,7 +598,7 @@ export function ExamWorkspace({ examId, initialExam = null }: ExamWorkspaceProps
                 ? hu.workspace.submitTitleShared
                 : hu.workspace.submitTitle
             }
-            className="rounded border border-[var(--accent)] px-3 py-1.5 text-sm text-[var(--accent)] transition hover:bg-[var(--accent-soft)] disabled:opacity-50"
+            className="rounded border border-[var(--accent)] bg-[var(--fg)] px-3 py-1.5 text-sm text-black transition-opacity hover:opacity-90 disabled:opacity-50"
           >
             {hu.workspace.submit}
           </button>

@@ -131,7 +131,7 @@ export function ExamList({ exams }: ExamListProps) {
                   setDifficulty("all");
                   setSelectedTags([]);
                 }}
-                className="rounded border border-[var(--border)] px-3 py-1.5 text-sm text-[var(--muted-strong)] transition hover:border-[var(--accent)] hover:text-[var(--fg)]"
+                className="rounded border border-[var(--border)] bg-[var(--fg)] px-3 py-1.5 text-sm text-black transition-opacity hover:opacity-90"
               >
                 {hu.home.filterClear}
               </button>

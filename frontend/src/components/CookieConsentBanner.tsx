@@ -53,14 +53,14 @@ export function CookieConsentBanner() {
           <button
             type="button"
             onClick={decline}
-            className="rounded-lg border border-[var(--border)] px-4 py-2 text-sm font-medium text-[var(--muted-strong)] transition hover:border-[var(--accent)] hover:text-[var(--fg)]"
+            className="rounded-lg border border-[var(--border)] bg-[var(--fg)] px-4 py-2 text-sm font-medium text-black transition-opacity hover:opacity-90"
           >
             {hu.cookieConsent.decline}
           </button>
           <button
             type="button"
             onClick={accept}
-            className="rounded-lg bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-[var(--bg)] transition hover:opacity-90 active:opacity-75"
+            className="rounded-lg bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-black transition hover:opacity-90 active:opacity-75"
           >
             {hu.cookieConsent.accept}
           </button>

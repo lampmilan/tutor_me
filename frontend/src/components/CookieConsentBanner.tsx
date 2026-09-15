@@ -53,7 +53,7 @@ export function CookieConsentBanner() {
           <button
             type="button"
             onClick={decline}
-            className="rounded-lg border border-[var(--border)] bg-[var(--fg)] px-4 py-2 text-sm font-medium text-black transition-opacity hover:opacity-90"
+            className="rounded-lg border border-[var(--border)] px-4 py-2 text-sm font-medium text-[var(--muted-strong)] transition hover:border-[var(--accent)] hover:text-[var(--fg)]"
           >
             {hu.cookieConsent.decline}
           </button>

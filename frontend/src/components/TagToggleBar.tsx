@@ -43,10 +43,10 @@ export function TagToggleBar({ tags, selected, onChange, label }: TagToggleBarPr
               type="button"
               aria-pressed={active}
               onClick={() => toggle(tag)}
-              className={`rounded-full border px-2 py-0.5 text-xs text-black transition ${
+              className={`rounded-full border px-2 py-0.5 text-xs transition ${
                 active
-                  ? "border-[var(--accent)] bg-[var(--accent)]"
-                  : "border-[var(--border)] bg-[var(--fg)] hover:border-[var(--accent)]"
+                  ? "border-[var(--accent)] bg-[var(--accent-soft)] text-[var(--fg)]"
+                  : "border-[var(--border)] bg-[var(--panel)] text-[var(--muted-strong)] hover:border-[var(--accent)] hover:text-[var(--fg)]"
               }`}
             >
               {tagLabelHu(tag)}

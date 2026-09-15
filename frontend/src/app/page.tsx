@@ -69,9 +69,6 @@ export default async function LandingPage() {
 
         <section className="relative mx-auto grid max-w-6xl gap-12 px-6 pb-16 pt-12 md:grid-cols-2 md:items-center md:pt-16">
           <div className="animate-[fade-up_0.5s_ease-out_both]">
-            <p className="mb-4 inline-flex rounded-full border border-[var(--border)] bg-[var(--accent-soft)] px-3 py-1 text-xs font-medium text-[var(--accent)]">
-              {hu.landing.badge}
-            </p>
             <h1 className="max-w-xl font-[family-name:var(--font-ibm-plex-mono)] text-3xl font-bold leading-snug text-[var(--fg)] md:text-4xl">
               {hu.landing.headline}
             </h1>

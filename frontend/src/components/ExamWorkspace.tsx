@@ -605,14 +605,6 @@ export function ExamWorkspace({ examId, initialExam = null }: ExamWorkspaceProps
         </div>
       </header>
 
-      {activeTask.uses_preamble ? (
-        <div className="border-b border-[var(--border)] bg-[var(--panel)] px-4 py-2 text-xs text-[var(--muted-strong)]">
-          {hu.workspace.preambleBanner}{" "}
-          <code className="text-[var(--accent)]">{exam.shared_variable}</code>{" "}
-          {hu.workspace.preambleSuffix}
-        </div>
-      ) : null}
-
       <div ref={splitRef} className="flex min-h-0 flex-1">
         <div className="flex min-h-0 min-w-0 flex-col" style={{ width: `${leftPct}%` }}>
           <ProblemPanel

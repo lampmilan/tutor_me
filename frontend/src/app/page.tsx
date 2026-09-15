@@ -118,19 +118,16 @@ export default async function LandingPage() {
         <div className="mx-auto grid max-w-6xl gap-10 px-6 py-16 md:grid-cols-3">
           <Feature
             icon={Laptop}
-            imageSrc="/landin_page_images/minden_egy_helyen.webp"
             title={hu.landing.featureAllInOneTitle}
             body={hu.landing.featureAllInOneBody}
           />
           <Feature
             icon={NotebookText}
-            imageSrc="/landin_page_images/erettsegi_szintu_feladatok.webp"
             title={hu.landing.featureExamLevelTitle}
             body={hu.landing.featureExamLevelBody}
           />
           <Feature
             icon={Target}
-            imageSrc="/landin_page_images/cellzott_gyakorlas.webp"
             title={hu.landing.featureTargetedTitle}
             body={hu.landing.featureTargetedBody}
           />
@@ -186,27 +183,16 @@ export default async function LandingPage() {
 
 function Feature({
   icon: Icon,
-  imageSrc,
   title,
   body,
 }: {
   icon: LucideIcon;
-  imageSrc: string;
   title: string;
   body: string;
 }) {
   return (
-    <div className="flex h-full flex-col">
-      <div className="relative aspect-square w-full overflow-hidden rounded-xl">
-        <Image
-          src={imageSrc}
-          alt=""
-          fill
-          className="object-cover"
-          sizes="(min-width: 768px) 341px, 100vw"
-        />
-      </div>
-      <Icon className="mt-4 mb-3 h-6 w-6 shrink-0" aria-hidden />
+    <div>
+      <Icon className="mb-3 h-6 w-6 shrink-0" aria-hidden />
       <h3 className="font-[family-name:var(--font-ibm-plex-mono)] text-lg font-bold text-[var(--fg)]">
         {title}
       </h3>

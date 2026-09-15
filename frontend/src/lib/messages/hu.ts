@@ -38,7 +38,7 @@ export const hu = {
     navHow: "Hogyan működik?",
     navAbout: "Rólunk",
     navStart: "Kezdés most",
-    headline: "Gyakorold a programozást úgy, ahogy az érettségin kell.",
+    headline: "Készülj célzottan a digitális kultúra érettségi programozás részére.",
     body:
 
       "Érettségi szintű programozási feladatok, közvetlenül a böngésződben.",

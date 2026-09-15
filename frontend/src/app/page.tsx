@@ -97,39 +97,23 @@ export default async function LandingPage() {
         <ProductPreview />
       </section>
 
-      <section className="relative overflow-hidden border-t border-[var(--border)]/60">
-        <div
-          className="absolute inset-0 hidden md:grid md:grid-cols-3"
-          aria-hidden
-        >
-          {FEATURE_IMAGES.map((src) => (
-            <div key={src} className="relative">
-              <Image
-                src={src}
-                alt=""
-                fill
-                className="object-cover"
-                sizes="33vw"
-              />
-            </div>
-          ))}
-        </div>
-        <div className="relative mx-auto grid max-w-6xl md:grid-cols-3">
+      <section className="border-t border-[var(--border)]/60 bg-[var(--panel)]/40">
+        <div className="mx-auto grid max-w-6xl gap-10 px-6 py-16 md:grid-cols-3">
           <Feature
             icon={Laptop}
-            imageSrc={FEATURE_IMAGES[0]}
+            imageSrc="/landin_page_images/minden_egy_helyen.webp"
             title={hu.landing.featureAllInOneTitle}
             body={hu.landing.featureAllInOneBody}
           />
           <Feature
             icon={NotebookText}
-            imageSrc={FEATURE_IMAGES[1]}
+            imageSrc="/landin_page_images/erettsegi_szintu_feladatok.webp"
             title={hu.landing.featureExamLevelTitle}
             body={hu.landing.featureExamLevelBody}
           />
           <Feature
             icon={Target}
-            imageSrc={FEATURE_IMAGES[2]}
+            imageSrc="/landin_page_images/cellzott_gyakorlas.webp"
             title={hu.landing.featureTargetedTitle}
             body={hu.landing.featureTargetedBody}
           />
@@ -183,12 +167,6 @@ export default async function LandingPage() {
   );
 }
 
-const FEATURE_IMAGES = [
-  "/landin_page_images/minden_egy_helyen.webp",
-  "/landin_page_images/erettsegi_szintu_feladatok.webp",
-  "/landin_page_images/cellzott_gyakorlas.webp",
-] as const;
-
 function Feature({
   icon: Icon,
   imageSrc,
@@ -201,23 +179,21 @@ function Feature({
   body: string;
 }) {
   return (
-    <div className="relative px-6 py-16">
-      <div className="absolute inset-0 md:hidden" aria-hidden>
+    <div className="flex h-full flex-col">
+      <div className="relative aspect-square w-full overflow-hidden rounded-xl">
         <Image
           src={imageSrc}
           alt=""
           fill
           className="object-cover"
-          sizes="100vw"
+          sizes="(min-width: 768px) 341px, 100vw"
         />
       </div>
-      <div className="relative">
-        <Icon className="mb-3 h-6 w-6 shrink-0" aria-hidden />
-        <h3 className="font-[family-name:var(--font-ibm-plex-mono)] text-lg font-bold text-[var(--fg)]">
-          {title}
-        </h3>
-        <p className="mt-2 text-sm leading-relaxed text-[var(--muted-strong)]">{body}</p>
-      </div>
+      <Icon className="mt-4 mb-3 h-6 w-6 shrink-0" aria-hidden />
+      <h3 className="font-[family-name:var(--font-ibm-plex-mono)] text-lg font-bold text-[var(--fg)]">
+        {title}
+      </h3>
+      <p className="mt-2 text-sm leading-relaxed text-[var(--muted-strong)]">{body}</p>
     </div>
   );
 }

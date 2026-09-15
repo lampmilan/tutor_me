@@ -23,7 +23,7 @@ export const hu = {
     originSynthetic: "Szintetikus",
     startHereHeading: "Kezdd itt",
     startHereSub:
-      "Kevesebb döntés — válassz egy konkrét kezdő feladatot, és azonnal kódolhatsz.",
+      "Nem tudod, mivel kezdd? Válassz egy ajánlott feladatot, és kezdj el gyakorolni.",
     easyStartEyebrow: "Könnyű kezdés",
     easyStartMeta: "Közép · ~10–15 perc",
     emeltStartEyebrow: "Kipróbálnám az emeltet",

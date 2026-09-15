@@ -56,7 +56,7 @@ export function ExamStartHere({ exams, pool }: ExamStartHereProps) {
             const pick = pickRandomExam(randomPool);
             if (pick) router.push(`/exam/${pick.id}`);
           }}
-          className="relative mt-4 flex min-h-[8.5rem] w-full items-center justify-between gap-4 overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--panel)] px-5 py-5 text-left transition hover:border-[var(--accent)]"
+          className="relative mt-4 flex w-full items-center justify-between gap-4 overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--panel)] px-5 py-4 text-left transition hover:border-[var(--accent)]"
         >
           <div
             className="pointer-events-none absolute inset-y-0 right-0 aspect-[13/8] h-full"

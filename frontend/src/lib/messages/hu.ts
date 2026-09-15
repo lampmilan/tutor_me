@@ -98,10 +98,6 @@ export const hu = {
     resetWorkspace: "Új munkaterület",
     resetConfirm:
       "Új munkaterületet indítasz — a jelenlegi szerkesztés elvész. Folytatod?",
-    preambleBanner:
-      "A Futtatás/Beküldés előtt a platform a bemeneti fájl tartalmát stringként betölti a",
-    preambleSuffix:
-      "változóba. Nem kell újra megnyitnod a fájlt — alakítsd át magad.",
     resizePanels: "Panelek méretezése",
     feladat: "feladat",
   },

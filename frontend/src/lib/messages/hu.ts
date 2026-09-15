@@ -28,7 +28,7 @@ export const hu = {
     easyStartMeta: "Közép · ~10–15 perc",
     emeltStartEyebrow: "Kipróbálnám az emeltet",
     emeltStartMeta: "Emelt · ~15–20 perc",
-    startCta: "Kezdem →",
+    startCta: "Kezdem",
     randomPickTitle: "Válassz nekem egy feladatot",
     randomPickSub: "Véletlen a jelenlegi találatok közül",
     randomPickCta: "Sorsolás",
@@ -42,7 +42,7 @@ export const hu = {
     headline: "Gyakorold a programozást úgy, ahogy az érettségin kell.",
     body:
       "Érettségi szintű feladatok, beépített szerkesztő és azonnali visszajelzés — PDF és fájlkezelés nélkül.",
-    ctaPrimary: "Próbálj ki egy 5 perces feladatot →",
+    ctaPrimary: "Próbálj ki egy 5 perces feladatot",
     ctaSecondary: "Feladatsorok böngészése",
     trustNoReg: "Nincs regisztráció",
     trustBrowser: "Böngészőben",
@@ -76,7 +76,7 @@ export const hu = {
     bottomCta: "Kezdd el most",
   },
   examCard: {
-    start: "Megnyitás →",
+    start: "Megnyitás",
   },
   workspace: {
     save: "Mentés",

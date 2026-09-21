@@ -58,7 +58,7 @@ export default async function LandingPage() {
               <Link
                 href="/app"
                 prefetch={false}
-                className="inline-flex items-center rounded-lg border border-[var(--border)] px-6 py-3 text-base font-semibold text-[var(--fg)] transition hover:border-[var(--accent)] hover:text-[var(--accent)]"
+                className="inline-flex items-center rounded-lg border border-[var(--border)] bg-[var(--panel-hover)] px-6 py-3 text-base font-semibold text-[var(--fg)] transition hover:border-[var(--accent)] hover:bg-[var(--border)] hover:text-[var(--accent)]"
               >
                 {hu.landing.ctaSecondary}
               </Link>

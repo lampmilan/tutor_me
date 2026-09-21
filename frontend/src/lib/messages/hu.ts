@@ -76,6 +76,13 @@ export const hu = {
       "A VizsgaGO magyar programozás érettségi gyakorló: kódolj úgy, ahogy a vizsgán kell, azonnali visszajelzéssel.",
     bottomCta: "Kezdd el most",
   },
+  footer: {
+    followUs: "Kövess minket",
+    socialNav: "Közösségi média",
+    youtube: "YouTube",
+    instagram: "Instagram",
+    tiktok: "TikTok",
+  },
   examCard: {
     start: "Megnyitás",
   },

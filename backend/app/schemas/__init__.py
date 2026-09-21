@@ -57,6 +57,7 @@ class ExamOut(BaseModel):
     template_type: str | None
     preamble: str = ""
     shared_variable: str = "data"
+    data_file: str = ""
     level: str = "kozep"
     origin: str = "synthetic"
     difficulty: int = 2

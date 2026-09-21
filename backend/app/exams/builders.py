@@ -262,7 +262,11 @@ def _task_literal(_rows: list[Row], spec: dict[str, Any]) -> str:
 
 
 def _task_store(_rows: list[Row], _spec: dict[str, Any]) -> str:
-    """Load-only feladat: no required stdout."""
+    """Load-only feladat: no required stdout.
+
+    File-load store feladats are still graded: compose_source appends a check
+    that ``shared_variable`` equals the mounted data file (exit non-zero on mismatch).
+    """
     return ""
 
 

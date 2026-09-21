@@ -40,11 +40,68 @@ def _effective_seed(template: Any, override: int | None = None) -> int | None:
     return getattr(template, "seed", None)
 
 
+def _data_file_for_exam(exam: Exam) -> str:
+    """Resolve the mounted dataset filename for store-load checks."""
+    name = (getattr(exam, "data_file", None) or "").strip()
+    if name:
+        return name
+    preamble = exam.preamble or ""
+    marker = 'open("'
+    start = preamble.find(marker)
+    if start >= 0:
+        start += len(marker)
+        end = preamble.find('"', start)
+        if end > start:
+            return preamble[start:end]
+    return ""
+
+
+def store_load_epilogue(shared_variable: str, data_file: str) -> str:
+    """Runtime check: student must leave shared_variable equal to the data file."""
+    var = shared_variable or "data"
+    path = data_file or "data.txt"
+    return (
+        "\n\n# --- VizsgaGO beolvasás ellenőrzés ---\n"
+        f"try:\n"
+        f"    __vg_actual = {var}\n"
+        f"except NameError as __vg_exc:\n"
+        f"    raise SystemExit(\"A '{var}' változó nincs definiálva.\") from __vg_exc\n"
+        f"with open({path!r}, encoding=\"utf-8\") as __vg_f:\n"
+        f"    __vg_expected = __vg_f.read()\n"
+        f"if __vg_actual != __vg_expected:\n"
+        f"    raise SystemExit(\n"
+        f"        \"A '{var}' változó nem a(z) '{path}' fájl tartalmát tartalmazza.\"\n"
+        f"    )\n"
+    )
+
+
+def should_verify_store_load(task: Task) -> bool:
+    """File-load store feladats only (not function stubs / spec-only store rows)."""
+    if getattr(task, "verify_store_load", False):
+        return True
+    # After rematerialize, task_type is set and verify_store_load is authoritative.
+    if (getattr(task, "task_type", None) or "").strip():
+        return False
+    # Legacy DB fallback: graded store tasks have store-sample / store-hidden-* cases.
+    if task.uses_preamble:
+        return False
+    return any((tc.name or "").startswith("store-") for tc in (task.test_cases or []))
+
+
 def compose_source(exam: Exam, task: Task, student_code: str) -> str:
-    """Option A: prepend canonical preamble when the task opts in."""
+    """Option A: prepend canonical preamble when the task opts in.
+
+    For file-load ``store`` feladats, append a check that ``shared_variable``
+    equals the mounted data file so empty/wrong solutions no longer auto-pass.
+    """
     code = student_code or ""
     if task.uses_preamble and (exam.preamble or "").strip():
-        return exam.preamble.rstrip() + "\n\n" + code
+        code = exam.preamble.rstrip() + "\n\n" + code
+    if should_verify_store_load(task):
+        data_file = _data_file_for_exam(exam)
+        shared = exam.shared_variable or "data"
+        if data_file and shared:
+            code = code.rstrip() + store_load_epilogue(shared, data_file)
     return code
 
 
@@ -78,6 +135,7 @@ def materialize_loaded_exam(
         template_type=template.id,
         preamble=preamble,
         shared_variable=shared_variable,
+        data_file=data_file,
         level=template.level or "kozep",
         origin=template.origin or "synthetic",
         difficulty=int(template.difficulty or 2),
@@ -135,6 +193,12 @@ def materialize_loaded_exam(
         stdin = sample_stdin
         expected_file = spec.get("expected_file") or ""
         task_tags = list(spec.get("tags") or [])
+        task_type = str(spec.get("type") or "")
+        # Own-file store + no preamble ⇒ student must actually read the data file.
+        store_is_spec_only = task_type == "store" and solution_file in gradeable_files
+        verify_store_load = (
+            task_type == "store" and not uses_preamble and not store_is_spec_only
+        )
 
         task = Task(
             exam_id=exam.id,
@@ -149,6 +213,8 @@ def materialize_loaded_exam(
             tags_json=json.dumps(task_tags, ensure_ascii=False),
             stdin=stdin,
             expected_file=expected_file,
+            task_type=task_type,
+            verify_store_load=verify_store_load,
         )
         db.add(task)
         db.flush()
@@ -165,7 +231,7 @@ def materialize_loaded_exam(
             )
             created_solution_files.add(solution_file)
 
-        if spec.get("type") == "store" and solution_file in gradeable_files:
+        if store_is_spec_only:
             continue
 
         db.add(

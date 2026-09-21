@@ -28,6 +28,8 @@ class Exam(Base):
     # Canonical file-load code injected for tasks with uses_preamble=True
     preamble: Mapped[str] = mapped_column(Text, default="")
     shared_variable: Mapped[str] = mapped_column(String(100), default="data")
+    # Dataset filename mounted in the workspace (e.g. fogasok.txt)
+    data_file: Mapped[str] = mapped_column(String(255), default="")
     level: Mapped[str] = mapped_column(String(20), default="kozep")
     origin: Mapped[str] = mapped_column(String(20), default="synthetic")
     difficulty: Mapped[int] = mapped_column(Integer, default=2)
@@ -109,6 +111,10 @@ class Task(Base):
     tags_json: Mapped[str] = mapped_column(Text, default="[]")
     stdin: Mapped[str] = mapped_column(Text, default="")
     expected_file: Mapped[str] = mapped_column(String(255), default="")
+    # Catalog task type (e.g. store, count, fogasok_max) — used for grading rules
+    task_type: Mapped[str] = mapped_column(String(100), default="")
+    # True for file-load store feladats: judge checks shared_variable == data file
+    verify_store_load: Mapped[bool] = mapped_column(default=False)
 
     exam: Mapped["Exam"] = relationship(back_populates="tasks")
     test_cases: Mapped[list["TestCase"]] = relationship(back_populates="task", cascade="all, delete-orphan")

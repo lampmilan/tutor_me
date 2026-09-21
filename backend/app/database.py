@@ -77,6 +77,11 @@ def ensure_schema() -> None:
     _add_column_if_missing("tasks", "tags_json", "tags_json TEXT DEFAULT '[]'")
     _add_column_if_missing("tasks", "stdin", "stdin TEXT DEFAULT ''")
     _add_column_if_missing("tasks", "expected_file", "expected_file VARCHAR(255) DEFAULT ''")
+    _add_column_if_missing("tasks", "task_type", "task_type VARCHAR(100) DEFAULT ''")
+    _add_column_if_missing(
+        "tasks", "verify_store_load", "verify_store_load BOOLEAN DEFAULT FALSE"
+    )
+    _add_column_if_missing("exams", "data_file", "data_file VARCHAR(255) DEFAULT ''")
     _add_column_if_missing("workspaces", "last_accessed_at", "last_accessed_at TIMESTAMP")
     _add_column_if_missing("feedback", "rating", "rating INTEGER")
     _add_column_if_missing(

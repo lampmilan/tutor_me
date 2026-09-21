@@ -29,6 +29,8 @@ def _needs_rematerialize(exam: Exam, loaded, expected_hidden: int) -> bool:
         loaded.template.shared_variable or "data"
     ):
         return True
+    if (getattr(exam, "data_file", None) or "") != (loaded.template.data_file or ""):
+        return True
     if len(exam.tasks) != len(loaded.template.tasks):
         return True
     expected_files = {
@@ -65,6 +67,23 @@ def _needs_rematerialize(exam: Exam, loaded, expected_hidden: int) -> bool:
         if (getattr(task, "stdin", None) or "") != (tmpl.stdin or ""):
             return True
         if (getattr(task, "expected_file", None) or "") != (tmpl.expected_file or ""):
+            return True
+        want_type = tmpl.type or ""
+        if (getattr(task, "task_type", None) or "") != want_type:
+            return True
+        # Own-file store without preamble must verify the shared_variable load.
+        gradeable = {
+            (t.solution_file or f"feladat{i + 1}.py")
+            for i, t in enumerate(loaded.template.tasks)
+            if t.type != "store"
+        }
+        sol = tmpl.solution_file or f"feladat{task.order_index + 1}.py"
+        want_verify = (
+            tmpl.type == "store"
+            and not bool(tmpl.uses_preamble)
+            and sol not in gradeable
+        )
+        if bool(getattr(task, "verify_store_load", False)) != want_verify:
             return True
         hidden_cases = sorted(
             (tc for tc in task.test_cases if tc.is_hidden),

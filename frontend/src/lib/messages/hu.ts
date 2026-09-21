@@ -39,20 +39,12 @@ export const hu = {
     navAbout: "Rólunk",
     navStart: "Kezdés most",
     headline: "Készülj célzottan a digitális kultúra érettségi programozás részére.",
-    body:
-
-      "Érettségi szintű programozási feladatok, közvetlenül a böngésződben.",
+    body: "Érettségi szintű programozási feladatok, közvetlenül a böngésződben.",
     ctaPrimary: "Próbálj ki egy 5 perces feladatot",
-
     ctaSecondary: "Feladatsorok böngészése",
     trustNoReg: "Nincs regisztráció",
     trustBrowser: "Böngészőben",
     trustFeedback: "Azonnali visszajelzés",
-    previewTask: "Feladat",
-    previewTaskBody: "Olvasd be a fogasok.txt tartalmát, majd számold meg a fogásokat.",
-    previewExample: "Példa: 120, 85, 210…",
-    previewFile: "main.py",
-    previewSuccess: "Helyes megoldás!",
     featureAllInOneTitle: "Minden egy helyen",
     featureAllInOneBody:
       "A feladatleírás, a forrásfájlok és a kódszerkesztő egyetlen felületen vár. Nincs ugrálás PDF és IDE között.",

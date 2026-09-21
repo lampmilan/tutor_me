@@ -27,30 +27,27 @@ export default async function LandingPage() {
   return (
     <main className="min-h-screen">
       <div className="relative overflow-hidden">
-        <div
-          className="pointer-events-none absolute inset-y-0 right-0 aspect-[4/3] h-full"
-          aria-hidden
-        >
+        <div className="pointer-events-none absolute inset-0" aria-hidden>
           <Image
             src={HEADER_BG_IMAGE}
             alt=""
             fill
             priority
-            className="object-cover object-right opacity-50"
-            sizes="(min-width: 768px) 50vw, 100vw"
+            className="object-cover object-center opacity-30"
+            sizes="100vw"
           />
         </div>
         <SiteHeader />
 
-        <section className={`relative ${PAGE_SHELL_CLASS} grid gap-12 pb-16 pt-12 md:grid-cols-2 md:items-center md:pt-16`}>
-          <div className="animate-[fade-up_0.5s_ease-out_both]">
-            <h1 className="max-w-xl font-[family-name:var(--font-ibm-plex-mono)] text-3xl font-bold leading-snug text-[var(--fg)] md:text-4xl">
+        <section className={`relative ${PAGE_SHELL_CLASS} pb-20 pt-16 md:pb-24 md:pt-24`}>
+          <div className="mx-auto max-w-2xl animate-[fade-up_0.5s_ease-out_both] text-center">
+            <h1 className="font-[family-name:var(--font-ibm-plex-mono)] text-3xl font-bold leading-snug text-[var(--fg)] md:text-4xl">
               {hu.landing.headline}
             </h1>
-            <p className="mt-4 max-w-lg text-base leading-relaxed text-[var(--muted-strong)]">
+            <p className="mt-4 text-base leading-relaxed text-[var(--muted-strong)]">
               {hu.landing.body}
             </p>
-            <div className="mt-8 flex flex-wrap items-center gap-3">
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Link
                 href={primaryHref}
                 prefetch={false}
@@ -66,7 +63,7 @@ export default async function LandingPage() {
                 {hu.landing.ctaSecondary}
               </Link>
             </div>
-            <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm text-[var(--muted)]">
+            <ul className="mt-6 flex flex-wrap justify-center gap-x-5 gap-y-2 text-sm text-[var(--muted)]">
               <li className="inline-flex items-center gap-1.5">
                 <Zap className="h-4 w-4 shrink-0" aria-hidden />
                 {hu.landing.trustNoReg}
@@ -81,8 +78,6 @@ export default async function LandingPage() {
               </li>
             </ul>
           </div>
-
-          <ProductPreview />
         </section>
       </div>
 
@@ -178,35 +173,6 @@ function CompareCard({ title, body }: { title: string; body: string }) {
     <div className="rounded-xl border border-[var(--border)] bg-[var(--panel)] p-5">
       <h3 className="font-semibold text-[var(--fg)]">{title}</h3>
       <p className="mt-2 text-sm leading-relaxed text-[var(--muted-strong)]">{body}</p>
-    </div>
-  );
-}
-
-function ProductPreview() {
-  return (
-    <div className="animate-[fade-up_0.6s_ease-out_0.08s_both] overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--panel)]">
-      <div className="flex items-center justify-between border-b border-[var(--border)] px-4 py-2.5">
-        <span className="text-sm font-semibold text-[var(--fg)]">Fogások</span>
-        <span className="rounded-md bg-[var(--accent-soft)] px-2 py-0.5 text-xs font-medium text-[var(--accent)]">
-          {hu.landing.previewSuccess}
-        </span>
-      </div>
-      <div className="grid min-h-[220px] sm:grid-cols-2">
-        <div className="border-b border-[var(--border)] p-4 sm:border-b-0 sm:border-r">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
-            {hu.landing.previewTask}
-          </p>
-          <p className="mt-2 text-sm leading-relaxed text-[var(--muted-strong)]">
-            {hu.landing.previewTaskBody}
-          </p>
-          <p className="mt-3 text-xs text-[var(--muted)]">{hu.landing.previewExample}</p>
-        </div>
-        <div className="bg-[var(--editor)] p-4 font-[family-name:var(--font-ibm-plex-mono)] text-sm">
-          <p className="text-[11px] text-[var(--muted)]">{hu.landing.previewFile}</p>
-          <p className="mt-3 text-[var(--accent)]">fogasok = open(...).read()</p>
-          <p className="mt-1 text-[var(--muted-strong)]">print(len(sorok))</p>
-        </div>
-      </div>
     </div>
   );
 }

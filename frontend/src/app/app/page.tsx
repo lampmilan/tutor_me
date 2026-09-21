@@ -1,4 +1,5 @@
 import { ExamList } from "@/components/ExamList";
+import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { hu } from "@/lib/messages/hu";
 import { fetchExamList } from "@/lib/exams";
@@ -22,6 +23,8 @@ export default async function HomePage() {
           <ExamList exams={exams} />
         )}
       </div>
+
+      <SiteFooter />
     </main>
   );
 }
